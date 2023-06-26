@@ -35,6 +35,12 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.batch:spring-batch-test'
 	testImplementation 'org.springframework.kafka:spring-kafka-test'
+
+	// https://mvnrepository.com/artifact/org.apache.tika/tika-langdetect
+	implementation 'org.apache.tika:tika-langdetect:2.8.0'
+
+	runtimeOnly 'org.apache.tika:tika-core:2.8.0'
+	runtimeOnly 'org.apache.tika:tika-parsers-standard-package:2.8.0'
 }
 
 tasks.named('test') {
