@@ -1,2 +1,2 @@
-rootProject.name = 'multimodule'
-include('exam')
+rootProject.name = 'myApplication'
+include('api')
