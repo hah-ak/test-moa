@@ -1,13 +1,9 @@
 package com.example.exam.controllers.file;
 
-import com.example.exam.services.file.FileUploadConstants;
-import com.example.exam.services.file.FileUploadService;
-import com.example.exam.services.file.PhotoFileUploadServiceImpl;
-import com.example.exam.services.file.VideoFileUploadServiceImpl;
+import com.example.exam.services.file.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.procedure.NoSuchParameterException;
-import org.hibernate.resource.beans.container.internal.NoSuchBeanException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -24,18 +20,18 @@ import java.util.Optional;
 @RequestMapping("/file")
 public class FileUploadController {
 
-    private final List<FileUploadService> photoFileUploadService;
+    private final List<FileService> photoFileService;
 //    private final FileUploadService videoFileUploadServiceImpl;
 
-    private Optional<FileUploadService> getBeans(String type) {
-        FileUploadConstants.FILE_TYPES fileTypes1 = Arrays.stream(FileUploadConstants.FILE_TYPES.values())
+    private Optional<FileService> getBeans(String type) {
+        FileConstants.FILE_TYPES fileTypes1 = Arrays.stream(FileConstants.FILE_TYPES.values())
                 .filter(fileTypes -> fileTypes.getType().equals(type))
                 .findFirst()
                 .orElseThrow(() -> new NoSuchParameterException("illegal argument : " + type));
 
-        Class<? extends FileUploadService> clazz = getServiceClass(fileTypes1);
+        Class<? extends FileService> clazz = getServiceClass(fileTypes1);
 
-        for (FileUploadService service : photoFileUploadService) {
+        for (FileService service : photoFileService) {
             if (service.getClass().equals(clazz)) {
                 return Optional.of(service);
             }
@@ -43,10 +39,11 @@ public class FileUploadController {
         return Optional.empty();
     }
 
-    private static Class<? extends FileUploadService> getServiceClass(FileUploadConstants.FILE_TYPES fileTypes1) {
+    private static Class<? extends FileService> getServiceClass(FileConstants.FILE_TYPES fileTypes1) {
         return switch (fileTypes1) {
-            case PHOTO -> PhotoFileUploadServiceImpl.class;
-            case VIDEO -> VideoFileUploadServiceImpl.class;
+            case PHOTO -> PhotoFileServiceImpl.class;
+            case VIDEO -> VideoFileServiceImpl.class;
+            case JSON -> JsonFileServiceImpl.class;
         };
     }
 

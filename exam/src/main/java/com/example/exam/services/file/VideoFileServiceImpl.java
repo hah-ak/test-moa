@@ -15,9 +15,9 @@ import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
-public class VideoFileUploadServiceImpl implements FileUploadService{
+public class VideoFileServiceImpl implements FileService {
 
-    private final String VIDEO_DIRECTORY = "Desktop\\videos";
+    protected final String VIDEO_DIRECTORY = "Desktop\\videos";
     @Qualifier("fileUpload")
     private final ThreadPoolTaskExecutor threadPoolTaskExecutor;
     @Override
@@ -33,7 +33,7 @@ public class VideoFileUploadServiceImpl implements FileUploadService{
     @Override
     public List<File> getAllFiles() throws IOException {
 
-        try (Stream<Path> videos = Files.list(FileUploadConstants.USER_HOME.resolve(VIDEO_DIRECTORY));) {
+        try (Stream<Path> videos = Files.list(FileConstants.USER_HOME.resolve(VIDEO_DIRECTORY));) {
             return videos.map(Path::toFile).toList();
         } catch (Exception e) {
             return null;

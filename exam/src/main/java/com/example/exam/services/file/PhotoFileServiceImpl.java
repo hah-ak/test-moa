@@ -3,7 +3,6 @@ package com.example.exam.services.file;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.autoconfigure.web.format.DateTimeFormatters;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -13,11 +12,8 @@ import java.io.IOException;
 import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeFormatterBuilder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
@@ -27,17 +23,17 @@ import java.util.stream.Stream;
 @Slf4j
 @Service("photoFileUploadServiceImpl")
 @RequiredArgsConstructor
-public class PhotoFileUploadServiceImpl implements FileUploadService {
-    private final String PHOTO_DIRECTORY = "Desktop\\photos";
+public class PhotoFileServiceImpl implements FileService {
+    protected final String PHOTO_DIRECTORY = "Desktop\\photos";
     @Qualifier("fileUpload")
     private final ThreadPoolTaskExecutor threadPoolTaskExecutor;
 
     @Override
     public void uploadFile(MultipartFile multipartFile) throws IOException {
 
-        final Path FILE_PATH = FileUploadConstants.USER_HOME
+        final Path FILE_PATH = FileConstants.USER_HOME
                 .resolve(PHOTO_DIRECTORY)
-                .resolve(ZonedDateTime.now(ZoneId.of("UTC")).format(FileUploadConstants.FILE_DATE_TIME_FORMAT) + multipartFile.getName());
+                .resolve(ZonedDateTime.now(ZoneId.of("UTC")).format(FileConstants.FILE_DATE_TIME_FORMAT) + multipartFile.getName());
 
         boolean exists = Files.exists(FILE_PATH);
 
@@ -75,7 +71,7 @@ public class PhotoFileUploadServiceImpl implements FileUploadService {
 
     @Override
     public List<File> getAllFiles() throws IOException {
-        try (Stream<Path> fileList = Files.list(FileUploadConstants.USER_HOME.resolve(PHOTO_DIRECTORY).toAbsolutePath())) {
+        try (Stream<Path> fileList = Files.list(FileConstants.USER_HOME.resolve(PHOTO_DIRECTORY).toAbsolutePath())) {
             return fileList.map(Path::toFile).toList();
         }
     }

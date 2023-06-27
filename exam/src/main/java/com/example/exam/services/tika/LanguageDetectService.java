@@ -11,6 +11,7 @@ public class LanguageDetectService {
     public String identifyLanguage(String text) {
         LanguageDetector detector = new OptimaizeLangDetector().loadModels();
         LanguageResult result = detector.detect(text);
+
         return result.getLanguage();
     }
 }

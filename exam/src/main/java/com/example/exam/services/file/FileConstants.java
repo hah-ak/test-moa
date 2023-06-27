@@ -4,10 +4,10 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.format.DateTimeFormatter;
 
-public class FileUploadConstants {
+public class FileConstants {
 
     public enum FILE_TYPES{
-        VIDEO("video"),PHOTO("photo");
+        VIDEO("video"),PHOTO("photo"),JSON("json");
         private String type;
 
         FILE_TYPES(String type) {

@@ -1,18 +1,16 @@
 package com.example.exam.business.file;
 
-import com.example.exam.services.file.FileUploadConstants;
-import com.example.exam.services.file.PhotoFileUploadServiceImpl;
+import com.example.exam.services.file.FileConstants;
+import com.example.exam.services.file.PhotoFileServiceImpl;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -24,10 +22,10 @@ import java.util.stream.Stream;
 
 @AutoConfigureMockMvc
 @SpringBootTest
-class FileUploadServiceTest {
+class FileServiceTest {
 
     @Autowired
-    PhotoFileUploadServiceImpl photoFileUploadService;
+    PhotoFileServiceImpl photoFileUploadService;
     @Autowired
     MockMvc mockMvc;
 
@@ -45,7 +43,7 @@ class FileUploadServiceTest {
 //        final Path FILE_PATH = FileUploadConstants.USER_HOME.resolve("Desktop\\photosTest").resolve(multipartFile.getResource().lastModified() + multipartFile.getName());
 //        log.info("path : {}",FILE_PATH.toString());
 
-        Files.list(FileUploadConstants.USER_HOME.resolve("Desktop\\photosTest")).forEach(path -> System.out.println(path.toFile().lastModified()));
+        Files.list(FileConstants.USER_HOME.resolve("Desktop\\photosTest")).forEach(path -> System.out.println(path.toFile().lastModified()));
 //        photoFileUploadService.getAllFiles().forEach(file -> {
 //            System.out.println(file.getName());
 //        });
@@ -60,7 +58,7 @@ class FileUploadServiceTest {
     void uploadTest() throws IOException, InterruptedException {
         //given
 
-        try(Stream<Path> list = Files.list(FileUploadConstants.USER_HOME.resolve("Desktop\\photosTest"));) {
+        try(Stream<Path> list = Files.list(FileConstants.USER_HOME.resolve("Desktop\\photosTest"));) {
             List<MultipartFile> list1 = list.map(path -> {
                 try {
                     return (MultipartFile) new MockMultipartFile(String.valueOf(path.getFileName()), Files.readAllBytes(path));
@@ -73,7 +71,7 @@ class FileUploadServiceTest {
 //            photoFileUploadService.uploadFile(list1.get(0));
             photoFileUploadService.uploadFiles(list1);
 
-            List<Path> list2 = Files.list(FileUploadConstants.USER_HOME.resolve("Desktop\\photos")).toList();
+            List<Path> list2 = Files.list(FileConstants.USER_HOME.resolve("Desktop\\photos")).toList();
             Assertions.assertThat(list1.size() == list2.size()).isTrue();
         }
 
