@@ -11,7 +11,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.repository.configuration.EnableRedisRepositories;
 
 @Configuration
-@EnableRedisRepositories(basePackages = "com.example.exam.repositories.redis")
+@EnableRedisRepositories(basePackages = "my.application.api.repositories.redis")
 public class RedisConfig {
 
     @Getter
@@ -25,7 +25,7 @@ public class RedisConfig {
     }
 
     @Bean
-    @ConfigurationProperties(prefix = "exams.db.redis.zero")
+    @ConfigurationProperties(prefix = "application.db.redis.zero")
     public RedisConfigurationProperties redisConfigurationProperties() {
         return new RedisConfigurationProperties();
     }
