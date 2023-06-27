@@ -14,13 +14,13 @@ public class MySQLConfig {
 
     @Bean
     @Qualifier("mysqlExam")
-    @ConfigurationProperties(prefix = "exams.db.mysql.exam")
+    @ConfigurationProperties(prefix = "application.db.mysql.exam")
     public DataSourceProperties hikariConfig() {
         return new DataSourceProperties();
     }
 
     @Bean
-    @ConfigurationProperties(prefix = "exams.db.mysql.exam.hikari")
+    @ConfigurationProperties(prefix = "application.db.mysql.exam.hikari")
     public HikariDataSource hikariDataSource(@Qualifier("mysqlExam") DataSourceProperties dataSourceProperties) {
         return dataSourceProperties.initializeDataSourceBuilder().type(HikariDataSource.class).build();
     }
