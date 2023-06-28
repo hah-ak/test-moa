@@ -1,5 +1,4 @@
-package com.example.exam.services.file;
-
+package my.application.api.services.file;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;

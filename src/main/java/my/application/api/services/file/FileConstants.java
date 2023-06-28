@@ -1,4 +1,4 @@
-package com.example.exam.services.file;
+package my.application.api.services.file;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;

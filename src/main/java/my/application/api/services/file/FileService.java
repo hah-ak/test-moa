@@ -1,4 +1,4 @@
-package com.example.exam.services.file;
+package my.application.api.services.file;
 
 import org.springframework.web.multipart.MultipartFile;
 

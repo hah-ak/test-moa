@@ -1,9 +1,9 @@
-package com.example.exam.controllers.jsonCreator;
+package my.application.api.controllers.jsonCreator;
 
-import com.example.exam.services.jsonCreator.JsonCreatorService;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import my.application.api.services.jsonCreator.JsonCreatorService;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.File;
