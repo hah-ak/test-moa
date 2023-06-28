@@ -23,7 +23,7 @@ import java.util.stream.Stream;
 class FileUploadServiceTest {
 
     @Autowired
-    PhotoFileUploadServiceImpl photoFileUploadService;
+    PhotoFileServiceImpl photoFileUploadService;
     @Autowired
     MockMvc mockMvc;
 
@@ -41,7 +41,7 @@ class FileUploadServiceTest {
 //        final Path FILE_PATH = FileUploadConstants.USER_HOME.resolve("Desktop\\photosTest").resolve(multipartFile.getResource().lastModified() + multipartFile.getName());
 //        log.info("path : {}",FILE_PATH.toString());
 
-        Files.list(FileUploadConstants.USER_HOME.resolve("Desktop\\photosTest")).forEach(path -> System.out.println(path.toFile().lastModified()));
+        Files.list(FileConstants.USER_HOME.resolve("Desktop\\photosTest")).forEach(path -> System.out.println(path.toFile().lastModified()));
 //        photoFileUploadService.getAllFiles().forEach(file -> {
 //            System.out.println(file.getName());
 //        });
@@ -56,7 +56,7 @@ class FileUploadServiceTest {
     void uploadTest() throws IOException, InterruptedException {
         //given
 
-        try(Stream<Path> list = Files.list(FileUploadConstants.USER_HOME.resolve("Desktop\\photosTest"));) {
+        try (Stream<Path> list = Files.list(FileConstants.USER_HOME.resolve("Desktop\\photosTest"));) {
             List<MultipartFile> list1 = list.map(path -> {
                 try {
                     return (MultipartFile) new MockMultipartFile(String.valueOf(path.getFileName()), Files.readAllBytes(path));
@@ -69,8 +69,9 @@ class FileUploadServiceTest {
 //            photoFileUploadService.uploadFile(list1.get(0));
             photoFileUploadService.uploadFiles(list1);
 
-            List<Path> list2 = Files.list(FileUploadConstants.USER_HOME.resolve("Desktop\\photos")).toList();
+            List<Path> list2 = Files.list(FileConstants.USER_HOME.resolve("Desktop\\photos")).toList();
             Assertions.assertThat(list1.size() == list2.size()).isTrue();
         }
 
     }
+}

@@ -1,7 +1,6 @@
-package com.example.exam.services.jsonCreator;
+package my.application.api.services.jsonCreator;
 
-import com.example.exam.services.file.FileService;
-import com.fasterxml.jackson.core.JsonProcessingException;
+import my.application.api.services.file.FileService;
 
 import java.io.IOException;
 

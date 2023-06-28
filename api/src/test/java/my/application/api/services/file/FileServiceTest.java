@@ -1,7 +1,5 @@
-package com.example.exam.business.file;
+package my.application.api.services.file;
 
-import com.example.exam.services.file.FileConstants;
-import com.example.exam.services.file.PhotoFileServiceImpl;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

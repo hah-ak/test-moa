@@ -1,12 +1,8 @@
 package my.application.api.controllers.file;
 
-import com.example.exam.services.file.*;
-import my.application.api.services.file.FileUploadConstants;
-import my.application.api.services.file.FileUploadService;
-import my.application.api.services.file.PhotoFileUploadServiceImpl;
-import my.application.api.services.file.VideoFileUploadServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import my.application.api.services.file.*;
 import org.hibernate.procedure.NoSuchParameterException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
