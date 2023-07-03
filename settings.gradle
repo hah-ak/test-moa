@@ -1,2 +1,4 @@
 rootProject.name = 'myApplication'
 include('api')
+include('ldap')
+include('kafka-consumers')
