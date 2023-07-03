@@ -1,0 +1,16 @@
+package my.application.api.producer.coupon;
+
+import lombok.RequiredArgsConstructor;
+import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.stereotype.Component;
+
+@RequiredArgsConstructor
+@Component
+public class CouponCreateProducer {
+
+    private final KafkaTemplate<String, Long> kafkaTemplate;
+
+    public void create(Long userid) {
+        kafkaTemplate.send("coupone_create", userid);
+    }
+}
