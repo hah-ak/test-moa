@@ -1,11 +1,9 @@
 package my.application.api.services.coupon;
 
-import my.application.api.entities.redis.CouponEntity;
-import my.application.api.producer.coupon.CouponCreateProducer;
-import my.application.api.repositories.redis.CouponRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.kafka.core.KafkaTemplate;
+import my.application.api.producer.coupon.CouponCreateProducer;
+import my.application.api.repositories.redis.CouponRepository;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -19,6 +17,9 @@ public class CouponService {
     public void issue(Long userId) {
 
 //        long count = couponRepository.count();
+
+        if(couponRedisCustom.add(userId) != 1) return ;
+
         Long count = couponRedisCustom.increase();
 
         if (count > 100) {
