@@ -11,6 +11,6 @@ public class CouponCreateProducer {
     private final KafkaTemplate<String, Long> kafkaTemplate;
 
     public void create(Long userid) {
-        kafkaTemplate.send("coupone_create", userid);
+        kafkaTemplate.send("coupon_create", userid);
     }
 }

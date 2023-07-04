@@ -56,7 +56,7 @@ class FileServiceTest {
     void uploadTest() throws IOException, InterruptedException {
         //given
 
-        try(Stream<Path> list = Files.list(FileConstants.USER_HOME.resolve("Desktop\\photosTest"));) {
+        try (Stream<Path> list = Files.list(FileConstants.USER_HOME.resolve("Desktop\\photosTest"));) {
             List<MultipartFile> list1 = list.map(path -> {
                 try {
                     return (MultipartFile) new MockMultipartFile(String.valueOf(path.getFileName()), Files.readAllBytes(path));
@@ -74,3 +74,4 @@ class FileServiceTest {
         }
 
     }
+}
