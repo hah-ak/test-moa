@@ -13,4 +13,9 @@ public class GreetingController {
         System.out.println("hello");
         return new Greeting("hi");
     }
+
+    @MessageMapping("/room")
+    public Greeting greetings() {
+        return new Greeting("romm hi");
+    }
 }

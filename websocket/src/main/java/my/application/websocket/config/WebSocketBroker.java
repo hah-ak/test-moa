@@ -16,6 +16,6 @@ public class WebSocketBroker implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry.addEndpoint("/gs-guid-websocket").withSockJS();
+        registry.addEndpoint("/broadCast").withSockJS(); // 웹에서 stomp프로토콜로 접근하는 소켓서버의 엔드포인트
     }
 }
