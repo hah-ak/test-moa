@@ -12,6 +12,9 @@ import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 import org.springframework.web.socket.server.HandshakeInterceptor;
 
+import java.nio.ByteBuffer;
+import java.nio.channels.FileChannel;
+import java.nio.file.Files;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -44,13 +47,45 @@ public class WebSocketConfig implements WebSocketConfigurer {
         }
     }
 
+    public static class MyBinarySocketHandler implements WebSocketHandler {
+
+        private final Set<WebSocketSession> sessions = ConcurrentHashMap.newKeySet();
+        @Override
+        public void afterConnectionEstablished(WebSocketSession session) throws Exception {
+            sessions.add(session);
+        }
+
+        @Override
+        public void handleMessage(WebSocketSession session, WebSocketMessage<?> message) throws Exception {
+            ByteBuffer payload = (ByteBuffer) message.getPayload();
+            for (WebSocketSession socketSession : sessions) {
+                socketSession.sendMessage(new BinaryMessage(payload));
+            }
+        }
+
+        @Override
+        public void handleTransportError(WebSocketSession session, Throwable exception) throws Exception {
+
+        }
+
+        @Override
+        public void afterConnectionClosed(WebSocketSession session, CloseStatus closeStatus) throws Exception {
+            sessions.remove(session);
+        }
+
+        @Override
+        public boolean supportsPartialMessages() {
+            return true;
+        }
+    }
+
     public static class MyInterceptor implements HandshakeInterceptor {
         @Override
         public boolean beforeHandshake(ServerHttpRequest request, ServerHttpResponse response, WebSocketHandler wsHandler, Map<String, Object> attributes) throws Exception {
 
             HttpHeaders headers = request.getHeaders();
             headers.forEach((key, value) -> {
-                System.out.printf("header key : %s, header value : %s%n", key,value);
+//                System.out.printf("header key : %s, header value : %s%n", key,value);
             });
             return true;
         }
@@ -63,12 +98,15 @@ public class WebSocketConfig implements WebSocketConfigurer {
     }
 
     @Bean
+    public MyBinarySocketHandler myBinarySocketHandler() { return new MyBinarySocketHandler();}
+
+    @Bean
     public MyInterceptor myInterceptor() {
         return new MyInterceptor();
     }
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-        registry.addHandler(myHandler(),"/room")
+        registry.addHandler(myBinarySocketHandler(),"/room")
                 .setAllowedOrigins("*")
                 .addInterceptors(myInterceptor());
     }
