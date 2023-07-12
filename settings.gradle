@@ -2,4 +2,4 @@ rootProject.name = 'myApplication'
 include('api')
 include('ldap')
 include('dispersion-queue')
-include('websocket')
+include('socket')
