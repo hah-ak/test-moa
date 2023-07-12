@@ -13,8 +13,8 @@ public class GreetingController {
         return new Greeting("hi" + messages);
     }
 
-    @MessageMapping("/room")
-    public Greeting greetings() {
-        return new Greeting("romm hi");
-    }
+//    @MessageMapping("/room")
+//    public Greeting greetings() {
+//        return new Greeting("romm hi");
+//    }
 }
