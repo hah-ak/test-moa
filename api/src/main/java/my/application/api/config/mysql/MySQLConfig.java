@@ -9,19 +9,19 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @Configuration
-@EnableJpaRepositories
+@EnableJpaRepositories(basePackages = {"my.application.api.repositories.mysql"})
 public class MySQLConfig {
 
     @Bean
-    @Qualifier("mysqlExam")
-    @ConfigurationProperties(prefix = "application.db.mysql.exam")
+    @Qualifier("mysqlMyApp")
+    @ConfigurationProperties(prefix = "application.db.mysql.my-app")
     public DataSourceProperties hikariConfig() {
         return new DataSourceProperties();
     }
 
     @Bean
     @ConfigurationProperties(prefix = "application.db.mysql.exam.hikari")
-    public HikariDataSource hikariDataSource(@Qualifier("mysqlExam") DataSourceProperties dataSourceProperties) {
+    public HikariDataSource hikariDataSource(@Qualifier("mysqlMyApp") DataSourceProperties dataSourceProperties) {
         return dataSourceProperties.initializeDataSourceBuilder().type(HikariDataSource.class).build();
     }
 
