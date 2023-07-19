@@ -17,7 +17,6 @@ public class MemberCRUDService {
     }
 
     public List<MemberEntity> memberEntities() {
-        System.out.println("???");
         return memberRepository.findAll();
     }
 }
