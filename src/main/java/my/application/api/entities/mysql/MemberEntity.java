@@ -15,8 +15,8 @@ public class MemberEntity {
     private String id;
     @Column(unique = true, nullable = false)
     private String name;
-    @NotEmpty
-    private String passWord;
+    @Column(nullable = false)
+    private String password;
     private String imageName;
 
     @Builder
