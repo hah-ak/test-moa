@@ -9,7 +9,7 @@ import lombok.Getter;
 @Getter
 public class MemberEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer memNo;
     @Column(unique = true, nullable = false)
     private String id;
