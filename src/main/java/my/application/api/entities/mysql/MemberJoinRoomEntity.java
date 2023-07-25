@@ -6,7 +6,6 @@ import lombok.Getter;
 
 @Entity(name = "member_join_room")
 @Getter
-@Builder
 public class MemberJoinRoomEntity {
 
     @Id
@@ -20,8 +19,9 @@ public class MemberJoinRoomEntity {
     @JoinColumn(name = "mem_no")
     private MemberEntity member;
 
-    @Builder
-    public MemberJoinRoomEntity() {
+    public MemberJoinRoomEntity() {};
 
+    @Builder
+    public MemberJoinRoomEntity(RoomEntity roomEntity,MemberEntity member) {
     }
 }
