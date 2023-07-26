@@ -19,4 +19,5 @@ public class MemberCRUDService {
     public List<MemberEntity> memberEntities() {
         return memberRepository.findAll();
     }
+    public MemberEntity getMember(Integer memNo) {return memberRepository.findByMemNo(memNo);}
 }
