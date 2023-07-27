@@ -29,4 +29,9 @@ public class MemberRestController {
         return memberCRUDService.getMember(memNo);
     }
 
+    @PostMapping("/login")
+    public MemberEntity login(@RequestParam(name = "id") String id, @RequestParam(name = "password") String password) {
+        return memberCRUDService.login(id, password);
+    }
+
 }
