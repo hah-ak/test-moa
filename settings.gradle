@@ -1,5 +1,6 @@
 rootProject.name = 'myApplication'
+include('common')
 include('api')
-include('ldap')
+include('security')
 include('dispersion-queue')
 include('socket')
