@@ -1,0 +1,13 @@
+plugins {
+    id 'java'
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-web' // spring boot 기본 코어를 위해 필요
+    implementation 'org.springframework.boot:spring-boot-starter-security' // security와 ldap접목을 위한 security 코어가 필요
+    implementation 'org.springframework.boot:spring-boot-starter-data-ldap' // jdbc, jpa 처럼 ldap 데이터 접근을 위한 프로젝트
+    implementation 'org.springframework.security:spring-security-ldap' // spring security에서 ldap 전용 프로젝트
+    implementation 'com.unboundid:unboundid-ldapsdk' // 실제 ldap 서버와 통신을 위해 필요함.
+
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
+}
