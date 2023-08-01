@@ -1,5 +1,7 @@
 rootProject.name = 'myApplication'
-include('common')
+include('domain-modules:jpa-core')
+include('domain-modules:mysql-domain')
+include('domain-modules:redis-domain')
 include('api')
 include('security')
 include('dispersion-queue')

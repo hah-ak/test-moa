@@ -1,0 +1,19 @@
+plugins {
+  id 'java-library'
+}
+
+group 'my.domain'
+version '1.0-SNAPSHOT'
+
+bootJar {
+  enabled = false
+}
+
+jar {
+  enabled = true
+}
+
+dependencies {
+  api project(":domain-modules:jpa-core")
+  api 'org.springframework.boot:spring-boot-starter-data-redis'
+}

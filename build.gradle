@@ -41,29 +41,29 @@ subprojects {
 
     testTask
 }
-project(':common') {
 
-}
 project(':api') {
     dependencies {
-        implementation project(':common')
+        implementation project(':domain-modules:mysql-domain')
+        implementation project(':domain-modules:redis-domain')
     }
 }
 
 project(':dispersion-queue') {
     dependencies {
-        implementation project(':common')
+        implementation project(':domain-modules:mysql-domain')
+        implementation project(':domain-modules:redis-domain')
     }
 }
 
 project(':socket') {
     dependencies {
-        implementation project(':common')
+        implementation project(':domain-modules:mysql-domain')
     }
 }
 
 project(':security') {
     dependencies {
-        implementation project(':common')
+        implementation project(':domain-modules:mysql-domain')
     }
 }
