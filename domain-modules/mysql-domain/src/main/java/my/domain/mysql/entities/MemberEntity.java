@@ -1,6 +1,7 @@
 package my.domain.mysql.entities;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -18,8 +19,14 @@ public class MemberEntity {
     private String password;
     private String imageName;
 
-    @Builder
     protected MemberEntity() {
 
+    }
+    @Builder
+    public MemberEntity(String id, String name, String password, String imageName) {
+        this.id = id;
+        this.name = name;
+        this.password = password;
+        this.imageName = imageName;
     }
 }
