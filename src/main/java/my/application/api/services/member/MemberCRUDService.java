@@ -1,39 +1,29 @@
 package my.application.api.services.member;
 
 import lombok.RequiredArgsConstructor;
+import my.application.api.dto.member.SignUp;
 import my.domain.mysql.entities.MemberEntity;
 import my.domain.mysql.repositories.member.MemberRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class MemberCRUDService {
     private final MemberRepository memberRepository;
 
-    public MemberEntity createMember(MemberEntity member) {
-        return memberRepository.save(member);
+    public boolean createMember(SignUp member) {
+        memberRepository.save(MemberEntity.builder().id(member.getId()).password(member.getPassword()).name(member.getName()).build());
+        return true;
     }
 
     public List<MemberEntity> memberEntities() {
         return memberRepository.findAll();
     }
-    public MemberEntity getMember(Integer memNo) {return memberRepository.findByMemNo(memNo);}
 
-    public MemberEntity login(String id, String password) {
-        MemberEntity memberEntity = getMemberEntity(id).orElseThrow(NoSuchElementException::new);
-
-        if (!memberEntity.getPassword().equals(password)) {
-            throw new NoSuchElementException();
-        }
-
-        return memberEntity;
+    public MemberEntity getMember(Integer memNo) {
+        return memberRepository.findByMemNo(memNo);
     }
 
-    private Optional<MemberEntity> getMemberEntity(String id) {
-        return Optional.ofNullable(memberRepository.findById(id));
-    }
 }

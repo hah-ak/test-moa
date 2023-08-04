@@ -1,12 +1,15 @@
 package my.application.api.controllers.member;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import my.application.api.dto.member.SignUp;
 import my.application.api.services.member.MemberCRUDService;
 import my.domain.mysql.entities.MemberEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Slf4j
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/member")
@@ -15,7 +18,7 @@ public class MemberRestController {
     private final MemberCRUDService memberCRUDService;
 
     @PostMapping("/create")
-    public MemberEntity create(MemberEntity member) {
+    public boolean create(@ModelAttribute SignUp member) {
         return memberCRUDService.createMember(member);
     }
 
@@ -28,10 +31,4 @@ public class MemberRestController {
     public MemberEntity getMember(@RequestParam(name = "mem_no") Integer memNo) {
         return memberCRUDService.getMember(memNo);
     }
-
-    @PostMapping("/login")
-    public MemberEntity login(@RequestParam(name = "id") String id, @RequestParam(name = "password") String password) {
-        return memberCRUDService.login(id, password);
-    }
-
 }
