@@ -10,13 +10,8 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class MemberCRUDService {
+public class MemberService {
     private final MemberRepository memberRepository;
-
-    public boolean createMember(SignUp member) {
-        memberRepository.save(MemberEntity.builder().id(member.getId()).password(member.getPassword()).name(member.getName()).build());
-        return true;
-    }
 
     public List<MemberEntity> memberEntities() {
         return memberRepository.findAll();
