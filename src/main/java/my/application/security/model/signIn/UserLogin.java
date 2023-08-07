@@ -1,4 +1,4 @@
-package my.application.security.model.login;
+package my.application.security.model.signIn;
 
 import lombok.Getter;
 import lombok.Setter;

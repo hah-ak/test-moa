@@ -22,8 +22,8 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.authorizeHttpRequests((authorize)-> authorize.requestMatchers("/admin/**").hasAuthority("ROLE_ADMIN").anyRequest().fullyAuthenticated()).formLogin(httpSecurityFormLoginConfigurer -> {});
-        http.authorizeHttpRequests(authorize -> authorize.requestMatchers("/login").permitAll().anyRequest().authenticated()).formLogin(formLogin -> formLogin.loginProcessingUrl("/login-process"));
+        http.authorizeHttpRequests((authorize)-> authorize.requestMatchers("/admin/**").hasAuthority("ROLE_ADMIN")).formLogin(httpSecurityFormLoginConfigurer -> {});
+        http.authorizeHttpRequests(authorize -> authorize.requestMatchers("/**").permitAll()).formLogin(formLogin -> formLogin.loginProcessingUrl("/sign-in-process"));
         return http.build();
     }
 
