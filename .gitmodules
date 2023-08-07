@@ -6,4 +6,4 @@
 	url = git@github.com:hah-ak/test-moa-security.git
 [submodule "api"]
 	path = api
-	url = https://github.com/hah-ak/test-moa-api.git
+	url = git@github.com:hah-ak/test-moa-api.git
