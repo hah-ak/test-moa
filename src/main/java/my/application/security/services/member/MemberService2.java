@@ -15,7 +15,7 @@ import java.util.Optional;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class MemberService {
+public class MemberService2 {
 
     private final MemberRepository memberRepository;
     public MemberEntity login(UserLogin login) {
