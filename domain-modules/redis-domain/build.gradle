@@ -15,5 +15,6 @@ jar {
 
 dependencies {
   api project(":domain-modules:jpa-core")
+  api project(':domain-modules:validation-core')
   api 'org.springframework.boot:spring-boot-starter-data-redis'
 }

@@ -44,6 +44,9 @@ subprojects {
 
 project(':api') {
     dependencies {
+        implementation project(':domain-modules:web-core')
+        implementation project(':domain-modules:validation-core')
+        implementation project(':security')
         implementation project(':domain-modules:mysql-domain')
         implementation project(':domain-modules:redis-domain')
     }
@@ -57,12 +60,6 @@ project(':dispersion-queue') {
 }
 
 project(':socket') {
-    dependencies {
-        implementation project(':domain-modules:mysql-domain')
-    }
-}
-
-project(':security') {
     dependencies {
         implementation project(':domain-modules:mysql-domain')
     }

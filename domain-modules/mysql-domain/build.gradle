@@ -15,6 +15,7 @@ jar {
 
 dependencies {
   api project(':domain-modules:jpa-core')
+  api project(':domain-modules:validation-core')
   api 'com.mysql:mysql-connector-j'
   api 'org.mariadb.jdbc:mariadb-java-client'
 }
