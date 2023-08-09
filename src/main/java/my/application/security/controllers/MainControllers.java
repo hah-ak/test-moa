@@ -1,23 +1,36 @@
 package my.application.security.controllers;
 
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import my.application.security.model.signIn.UserLogin;
+import my.application.security.cookie.CookieUtils;
+import my.application.security.model.signIn.SignIn;
 import my.application.security.model.signUp.SignUp;
-import my.application.security.services.member.MemberService2;
+import my.application.security.services.member.MemberSecurityService;
+import my.application.security.services.member.MemberSignInUserDetails;
 import my.domain.mysql.entities.MemberEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/sign-in")
 public class MainControllers {
 
-    private final MemberService2 memberService;
+    private final MemberSecurityService memberService;
     @PostMapping("/sign-in-process")
-    public MemberEntity loginProcess(@ModelAttribute UserLogin login) {
-        return memberService.login(login);
+    public MemberSignInUserDetails loginProcess(@ModelAttribute SignIn signIn, HttpServletRequest request, HttpServletResponse response) {
+        try {
+            request.login(signIn.getId(), signIn.getPassword());
+            request.getSession().setMaxInactiveInterval(60*30);
+            CookieUtils.createLoginCookie(request, response);
+        } catch (ServletException e) {
+            throw new RuntimeException(e);
+        }
+
+        var auth = (Authentication) request.getUserPrincipal();
+        return (MemberSignInUserDetails) auth.getPrincipal();
     }
 
     @PostMapping("/sign-up-process")
