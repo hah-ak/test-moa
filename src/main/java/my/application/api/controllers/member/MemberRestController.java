@@ -16,13 +16,12 @@ public class MemberRestController {
 
     private final MemberService memberService;
 
-    @GetMapping("/members")
-    public List<MemberEntity> memberEntities() {
-        return memberService.memberEntities();
-    }
-
-    @GetMapping("/member")
+    @GetMapping("")
     public MemberEntity getMember(@RequestParam(name = "mem_no") Integer memNo) {
         return memberService.getMember(memNo);
+    }
+    @GetMapping("/members/permit-all")
+    public List<MemberEntity> memberEntities() {
+        return memberService.memberEntities();
     }
 }
