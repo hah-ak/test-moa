@@ -1,6 +1,5 @@
 package my.application.security.services.member;
 
-import lombok.Builder;
 import my.domain.mysql.entities.MemberEntity;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
