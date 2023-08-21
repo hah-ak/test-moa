@@ -1,7 +1,6 @@
 package my.application.api.services.member;
 
 import lombok.RequiredArgsConstructor;
-import my.application.api.dto.member.SignUp;
 import my.domain.mysql.entities.MemberEntity;
 import my.domain.mysql.repositories.member.MemberRepository;
 import org.springframework.stereotype.Service;
