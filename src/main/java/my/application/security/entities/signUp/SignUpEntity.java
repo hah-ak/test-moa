@@ -1,13 +1,13 @@
-package my.application.security.model.signUp;
+package my.application.security.entities.signUp;
 
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class SignUp {
+public class SignUpEntity {
+
     private String id;
     private String password;
-    private String imageName;
     private String name;
 }
