@@ -1,0 +1,11 @@
+spring:
+  security:
+    oauth2:
+      authorizationserver:
+        client:
+          oidc-client:
+            registration:
+              redirect-uris:
+                - "http://localhost:3003/"
+              post-logout-redirect-uris:
+                - "http://localhost:3003/"

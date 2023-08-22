@@ -15,6 +15,7 @@ dependencies {
     implementation project(':domain-modules:mysql-domain')
     implementation project(':domain-modules:redis-domain')
     implementation project(':domain-modules:validation-core')
+    implementation 'org.springframework.security:spring-security-oauth2-authorization-server:1.1.1' // oauth2.0 server
     implementation 'org.springframework.boot:spring-boot-starter-security' // security와 ldap접목을 위한 security 코어가 필요
 //    implementation 'org.springframework.boot:spring-boot-starter-data-ldap' // jdbc, jpa 처럼 ldap 데이터 접근을 위한 프로젝트
 //    implementation 'org.springframework.security:spring-security-ldap' // spring security에서 ldap 전용 프로젝트
