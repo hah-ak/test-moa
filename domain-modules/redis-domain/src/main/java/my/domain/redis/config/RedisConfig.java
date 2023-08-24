@@ -16,7 +16,7 @@ import org.springframework.data.redis.repository.configuration.EnableRedisReposi
 @Configuration
 @PropertySource("classpath:domain-redis-${spring.profiles.active}.properties")
 @EntityScan("my.domain.redis.entities")
-@EnableRedisRepositories(basePackages = "my.domain.redis.repositories")
+@EnableRedisRepositories(basePackages = {"my.domain.redis.repositories"})
 public class RedisConfig {
 
     @Getter
