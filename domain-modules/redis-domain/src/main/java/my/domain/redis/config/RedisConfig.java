@@ -26,7 +26,6 @@ public class RedisConfig {
         private String password;
         private String host;
         private Integer port;
-
     }
 
     @Bean
