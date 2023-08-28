@@ -9,3 +9,6 @@ spring:
                 - "http://localhost:3003/"
               post-logout-redirect-uris:
                 - "http://localhost:3003/"
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8083/oauth2/issuer

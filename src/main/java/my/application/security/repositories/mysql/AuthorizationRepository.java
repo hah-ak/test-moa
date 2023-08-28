@@ -1,7 +1,7 @@
-package my.application.security.repositories;
+package my.application.security.repositories.mysql;
 
 import io.lettuce.core.dynamic.annotation.Param;
-import my.application.security.entities.oauth.Authorization;
+import my.application.security.entities.mysql.Authorization;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;

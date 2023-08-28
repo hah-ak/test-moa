@@ -1,8 +1,8 @@
 package my.application.security.services.oauth;
 
 import lombok.RequiredArgsConstructor;
-import my.application.security.entities.oauth.AuthorizationConsent;
-import my.application.security.repositories.AuthorizationConsentRepository;
+import my.application.security.entities.redis.AuthorizationConsent;
+import my.application.security.repositories.redis.AuthorizationConsentRepository;
 import org.springframework.dao.DataRetrievalFailureException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

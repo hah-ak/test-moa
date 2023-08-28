@@ -1,6 +1,6 @@
-package my.application.security.repositories;
+package my.application.security.repositories.redis;
 
-import my.application.security.entities.oauth.Client;
+import my.application.security.entities.redis.Client;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 

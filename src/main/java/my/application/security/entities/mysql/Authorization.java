@@ -1,4 +1,4 @@
-package my.application.security.entities.oauth;
+package my.application.security.entities.mysql;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
