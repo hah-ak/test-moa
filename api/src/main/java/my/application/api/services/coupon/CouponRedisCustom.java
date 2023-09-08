@@ -1,12 +1,8 @@
 package my.application.api.services.coupon;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.redis.core.BoundSetOperations;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.SetOperations;
 import org.springframework.stereotype.Component;
-
-import java.util.Set;
 
 @Component
 @RequiredArgsConstructor

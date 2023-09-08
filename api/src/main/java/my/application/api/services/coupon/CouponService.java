@@ -3,7 +3,7 @@ package my.application.api.services.coupon;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import my.application.api.producer.coupon.CouponCreateProducer;
-import my.application.api.repositories.redis.CouponRepository;
+import my.domain.redis.repositories.coupon.CouponRepository;
 import org.springframework.stereotype.Service;
 
 @Service
