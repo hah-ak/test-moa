@@ -4,6 +4,3 @@
 [submodule "security"]
 	path = security
 	url = git@github.com:hah-ak/test-moa-security.git
-[submodule "api"]
-	path = api
-	url = git@github.com:hah-ak/test-moa-api.git
