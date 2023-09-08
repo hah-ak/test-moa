@@ -1,0 +1,22 @@
+plugins {
+    id 'java-library'
+}
+
+group 'my.domain'
+version '1.0-SNAPSHOT'
+
+bootJar {
+    enabled = false
+}
+
+jar {
+    enabled = true
+}
+
+dependencies {
+    api project(':domain-modules:secret-resources')
+    api project(':domain-modules:cores:jpa-core')
+    api project(':domain-modules:cores:validation-core')
+    api 'com.mysql:mysql-connector-j'
+    api 'org.mariadb.jdbc:mariadb-java-client'
+}
