@@ -1,4 +1,4 @@
 **/application-*.properties
-/src/test/
+/api/src/test/
 /out
 /build
