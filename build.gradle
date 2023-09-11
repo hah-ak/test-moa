@@ -64,10 +64,3 @@ project(':socket') {
         implementation project(':domain-modules:mysql-domain')
     }
 }
-
-project(":oauth2-server") {
-    dependencies {
-        implementation(project(':domain-modules:cores:mysql-core'))
-        implementation(project(':domain-modules:cores:redis-core'))
-    }
-}

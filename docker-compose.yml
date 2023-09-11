@@ -1,4 +1,16 @@
+version: "3.8"
 services:
-  myApplication:
-    build: .
-  api:
+  redis:
+    build: ./domain-modules/secret-resources/dockerfiles/redis
+    ports:
+      - "6379:6379"
+    networks:
+      - myApp-network
+  mysql:
+    build: ./domain-modules/secret-resources/dockerfiles/mysql
+    ports:
+      - "3306:3306"
+    networks:
+      - myApp-network
+networks:
+  myApp-network:
