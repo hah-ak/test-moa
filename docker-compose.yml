@@ -6,11 +6,17 @@ services:
       - "6379:6379"
     networks:
       - myApp-network
+    volumes:
+      - myApp-volume:/myApp/redis
   mysql:
     build: ./domain-modules/secret-resources/dockerfiles/mysql
     ports:
       - "3306:3306"
     networks:
       - myApp-network
+    volumes:
+      - myApp-volume:/myApp/mysql
 networks:
   myApp-network:
+volumes:
+  myApp-volume:
