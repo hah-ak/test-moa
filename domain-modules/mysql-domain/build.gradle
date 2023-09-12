@@ -1,5 +1,7 @@
 plugins {
   id 'java-library'
+  id 'org.springframework.boot'
+  id 'io.spring.dependency-management'
 }
 
 group 'my.domain'
@@ -15,4 +17,8 @@ jar {
 
 dependencies {
   api project(':domain-modules:cores:mysql-core')
+}
+
+test {
+  useJUnitPlatform()
 }

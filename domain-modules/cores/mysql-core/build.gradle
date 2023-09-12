@@ -5,10 +5,6 @@ plugins {
 group 'my.domain'
 version '1.0-SNAPSHOT'
 
-bootJar {
-    enabled = false
-}
-
 jar {
     enabled = true
 }

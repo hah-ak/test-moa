@@ -1,7 +1,25 @@
 plugins {
-    id 'java'
+    id 'application'
+    id 'org.springframework.boot'
+    id 'io.spring.dependency-management'
 }
 
+application {
+    mainClass = 'my.application.socket.WebsocketApplication'
+}
+
+group 'my.application'
+version '1.0-SNAPSHOT'
+
 dependencies {
+    implementation project(':domain-modules:mysql-domain')
+
     implementation 'org.springframework.boot:spring-boot-starter-websocket'
+
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+
+test {
+    useJUnitPlatform()
 }
