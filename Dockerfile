@@ -9,7 +9,6 @@ COPY dispersion-queue .
 COPY domain-modules .
 COPY security .
 COPY socket .
-COPY lombok.config .
 RUN chomd +x ./gradlew
 RUN ./gradlew bootJar
 

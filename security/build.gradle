@@ -1,7 +1,6 @@
 plugins {
     id 'java-library'
-    id 'org.springframework.boot'
-    id 'io.spring.dependency-management'
+    id "io.freefair.lombok"
 }
 
 group 'my.application'
@@ -16,11 +15,11 @@ jar {
 }
 
 dependencies {
-    implementation project(':domain-modules:cores:web-core')
-    implementation project(':domain-modules:mysql-domain')
-    implementation project(':domain-modules:redis-domain')
-    implementation project(':domain-modules:cores:validation-core')
-    implementation 'org.springframework.boot:spring-boot-starter-security' // security와 ldap접목을 위한 security 코어가 필요
+    api project(':domain-modules:cores:web-core')
+    api project(':domain-modules:mysql-domain')
+    api project(':domain-modules:redis-domain')
+    api 'org.springframework.boot:spring-boot-starter-validation'
+    api 'org.springframework.boot:spring-boot-starter-security' // security와 ldap접목을 위한 security 코어가 필요
 //    implementation 'org.springframework.boot:spring-boot-starter-data-ldap' // jdbc, jpa 처럼 ldap 데이터 접근을 위한 프로젝트
 //    implementation 'org.springframework.security:spring-security-ldap' // spring security에서 ldap 전용 프로젝트
 //    implementation 'com.unboundid:unboundid-ldapsdk' // 실제 ldap 서버와 통신을 위해 필요함.

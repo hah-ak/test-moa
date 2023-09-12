@@ -1,15 +1,7 @@
-pluginManagement {
-    plugins {
-        id 'org.springframework.boot' version '3.1.1'
-        id 'io.spring.dependency-management' version '1.1.0'
-    }
-}
 rootProject.name = 'myApplication'
-include('domain-modules:cores:jpa-core')
 include('domain-modules:cores:web-core')
 include('domain-modules:cores:mysql-core')
 include('domain-modules:cores:redis-core')
-include('domain-modules:cores:validation-core')
 include('domain-modules:mysql-domain')
 include('domain-modules:redis-domain')
 include('domain-modules:secret-resources')
