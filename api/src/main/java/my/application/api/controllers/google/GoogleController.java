@@ -5,7 +5,9 @@ import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
 import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeTokenRequest;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import com.google.api.client.googleapis.auth.oauth2.GoogleTokenResponse;
+import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
 import com.google.api.client.json.gson.GsonFactory;
+import com.google.api.services.calendar.Calendar;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -36,11 +38,13 @@ public class GoogleController {
         response.setHeader("JWT-TOKEN",parse.getPayload().toString());
     }
 
-    @GetMapping("/calendar")
-    public void calendar(HttpServletRequest httpServletRequest) throws IOException, GeneralSecurityException {
+    @GetMapping("/calendar/list")
+    public Calendar.CalendarList calendar(HttpServletRequest httpServletRequest) throws IOException, GeneralSecurityException {
         String header = httpServletRequest.getHeader("JWT-TOKEN");
         GoogleIdToken parse = GoogleIdToken.parse(GsonFactory.getDefaultInstance(), header);
-//        new HttpCredentialsAdapter(codeFlow.loadCredential(parse.toString());
-//        new Calendar.Builder(GoogleNetHttpTransport.newTrustedTransport(), GsonFactory.getDefaultInstance(),)
+        Credential credential = codeFlow.loadCredential(parse.toString());
+
+        Calendar build = new Calendar.Builder(GoogleNetHttpTransport.newTrustedTransport(), GsonFactory.getDefaultInstance(), credential).build();
+        return build.calendarList();
     }
 }
