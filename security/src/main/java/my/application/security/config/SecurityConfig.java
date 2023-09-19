@@ -10,6 +10,7 @@ import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.annotation.web.configurers.SessionManagementConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -26,20 +27,17 @@ import java.util.List;
 @EnableWebSecurity
 public class SecurityConfig {
 
-
     @Bean
-    @Order(2)
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         http
                 .csrf(AbstractHttpConfigurer::disable)
+                .sessionManagement(SessionManagementConfigurer::disable)
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .requestMatchers("/sign-in/**", "{*permit-all}","/oauth2/**").permitAll()
-                        .anyRequest().fullyAuthenticated())
+                        .anyRequest().fullyAuthenticated());
 //                .oauth2Login(Customizer.withDefaults());
-                .oauth2ResourceServer((configurer) ->
-                        configurer.jwt(Customizer.withDefaults()));
 //                .formLogin(formLogin -> formLogin.usernameParameter("id").passwordParameter("password").loginProcessingUrl("/sign-in/sign-in-process").success);
         return http.build();
     }

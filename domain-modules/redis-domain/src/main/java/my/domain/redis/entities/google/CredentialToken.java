@@ -1,5 +1,6 @@
 package my.domain.redis.entities.google;
 
+import com.google.api.client.auth.oauth2.StoredCredential;
 import lombok.Builder;
 import lombok.Getter;
 import org.springframework.data.annotation.CreatedDate;
@@ -17,11 +18,8 @@ public class CredentialToken implements Serializable {
     @Id //springframework id 사용
     private String key;
     private String accessToken;
-    private String idToken;
-    private String scope;
-    private String tokenType;
     private String refreshToken;
-    private Long expiresIn;
+    private Long expirationTimeMilliseconds;
 
     @CreatedDate
     private LocalDateTime createdAt;
@@ -32,23 +30,17 @@ public class CredentialToken implements Serializable {
     public CredentialToken(){}
 
     @Builder
-    public CredentialToken(String accessToken, String idToken, String scope, String tokenType, String refreshToken, Long expiresIn) {
-        this.accessToken = accessToken;
-        this.idToken = idToken;
-        this.scope = scope;
-        this.tokenType = tokenType;
-        this.refreshToken = refreshToken;
-        this.expiresIn = expiresIn;
+    public CredentialToken(StoredCredential storedCredential) {
+        this.accessToken = storedCredential.getAccessToken();
+        this.refreshToken = storedCredential.getRefreshToken();
+        this.expirationTimeMilliseconds = storedCredential.getExpirationTimeMilliseconds();
     }
 
     @Builder
-    public CredentialToken(String key, CredentialToken credentialToken) {
+    public CredentialToken(String key, StoredCredential storedCredential) {
         this.key = key;
-        this.accessToken = credentialToken.getAccessToken();
-        this.idToken = credentialToken.getIdToken();
-        this.scope = credentialToken.getScope();
-        this.tokenType = credentialToken.getTokenType();
-        this.refreshToken = credentialToken.getRefreshToken();
-        this.expiresIn = credentialToken.getExpiresIn();
+        this.accessToken = storedCredential.getAccessToken();
+        this.refreshToken = storedCredential.getRefreshToken();
+        this.expirationTimeMilliseconds = storedCredential.getExpirationTimeMilliseconds();
     }
 }
