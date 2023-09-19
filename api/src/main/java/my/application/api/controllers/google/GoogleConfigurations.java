@@ -5,6 +5,7 @@ import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
 import com.google.api.client.json.gson.GsonFactory;
 import com.google.api.services.calendar.CalendarScopes;
+import com.google.api.services.oauth2.Oauth2Scopes;
 import my.domain.redis.repositories.google.CredentialTokenRepository;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationContext;
@@ -17,6 +18,7 @@ import org.springframework.web.client.RestTemplate;
 import java.io.FileReader;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
+import java.util.List;
 
 @Configuration
 public class GoogleConfigurations {
@@ -41,8 +43,12 @@ public class GoogleConfigurations {
                 GoogleNetHttpTransport.newTrustedTransport(),
                 GsonFactory.getDefaultInstance(),
                 googleClientSecrets,
-                CalendarScopes.all()
-        ).setDataStoreFactory(new JPADataStoreFactory(credentialTokenRepository)).setAccessType("offline").setAuthorizationServerEncodedUrl(googleClientSecrets.getDetails().getAuthUri()).build();
+                null
+        )
+                .setDataStoreFactory(new JPADataStoreFactory(credentialTokenRepository))
+                .setAccessType("offline")
+                .setAuthorizationServerEncodedUrl(googleClientSecrets.getDetails().getAuthUri())
+                .build();
     }
 
     @Bean("desktopAppFlow")
