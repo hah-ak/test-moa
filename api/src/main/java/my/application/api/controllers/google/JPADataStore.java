@@ -6,6 +6,7 @@ import com.google.api.client.util.store.AbstractDataStore;
 import com.google.api.client.util.store.DataStore;
 import my.domain.redis.entities.google.CredentialToken;
 import my.domain.redis.repositories.google.CredentialTokenRepository;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
 import java.util.*;
@@ -55,6 +56,9 @@ public class JPADataStore extends AbstractDataStore<StoredCredential> {
 
     @Override
     public DataStore<StoredCredential> set(String key, StoredCredential value) throws IOException {
+        if (StringUtils.isEmpty(value.getRefreshToken())) {
+            credentialTokenRepository.findById(key).ifPresent(credentialToken -> value.setRefreshToken(credentialToken.getRefreshToken()));
+        }
         CredentialToken save = credentialTokenRepository.save(new CredentialToken(key, value));
         return this;
     }

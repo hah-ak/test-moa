@@ -22,7 +22,7 @@ import java.util.List;
 
 @Configuration
 @PropertySource("classpath:security-${spring.profiles.active}.yaml")
-@ComponentScan(basePackages = {"my.application.security.services"})
+@ComponentScan(basePackages = {"my.application.security.services","my.domain.redis","my.domain.mysql"})
 @RequiredArgsConstructor
 @EnableWebSecurity
 public class SecurityConfig {
@@ -36,7 +36,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .requestMatchers("/sign-in/**", "{*permit-all}","/oauth2/**").permitAll()
-                        .anyRequest().fullyAuthenticated());
+                        .anyRequest().fullyAuthenticated())
+                .exceptionHandling(configurer -> configurer.accessDeniedHandler(new CustomAccessDeniedHandler()));
 //                .oauth2Login(Customizer.withDefaults());
 //                .formLogin(formLogin -> formLogin.usernameParameter("id").passwordParameter("password").loginProcessingUrl("/sign-in/sign-in-process").success);
         return http.build();

@@ -43,11 +43,10 @@ public class GoogleConfigurations {
                 GoogleNetHttpTransport.newTrustedTransport(),
                 GsonFactory.getDefaultInstance(),
                 googleClientSecrets,
-                null
+                List.of(Oauth2Scopes.OPENID)
         )
                 .setDataStoreFactory(new JPADataStoreFactory(credentialTokenRepository))
                 .setAccessType("offline")
-                .setAuthorizationServerEncodedUrl(googleClientSecrets.getDetails().getAuthUri())
                 .build();
     }
 
