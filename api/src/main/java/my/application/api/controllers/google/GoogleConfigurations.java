@@ -47,6 +47,7 @@ public class GoogleConfigurations {
         )
                 .setDataStoreFactory(new JPADataStoreFactory(credentialTokenRepository))
                 .setAccessType("offline")
+                .setRefreshListeners(List.of())
                 .build();
     }
 

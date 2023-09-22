@@ -1,19 +1,22 @@
 package my.application.api.controllers.google;
 
 import com.google.api.client.auth.oauth2.Credential;
+import com.google.api.client.auth.oauth2.TokenErrorResponse;
+import com.google.api.client.auth.oauth2.TokenResponseException;
 import com.google.api.client.googleapis.auth.oauth2.*;
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
 import com.google.api.client.json.gson.GsonFactory;
 import com.google.api.services.calendar.Calendar;
 import com.google.api.services.calendar.CalendarScopes;
 import com.google.api.services.calendar.model.CalendarListEntry;
-import com.google.auth.oauth2.OAuth2Credentials;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import my.application.api.resolvers.MyAppHeaderToken;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -62,8 +65,21 @@ public class GoogleController {
                 };
     }
 
+    public void refresh(HttpServletRequest httpServletRequest,HttpServletResponse httpServletResponse, MyAppHeaderToken myAppHeaderToken) throws IOException {
+        try {
+            Credential credential = codeFlow.loadCredential(myAppHeaderToken.getId());
+            if (credential.refreshToken()) {
+                httpServletResponse.sendRedirect(httpServletRequest.getRequestURI());
+            } else {
+
+            }
+        } catch (TokenResponseException exception) {
+            httpServletResponse.sendRedirect("/google/login?type=oidc");
+        }
+    }
+
     @GetMapping("/accept")
-    public void accept(HttpServletRequest httpServletRequest, HttpServletResponse response) throws IOException {
+    public void accept(HttpServletRequest httpServletRequest, HttpServletResponse response, MyAppHeaderToken myAppHeaderToken) throws IOException {
 
         String state = httpServletRequest.getParameter("state");
         GoogleAuthorizationCodeTokenRequest code = codeFlow.newTokenRequest(httpServletRequest.getParameter("code"));
@@ -79,34 +95,27 @@ public class GoogleController {
             response.setHeader("MY-APP-CREDENTIAL", googleIdToken.getPayload().getSubject());
         }
         else if (state.equals("calendar")) {
-//            String header = httpServletRequest.getHeader("MY-APP-CREDENTIAL");
-            String header = "107202654188028577798";
-            Credential credential = codeFlow.loadCredential(header);
+            Credential credential = codeFlow.loadCredential(myAppHeaderToken.getId());
             if (credential == null) {
-                response.sendRedirect("/login?type=oidc");
+                response.sendRedirect("/google/login?type=oidc");
             } else {
-                codeFlow.createAndStoreCredential(execute, header);
+                codeFlow.createAndStoreCredential(execute, myAppHeaderToken.getId());
             }
         }
     }
 
     @GetMapping("/revoke")
-    public void revoke() throws IOException, URISyntaxException {
-        //        String header = httpServletRequest.getHeader("MY-APP-CREDENTIAL");
-        String header = "107202654188028577798";
-        Credential credential = codeFlow.loadCredential(header);
+    public void revoke(HttpServletRequest httpServletRequest,MyAppHeaderToken myAppHeaderToken) throws IOException, URISyntaxException {
+        Credential credential = codeFlow.loadCredential(myAppHeaderToken.getId());
         String accessToken = credential.getAccessToken();
 
         HttpStatusCode execute = restTemplate.execute(new URI("https://oauth2.googleapis.com/revoke?token=" + accessToken), HttpMethod.POST, null, ClientHttpResponse::getStatusCode);
-        log.error("status code : {}", execute.value());
     }
 
     @GetMapping("/calendar/list")
-    public CalendarListEntry calendar(HttpServletRequest httpServletRequest, HttpServletResponse response) throws IOException, GeneralSecurityException {
+    public CalendarListEntry calendar(HttpServletRequest httpServletRequest, HttpServletResponse response, MyAppHeaderToken myAppHeaderToken) throws IOException, GeneralSecurityException {
 
-//        String header = httpServletRequest.getHeader("MY-APP-CREDENTIAL");
-        String header = "107202654188028577798";
-        Credential credential = codeFlow.loadCredential(header);
+        Credential credential = codeFlow.loadCredential(myAppHeaderToken.getId());
         Calendar build = new Calendar.Builder(GoogleNetHttpTransport.newTrustedTransport(), GsonFactory.getDefaultInstance(), credential).build();
 
         return build.calendarList().get("primary").execute();

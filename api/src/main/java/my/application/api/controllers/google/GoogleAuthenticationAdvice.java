@@ -1,20 +1,22 @@
 package my.application.api.controllers.google;
 
+import com.google.api.client.auth.oauth2.TokenErrorResponse;
 import com.google.api.client.auth.oauth2.TokenResponseException;
-import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeTokenRequest;
-import com.google.api.client.googleapis.auth.oauth2.OAuth2Utils;
-import com.google.api.client.googleapis.json.GoogleJsonError;
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;
-import com.google.api.client.util.GenericData;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
+import my.application.api.resolvers.MyAppHeaderToken;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.io.IOException;
 
+@RequiredArgsConstructor
 @RestControllerAdvice
 public class GoogleAuthenticationAdvice {
+
+    private final GoogleController googleController;
 
     private final String ADMIN_POLICY_ENFORCED = "admin_policy_enforced";
     private final String DISALLOWED_USERAGENT = "disallowed_useragent"; //
@@ -33,10 +35,9 @@ public class GoogleAuthenticationAdvice {
     }
 
     @ExceptionHandler(TokenResponseException.class)
-    public void tokenResponseException(HttpServletResponse response, HttpServletRequest request, TokenResponseException exception) throws IOException {
+    public void tokenResponseException(HttpServletResponse response, HttpServletRequest request, MyAppHeaderToken myAppHeaderToken, TokenResponseException exception) throws IOException {
         switch (exception.getDetails().getError()) {
-            case INVALID_GRANT -> response.sendRedirect("/google/login?type=oidc");
+            case INVALID_GRANT -> googleController.refresh(request, response, myAppHeaderToken);
         }
-
     }
 }
