@@ -13,6 +13,10 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.annotation.web.configurers.SessionManagementConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
+import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
+import org.springframework.security.oauth2.client.web.AuthenticatedPrincipalOAuth2AuthorizedClientRepository;
+import org.springframework.security.oauth2.client.web.OAuth2AuthorizedClientRepository;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -35,9 +39,12 @@ public class SecurityConfig {
                 .sessionManagement(SessionManagementConfigurer::disable)
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/admin/**").hasRole("ADMIN")
-                        .requestMatchers("/sign-in/**", "{*permit-all}","/oauth2/**").permitAll()
+                        .requestMatchers("/sign-in/**", "{*permit-all}","/oauth2/**","/google/revoke","google/login").permitAll()
+                        .requestMatchers("/google/**").authenticated()
                         .anyRequest().fullyAuthenticated())
-                .exceptionHandling(configurer -> configurer.accessDeniedHandler(new CustomAccessDeniedHandler()));
+                .exceptionHandling(configurer -> configurer.accessDeniedHandler(new CustomAccessDeniedHandler()))
+                .oauth2Login(configure -> configure.loginPage("/google/login"))
+                .oauth2Client(configure -> configure.authorizedClientRepository());
 //                .oauth2Login(Customizer.withDefaults());
 //                .formLogin(formLogin -> formLogin.usernameParameter("id").passwordParameter("password").loginProcessingUrl("/sign-in/sign-in-process").success);
         return http.build();
@@ -58,6 +65,16 @@ public class SecurityConfig {
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public OAuth2AuthorizedClientService googleAuthorizedClientService() {
+        return new OAuth2
+    }
+
+    @Bean
+    public OAuth2AuthorizedClientRepository googleAuthorizedClientRepository() {
+        new AuthenticatedPrincipalOAuth2AuthorizedClientRepository()
     }
 
 }

@@ -2,7 +2,7 @@ package my.application.api.controllers.google;
 
 import com.google.api.client.util.store.AbstractDataStoreFactory;
 import com.google.api.client.util.store.DataStore;
-import my.domain.redis.repositories.google.CredentialTokenRepository;
+import my.application.security.repositories.google.CredentialTokenRepository;
 
 import java.io.IOException;
 import java.io.Serializable;

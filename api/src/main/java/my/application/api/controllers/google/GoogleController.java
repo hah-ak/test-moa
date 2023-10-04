@@ -1,7 +1,6 @@
 package my.application.api.controllers.google;
 
 import com.google.api.client.auth.oauth2.Credential;
-import com.google.api.client.auth.oauth2.TokenErrorResponse;
 import com.google.api.client.auth.oauth2.TokenResponseException;
 import com.google.api.client.googleapis.auth.oauth2.*;
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
@@ -9,6 +8,7 @@ import com.google.api.client.json.gson.GsonFactory;
 import com.google.api.services.calendar.Calendar;
 import com.google.api.services.calendar.CalendarScopes;
 import com.google.api.services.calendar.model.CalendarListEntry;
+import com.google.auth.oauth2.JwtClaims;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +16,6 @@ import lombok.extern.slf4j.Slf4j;
 import my.application.api.resolvers.MyAppHeaderToken;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -52,7 +51,6 @@ public class GoogleController {
         GoogleAuthorizationCodeRequestUrl googleAuthorizationCodeRequestUrl = codeFlow
                 .newAuthorizationUrl()
                 .setRedirectUri(secrets.getDetails().getRedirectUris().get(0));
-
         return switch (type) {
                     case "calendar" -> googleAuthorizationCodeRequestUrl
                             .set("include_granted_scopes", true)
@@ -92,6 +90,7 @@ public class GoogleController {
             Credential andStoreCredential = codeFlow.createAndStoreCredential(execute, googleIdToken.getPayload().getSubject());
             // 클라이언트 측에서 사용할때 필요함.
             // sub와 app전용 아이디와 매핍해서 app전용 아이디를 노출해야함.
+
             response.setHeader("MY-APP-CREDENTIAL", googleIdToken.getPayload().getSubject());
         }
         else if (state.equals("calendar")) {

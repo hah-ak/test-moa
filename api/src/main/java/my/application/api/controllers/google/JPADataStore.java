@@ -4,8 +4,8 @@ import com.drew.lang.Iterables;
 import com.google.api.client.auth.oauth2.StoredCredential;
 import com.google.api.client.util.store.AbstractDataStore;
 import com.google.api.client.util.store.DataStore;
-import my.domain.redis.entities.google.CredentialToken;
-import my.domain.redis.repositories.google.CredentialTokenRepository;
+import my.application.security.entities.google.CredentialToken;
+import my.application.security.repositories.google.CredentialTokenRepository;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
@@ -32,8 +32,8 @@ public class JPADataStore extends AbstractDataStore<StoredCredential> {
     public Collection<StoredCredential> values() throws IOException {
         return Iterables.toList(credentialTokenRepository.findAll()).stream().map(token -> {
             StoredCredential storedCredential = new StoredCredential();
-            storedCredential.setAccessToken(token.getAccessToken());
-            storedCredential.setRefreshToken(token.getRefreshToken());
+            storedCredential.setAccessToken(token.getAccessToken().getTokenValue());
+            storedCredential.setRefreshToken(Objects.requireNonNull(token.getRefreshToken()).getTokenValue());
             storedCredential.setExpirationTimeMilliseconds(token.getExpirationTimeMilliseconds());
             return storedCredential;
         }).toList();
@@ -48,8 +48,8 @@ public class JPADataStore extends AbstractDataStore<StoredCredential> {
         }
         CredentialToken credentialToken = byId.get();
         StoredCredential storedCredential = new StoredCredential();
-        storedCredential.setAccessToken(credentialToken.getAccessToken());
-        storedCredential.setRefreshToken(credentialToken.getRefreshToken());
+        storedCredential.setAccessToken(credentialToken.getAccessToken().getTokenValue());
+        storedCredential.setRefreshToken(Objects.requireNonNull(credentialToken.getRefreshToken()).getTokenValue());
         storedCredential.setExpirationTimeMilliseconds(credentialToken.getExpirationTimeMilliseconds());
         return storedCredential;
     }
@@ -57,7 +57,7 @@ public class JPADataStore extends AbstractDataStore<StoredCredential> {
     @Override
     public DataStore<StoredCredential> set(String key, StoredCredential value) throws IOException {
         if (StringUtils.isEmpty(value.getRefreshToken())) {
-            credentialTokenRepository.findById(key).ifPresent(credentialToken -> value.setRefreshToken(credentialToken.getRefreshToken()));
+            credentialTokenRepository.findById(key).ifPresent(credentialToken -> value.setRefreshToken(Objects.requireNonNull(credentialToken.getRefreshToken()).getTokenValue()));
         }
         CredentialToken save = credentialTokenRepository.save(new CredentialToken(key, value));
         return this;

@@ -1,6 +1,6 @@
-package my.domain.redis.repositories.google;
+package my.application.security.repositories.google;
 
-import my.domain.redis.entities.google.CredentialToken;
+import my.application.security.entities.google.CredentialToken;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 

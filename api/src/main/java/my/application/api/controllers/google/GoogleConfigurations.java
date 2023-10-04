@@ -6,7 +6,7 @@ import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
 import com.google.api.client.json.gson.GsonFactory;
 import com.google.api.services.calendar.CalendarScopes;
 import com.google.api.services.oauth2.Oauth2Scopes;
-import my.domain.redis.repositories.google.CredentialTokenRepository;
+import my.application.security.repositories.google.CredentialTokenRepository;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
@@ -47,7 +47,6 @@ public class GoogleConfigurations {
         )
                 .setDataStoreFactory(new JPADataStoreFactory(credentialTokenRepository))
                 .setAccessType("offline")
-                .setRefreshListeners(List.of())
                 .build();
     }
 
@@ -58,7 +57,9 @@ public class GoogleConfigurations {
                 GsonFactory.getDefaultInstance(),
                 googleClientSecrets,
                 CalendarScopes.all()
-        ).setDataStoreFactory(new JPADataStoreFactory(credentialTokenRepository)).setAccessType("offline").build();
+        ).setDataStoreFactory(new JPADataStoreFactory(credentialTokenRepository))
+                .setAccessType("offline")
+                .build();
     }
 
     @Bean
