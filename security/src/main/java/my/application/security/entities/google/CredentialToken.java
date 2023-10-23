@@ -7,21 +7,16 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.redis.core.RedisHash;
-import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
-import org.springframework.security.oauth2.client.registration.ClientRegistration;
 
-import java.io.Serializable;
 import java.time.LocalDateTime;
-
 @Getter
 @RedisHash("credentialToken")
-public class CredentialToken extends OAuth2AuthorizedClient {
+public class CredentialToken {
 
     @Id //springframework id 사용
     private String key;
-//    private String accessToken;
-//    private String refreshToken;
     private Long expirationTimeMilliseconds;
+    private StoredCredential storedCredential;
 
     @CreatedDate
     private LocalDateTime createdAt;
@@ -29,15 +24,14 @@ public class CredentialToken extends OAuth2AuthorizedClient {
     private LocalDateTime updatedAt;
 
     @Builder
-    public CredentialToken(ClientRegistration clientRegistration){
+    public CredentialToken(){
         super();
     }
 
     @Builder
     public CredentialToken(StoredCredential storedCredential) {
         super();
-//        this.accessToken = storedCredential.getAccessToken();
-//        this.refreshToken = storedCredential.getRefreshToken();
+        this.storedCredential = storedCredential;
         this.expirationTimeMilliseconds = storedCredential.getExpirationTimeMilliseconds();
     }
 
@@ -45,8 +39,7 @@ public class CredentialToken extends OAuth2AuthorizedClient {
     public CredentialToken(String key, StoredCredential storedCredential) {
         super();
         this.key = key;
-//        this.accessToken = storedCredential.getAccessToken();
-//        this.refreshToken = storedCredential.getRefreshToken();
+        this.storedCredential = storedCredential;
         this.expirationTimeMilliseconds = storedCredential.getExpirationTimeMilliseconds();
     }
 }

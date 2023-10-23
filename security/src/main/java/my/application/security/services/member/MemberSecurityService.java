@@ -28,7 +28,6 @@ public class MemberSecurityService {
                 .imageName(signUp.imageName())
                 .build();
         MemberEntity save = memberRepository.save(memberEntity);
-        log.info("save memNo : {}",save.getMemNo());
         return save;
     }
 
@@ -37,7 +36,8 @@ public class MemberSecurityService {
         MemberEntity byId = memberRepository.findById(signIn.id());
         if (byId.getPassword().equals(passwordEncoder.encode(signIn.password()))) {
             HmacAlgorithms hmacSha256 = HmacAlgorithms.HMAC_SHA_256;
-            HmacUtils.getInitializedMac()
+//            HmacUtils.getInitializedMac()
         }
+        return byId;
     }
 }

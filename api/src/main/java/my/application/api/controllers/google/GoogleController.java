@@ -8,12 +8,14 @@ import com.google.api.client.json.gson.GsonFactory;
 import com.google.api.services.calendar.Calendar;
 import com.google.api.services.calendar.CalendarScopes;
 import com.google.api.services.calendar.model.CalendarListEntry;
-import com.google.auth.oauth2.JwtClaims;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import my.application.api.resolvers.MyAppHeaderToken;
+import my.application.api.services.member.MemberService;
+import my.application.security.entities.signUp.SignUp;
+import my.application.security.services.member.MemberSecurityService;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatusCode;
@@ -37,6 +39,7 @@ public class GoogleController {
 
     private final GoogleAuthorizationCodeFlow codeFlow;
     private final GoogleClientSecrets secrets;
+    private final MemberSecurityService memberSecurityService;
 
     private final @Qualifier("desktopAppFlow") GoogleAuthorizationCodeFlow appCodeFlow;
     private final RestTemplate restTemplate;
@@ -87,6 +90,8 @@ public class GoogleController {
         GoogleTokenResponse execute = code.execute();
         if (state.equals("oidc")) {
             GoogleIdToken googleIdToken = execute.parseIdToken();
+            // 멤버에도 집어 넣어서 어플리케이션 로그인 자체를 구현해야됨.
+            memberSecurityService.signUpProcess(new SignUp(googleIdToken.getPayload().getEmail(),"google",null,googleIdToken.getPayload().get("name").toString()));
             Credential andStoreCredential = codeFlow.createAndStoreCredential(execute, googleIdToken.getPayload().getSubject());
             // 클라이언트 측에서 사용할때 필요함.
             // sub와 app전용 아이디와 매핍해서 app전용 아이디를 노출해야함.

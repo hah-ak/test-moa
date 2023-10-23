@@ -1,10 +1,20 @@
 package my.application.security.utils;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
+import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.codec.digest.HmacAlgorithms;
+import org.apache.commons.codec.digest.HmacUtils;
+import org.apache.commons.codec.digest.MessageDigestAlgorithms;
 import org.springframework.security.oauth2.jose.jws.SignatureAlgorithm;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
 
+import javax.crypto.Mac;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
 import java.time.Instant;
 
 public class MyAppJwtUtils {
@@ -23,6 +33,21 @@ public class MyAppJwtUtils {
                 .header("typ","JWT")
                 .header("alg","HS256")
                 .build();
+    }
 
+    public static String encodeJwt(Jwt jwt) throws JsonProcessingException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
+
+        Base64 base64 = new Base64();
+        String s = base64.encodeAsString(objectMapper.writeValueAsString(jwt.getHeaders()).getBytes(StandardCharsets.UTF_8));
+        String s1 = base64.encodeAsString(objectMapper.writeValueAsString(jwt.getClaims()).getBytes(StandardCharsets.UTF_8));
+
+        Mac mac = HmacUtils.getInitializedMac(HmacAlgorithms.HMAC_SHA_256, "secretawfawfe".getBytes());
+        mac.update((s + "." + s1).getBytes());
+        byte[] bytes = mac.doFinal();
+
+
+        return new String(bytes, StandardCharsets.UTF_8);
     }
 }

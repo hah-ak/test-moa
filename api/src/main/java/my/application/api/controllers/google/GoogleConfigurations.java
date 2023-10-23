@@ -8,34 +8,17 @@ import com.google.api.services.calendar.CalendarScopes;
 import com.google.api.services.oauth2.Oauth2Scopes;
 import my.application.security.repositories.google.CredentialTokenRepository;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
-import org.springframework.core.io.Resource;
 import org.springframework.web.client.RestTemplate;
 
-import java.io.FileReader;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.util.List;
 
 @Configuration
 public class GoogleConfigurations {
-
-    @Bean
-    @Primary
-    public GoogleClientSecrets googleClientSecrets(ApplicationContext applicationContext) throws IOException {
-        Resource resource = applicationContext.getResource("classpath:/client_secret.json");
-        return GoogleClientSecrets.load(GsonFactory.getDefaultInstance(), new FileReader(resource.getFile()));
-    }
-
-    @Bean("deskTopApp")
-    public GoogleClientSecrets googleClientSecrets2(ApplicationContext applicationContext) throws IOException {
-        Resource resource = applicationContext.getResource("classpath:/desktopApp_secret.json");
-        return GoogleClientSecrets.load(GsonFactory.getDefaultInstance(), new FileReader(resource.getFile()));
-    }
-
     @Bean
     @Primary
     public GoogleAuthorizationCodeFlow authorizationCodeFlow(GoogleClientSecrets googleClientSecrets, CredentialTokenRepository credentialTokenRepository) throws GeneralSecurityException, IOException {

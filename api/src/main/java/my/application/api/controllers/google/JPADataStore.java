@@ -30,34 +30,19 @@ public class JPADataStore extends AbstractDataStore<StoredCredential> {
 
     @Override
     public Collection<StoredCredential> values() throws IOException {
-        return Iterables.toList(credentialTokenRepository.findAll()).stream().map(token -> {
-            StoredCredential storedCredential = new StoredCredential();
-            storedCredential.setAccessToken(token.getAccessToken().getTokenValue());
-            storedCredential.setRefreshToken(Objects.requireNonNull(token.getRefreshToken()).getTokenValue());
-            storedCredential.setExpirationTimeMilliseconds(token.getExpirationTimeMilliseconds());
-            return storedCredential;
-        }).toList();
+        return Iterables.toList(credentialTokenRepository.findAll()).stream().map(CredentialToken::getStoredCredential).toList();
     }
 
     @Override
     public StoredCredential get(String key) throws IOException {
         Optional<CredentialToken> byId = credentialTokenRepository.findById(key);
-
-        if (byId.isEmpty()) {
-            return null;
-        }
-        CredentialToken credentialToken = byId.get();
-        StoredCredential storedCredential = new StoredCredential();
-        storedCredential.setAccessToken(credentialToken.getAccessToken().getTokenValue());
-        storedCredential.setRefreshToken(Objects.requireNonNull(credentialToken.getRefreshToken()).getTokenValue());
-        storedCredential.setExpirationTimeMilliseconds(credentialToken.getExpirationTimeMilliseconds());
-        return storedCredential;
+        return byId.map(CredentialToken::getStoredCredential).orElse(null);
     }
 
     @Override
     public DataStore<StoredCredential> set(String key, StoredCredential value) throws IOException {
         if (StringUtils.isEmpty(value.getRefreshToken())) {
-            credentialTokenRepository.findById(key).ifPresent(credentialToken -> value.setRefreshToken(Objects.requireNonNull(credentialToken.getRefreshToken()).getTokenValue()));
+            credentialTokenRepository.findById(key).ifPresent(credentialToken -> value.setRefreshToken(Objects.requireNonNull(credentialToken.getStoredCredential().getRefreshToken())));
         }
         CredentialToken save = credentialTokenRepository.save(new CredentialToken(key, value));
         return this;
