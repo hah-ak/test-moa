@@ -30,6 +30,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.security.GeneralSecurityException;
+import java.util.UUID;
 
 @Slf4j
 @RestController
@@ -90,8 +91,16 @@ public class GoogleController {
         GoogleTokenResponse execute = code.execute();
         if (state.equals("oidc")) {
             GoogleIdToken googleIdToken = execute.parseIdToken();
-            // 멤버에도 집어 넣어서 어플리케이션 로그인 자체를 구현해야됨.
-            memberSecurityService.signUpProcess(new SignUp(googleIdToken.getPayload().getEmail(),"google",null,googleIdToken.getPayload().get("name").toString()));
+
+            memberSecurityService.signUpProcess(
+                    new SignUp(
+                            googleIdToken.getPayload().getEmail(),
+                            UUID.randomUUID().toString(),
+                            null,
+                            googleIdToken.getPayload().get("name").toString()
+                    )
+            );
+
             Credential andStoreCredential = codeFlow.createAndStoreCredential(execute, googleIdToken.getPayload().getSubject());
             // 클라이언트 측에서 사용할때 필요함.
             // sub와 app전용 아이디와 매핍해서 app전용 아이디를 노출해야함.
