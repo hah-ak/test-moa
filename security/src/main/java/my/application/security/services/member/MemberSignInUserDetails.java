@@ -5,17 +5,24 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
+import java.util.List;
 
 public class MemberSignInUserDetails implements UserDetails {
 
     private MemberEntity memberEntity;
+    private Collection<? extends GrantedAuthority> authorities;
 
     public MemberSignInUserDetails(MemberEntity memberEntity) {
         this.memberEntity = memberEntity;
+        setAuthorities();
+    }
+
+    private void setAuthorities() {
+        authorities = List.of(MemberAuthority.MemberUserAuthority.getInstance());
     }
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        return authorities;
     }
 
     @Override

@@ -22,7 +22,8 @@ public class MemberSignInUserDetailService implements UserDetailsService {
     private final PasswordEncoder passwordEncoder;
     @Override
     public UserDetails loadUserByUsername(String id) throws UsernameNotFoundException {
-        MemberEntity memberEntity = getMemberEntity(id).orElseThrow(NoSuchElementException::new);
+        Optional<MemberEntity> memberEntity1 = getMemberEntity(id);
+        MemberEntity memberEntity = memberEntity1.orElseThrow(NoSuchElementException::new);
         return new MemberSignInUserDetails(memberEntity);
     }
 

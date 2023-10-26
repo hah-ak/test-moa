@@ -15,7 +15,7 @@ public class MemberAuthorizationManager implements AuthorizationManager<RequestA
     @Override
     public AuthorizationDecision check(Supplier<Authentication> authentication, RequestAuthorizationContext object) {
         log.error("authorization manager check");
-        return null;
+        return new AuthorizationDecision(authentication.get().getAuthorities().contains(MemberAuthority.MemberUserAuthority.getInstance()));
     }
 
     @Override

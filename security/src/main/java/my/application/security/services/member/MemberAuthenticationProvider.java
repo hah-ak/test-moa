@@ -1,12 +1,11 @@
 package my.application.security.services.member;
 
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import my.domain.mysql.entities.MemberEntity;
 import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.stereotype.Component;
+import org.springframework.security.core.userdetails.UserDetails;
 
 @Slf4j
 public class MemberAuthenticationProvider implements AuthenticationProvider {
@@ -19,14 +18,13 @@ public class MemberAuthenticationProvider implements AuthenticationProvider {
 
     @Override
     public boolean supports(Class<?> authentication) {
-        log.error("just supports");
-        return false;
+        return authentication.equals(MemberSignInUserDetails.class);
     }
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-        log.error("just pass authenticate");
-
-        return null;
+        MemberSignInUserDetails principal = (MemberSignInUserDetails) authentication.getPrincipal();
+        UserDetails userDetails = memberSignInUserDetailService.loadUserByUsername(principal.getUsername());
+        return authentication;
     }
 }

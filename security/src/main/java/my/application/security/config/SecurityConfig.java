@@ -1,30 +1,19 @@
 package my.application.security.config;
 
-import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
 import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
 import com.google.api.client.json.gson.GsonFactory;
 import com.google.api.services.oauth2.Oauth2Scopes;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import my.application.security.services.member.*;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.*;
 import org.springframework.core.io.Resource;
 import org.springframework.data.redis.repository.configuration.EnableRedisRepositories;
-import org.springframework.http.HttpMethod;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.ProviderManager;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.authorization.AuthorizationManager;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.configurers.SessionManagementConfigurer;
-import org.springframework.security.config.oauth2.client.CommonOAuth2Provider;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.client.registration.ClientRegistration;
@@ -33,10 +22,10 @@ import org.springframework.security.oauth2.client.registration.InMemoryClientReg
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.access.intercept.RequestAuthorizationContext;
-import org.springframework.security.web.authentication.RememberMeServices;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.authentication.rememberme.TokenBasedRememberMeServices;
+import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+import org.springframework.security.web.context.NullSecurityContextRepository;
+import org.springframework.security.web.context.SecurityContextHolderFilter;
+import org.springframework.security.web.context.SecurityContextPersistenceFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -61,24 +50,33 @@ public class SecurityConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(SessionManagementConfigurer::disable)
+                .addFilterAt(new MemberAuthenticationFilter("/**", new MemberAuthenticationProviderManager(memberAuthenticationProvider)), SecurityContextHolderFilter.class)
+                .securityContext(securityContext->securityContext
+                        .securityContextRepository(new NullSecurityContextRepository())
+                )
+//                .authenticationManager(new MemberAuthenticationProviderManager(memberAuthenticationProvider))
 //                .authenticationProvider(memberAuthenticationProvider)
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/admin/**").hasRole("ADMIN")
-                        .requestMatchers("/sign-in/**","/oauth2/**","/google/revoke","/google/login","/.*permit-all.*").permitAll()
+                        .requestMatchers("/sign-in/**","/oauth2/**","/google/revoke","/google/login").permitAll()
+                        .requestMatchers(AntPathRequestMatcher.antMatcher("/member/members/permit-all")).permitAll()
                         .requestMatchers("/google/**").access(memberAuthorizationManager)
-                        .anyRequest().authenticated()
+                        .anyRequest().access(memberAuthorizationManager)
                 )
-                .formLogin(formLogin -> formLogin
-                        .usernameParameter("id")
-                        .passwordParameter("password")
-                        .loginProcessingUrl("/sign-in/sign-in-process")
+                .exceptionHandling(exception -> exception
+                        .accessDeniedHandler(new CustomAccessDeniedHandler())
                 )
-                .oauth2Login(oauth -> oauth
-                        .loginProcessingUrl("/google/login")
-                        .authorizationEndpoint( endpoint -> endpoint
-                                .baseUri("/google/login")
-                        )
-                )
+//                .formLogin(formLogin -> formLogin
+//                        .usernameParameter("id")
+//                        .passwordParameter("password")
+//                        .loginProcessingUrl("/sign-in/sign-in-process")
+//                )
+//                .oauth2Login(oauth -> oauth
+//                        .loginProcessingUrl("/google/login")
+//                        .authorizationEndpoint( endpoint -> endpoint
+//                                .baseUri("/google/login")
+//                        )
+//                )
         ;
 //                .oauth2Client(configure -> configure.authorizedClientRepository());
 //                .oauth2Login(Customizer.withDefaults());

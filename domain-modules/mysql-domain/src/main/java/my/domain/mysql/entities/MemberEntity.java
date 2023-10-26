@@ -18,18 +18,15 @@ public class MemberEntity {
     @Column(nullable = false)
     private String password;
     private String imageName;
-    @Column(nullable = false)
-    private String token;
 
     protected MemberEntity() {
 
     }
     @Builder
-    public MemberEntity(String id, String name, String password, String imageName, String token) {
+    public MemberEntity(String id, String name, String password, String imageName) {
         this.id = id;
         this.name = name;
         this.password = password;
         this.imageName = imageName;
-        this.token = token;
     }
 }
