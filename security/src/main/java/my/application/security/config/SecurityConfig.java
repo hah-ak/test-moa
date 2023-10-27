@@ -46,7 +46,6 @@ import java.util.List;
 public class SecurityConfig {
 
     private final MemberAuthorizationManager memberAuthorizationManager;
-    private final CustomAccessDeniedHandler customAccessDeniedHandler;
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         // .addFilterAt(new MemberAuthenticationFilter("/**", new MemberAuthenticationProviderManager(memberAuthenticationProvider)), SecurityContextHolderFilter.class) 이렇게 하면 전지역에서 authenticate를 시도하는 형태가되어 전부다 authenticate성공으로 보고 리다이렉트를 돌게되어 무한루프발행.
@@ -56,8 +55,7 @@ public class SecurityConfig {
                 .sessionManagement(SessionManagementConfigurer::disable)
                 .addFilterBefore(new MemberNullRepositoryAuthenticationFilter(), AnonymousAuthenticationFilter.class)
                 .exceptionHandling(exception -> exception
-                        .accessDeniedHandler(customAccessDeniedHandler)
-                        .defaultAccessDeniedHandlerFor(customAccessDeniedHandler,AntPathRequestMatcher.antMatcher("/**"))
+                        .accessDeniedHandler(new CustomAccessDeniedHandler())
                 )
                 .securityContext(securityContext->securityContext
                         .securityContextRepository(new NullSecurityContextRepository())

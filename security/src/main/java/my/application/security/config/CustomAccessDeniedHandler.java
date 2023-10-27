@@ -12,8 +12,8 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 
 @Slf4j
-@Component
 public class CustomAccessDeniedHandler implements AccessDeniedHandler {
+    // 인증된 사용자가 accessDenied인 경우에만 호출됨 // 인증되지 않으면 authenticationEntrypoint구성
     @Override
     public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) throws IOException, ServletException {
         log.error("my log : {}", "unauthorized error");
