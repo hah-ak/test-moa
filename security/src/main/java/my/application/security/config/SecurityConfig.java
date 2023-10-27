@@ -5,7 +5,10 @@ import com.google.api.client.json.gson.GsonFactory;
 import com.google.api.services.oauth2.Oauth2Scopes;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import my.application.security.services.member.*;
+import my.application.security.services.member.MemberAuthenticationProvider;
+import my.application.security.services.member.MemberAuthorizationManager;
+import my.application.security.services.member.MemberNullRepositoryAuthenticationFilter;
+import my.application.security.services.member.MemberSignInUserDetailService;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.*;
 import org.springframework.core.io.Resource;
@@ -22,10 +25,8 @@ import org.springframework.security.oauth2.client.registration.InMemoryClientReg
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+import org.springframework.security.web.authentication.AnonymousAuthenticationFilter;
 import org.springframework.security.web.context.NullSecurityContextRepository;
-import org.springframework.security.web.context.SecurityContextHolderFilter;
-import org.springframework.security.web.context.SecurityContextPersistenceFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -45,26 +46,28 @@ import java.util.List;
 public class SecurityConfig {
 
     private final MemberAuthorizationManager memberAuthorizationManager;
+    private final CustomAccessDeniedHandler customAccessDeniedHandler;
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http, MemberAuthenticationProvider memberAuthenticationProvider) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        // .addFilterAt(new MemberAuthenticationFilter("/**", new MemberAuthenticationProviderManager(memberAuthenticationProvider)), SecurityContextHolderFilter.class) 이렇게 하면 전지역에서 authenticate를 시도하는 형태가되어 전부다 authenticate성공으로 보고 리다이렉트를 돌게되어 무한루프발행.
+        // 리퀘스트가 생성되고 각 필터에서 그 상황에 맞는 필터링과정을 걸치고 이 과정에서 필요하다면 authentication 객체를 생성하고 그걸 활용해 authenticated인지 판단후 authorization을 authorization필터로 확인하는 과정임.
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(SessionManagementConfigurer::disable)
-                .addFilterAt(new MemberAuthenticationFilter("/**", new MemberAuthenticationProviderManager(memberAuthenticationProvider)), SecurityContextHolderFilter.class)
+                .addFilterBefore(new MemberNullRepositoryAuthenticationFilter(), AnonymousAuthenticationFilter.class)
+                .exceptionHandling(exception -> exception
+                        .accessDeniedHandler(customAccessDeniedHandler)
+                        .defaultAccessDeniedHandlerFor(customAccessDeniedHandler,AntPathRequestMatcher.antMatcher("/**"))
+                )
                 .securityContext(securityContext->securityContext
                         .securityContextRepository(new NullSecurityContextRepository())
                 )
-//                .authenticationManager(new MemberAuthenticationProviderManager(memberAuthenticationProvider))
-//                .authenticationProvider(memberAuthenticationProvider)
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .requestMatchers("/sign-in/**","/oauth2/**","/google/revoke","/google/login").permitAll()
                         .requestMatchers(AntPathRequestMatcher.antMatcher("/member/members/permit-all")).permitAll()
                         .requestMatchers("/google/**").access(memberAuthorizationManager)
-                        .anyRequest().access(memberAuthorizationManager)
-                )
-                .exceptionHandling(exception -> exception
-                        .accessDeniedHandler(new CustomAccessDeniedHandler())
+                        .anyRequest().authenticated()
                 )
 //                .formLogin(formLogin -> formLogin
 //                        .usernameParameter("id")
@@ -80,7 +83,6 @@ public class SecurityConfig {
         ;
 //                .oauth2Client(configure -> configure.authorizedClientRepository());
 //                .oauth2Login(Customizer.withDefaults());
-
         return http.build();
     }
 

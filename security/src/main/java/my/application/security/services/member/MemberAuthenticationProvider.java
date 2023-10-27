@@ -1,7 +1,6 @@
 package my.application.security.services.member;
 
 import lombok.extern.slf4j.Slf4j;
-import my.domain.mysql.entities.MemberEntity;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
