@@ -1,9 +1,13 @@
 package my.application.security.services.member;
 
+import com.google.api.client.util.DateTime;
+import my.application.security.filter.authority.MemberAuthority;
 import my.domain.mysql.entities.MemberEntity;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Collection;
 import java.util.List;
 
@@ -18,7 +22,7 @@ public class MemberSignInUserDetails implements UserDetails {
     }
 
     private void setAuthorities() {
-        authorities = List.of(MemberAuthority.MemberUserAuthority.getInstance());
+        authorities = List.of(MemberAuthority.MemberUserRoleAuthority.getInstance());
     }
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -42,16 +46,16 @@ public class MemberSignInUserDetails implements UserDetails {
 
     @Override
     public boolean isAccountNonLocked() {
-        return true;
+        return !this.memberEntity.isSuspended();
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return true;
+        return LocalDateTime.now(ZoneId.of("UTC")).minusMonths(3).isAfter(this.memberEntity.getPasswordUpdateDateTime());
     }
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return isAccountNonExpired() && isAccountNonExpired() && isAccountNonExpired();
     }
 }

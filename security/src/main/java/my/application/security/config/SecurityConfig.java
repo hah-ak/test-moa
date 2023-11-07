@@ -5,9 +5,13 @@ import com.google.api.client.json.gson.GsonFactory;
 import com.google.api.services.oauth2.Oauth2Scopes;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import my.application.security.services.member.MemberAuthenticationProvider;
-import my.application.security.services.member.MemberAuthorizationManager;
-import my.application.security.services.member.MemberNullRepositoryAuthenticationFilter;
+import my.application.security.filter.exception.CustomAccessDeniedHandler;
+import my.application.security.filter.exception.MemberAuthenticationEntryPoint;
+import my.application.security.filter.filter.MemberAuthenticationFilter;
+import my.application.security.filter.manager.MemberAuthenticationProviderManager;
+import my.application.security.filter.provider.MemberAuthenticationProvider;
+import my.application.security.filter.manager.MemberAuthorizationManager;
+import my.application.security.filter.filter.MemberNullRepositoryAuthenticationFilter;
 import my.application.security.services.member.MemberSignInUserDetailService;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.*;
@@ -17,6 +21,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.configurers.SessionManagementConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.client.registration.ClientRegistration;
@@ -26,7 +31,9 @@ import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AnonymousAuthenticationFilter;
+import org.springframework.security.web.authentication.session.SessionAuthenticationStrategy;
 import org.springframework.security.web.context.NullSecurityContextRepository;
+import org.springframework.security.web.session.SessionManagementFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -46,25 +53,31 @@ import java.util.List;
 public class SecurityConfig {
 
     private final MemberAuthorizationManager memberAuthorizationManager;
+
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http, MemberAuthenticationProviderManager memberAuthenticationProviderManager) throws Exception {
         // .addFilterAt(new MemberAuthenticationFilter("/**", new MemberAuthenticationProviderManager(memberAuthenticationProvider)), SecurityContextHolderFilter.class) 이렇게 하면 전지역에서 authenticate를 시도하는 형태가되어 전부다 authenticate성공으로 보고 리다이렉트를 돌게되어 무한루프발행.
         // 리퀘스트가 생성되고 각 필터에서 그 상황에 맞는 필터링과정을 걸치고 이 과정에서 필요하다면 authentication 객체를 생성하고 그걸 활용해 authenticated인지 판단후 authorization을 authorization필터로 확인하는 과정임.
         http
                 .csrf(AbstractHttpConfigurer::disable)
-                .sessionManagement(SessionManagementConfigurer::disable)
-                .addFilterBefore(new MemberNullRepositoryAuthenticationFilter(), AnonymousAuthenticationFilter.class)
-                .exceptionHandling(exception -> exception
-                        .accessDeniedHandler(new CustomAccessDeniedHandler())
+                .sessionManagement(session -> session
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
                 .securityContext(securityContext->securityContext
                         .securityContextRepository(new NullSecurityContextRepository())
+                )
+//                .addFilterBefore(new MemberNullRepositoryAuthenticationFilter(), AnonymousAuthenticationFilter.class)
+                .addFilterBefore(new MemberAuthenticationFilter("/**",memberAuthenticationProviderManager), AnonymousAuthenticationFilter.class)
+                .exceptionHandling(exception -> exception
+                        .accessDeniedHandler(new CustomAccessDeniedHandler())
+                        .authenticationEntryPoint(new MemberAuthenticationEntryPoint())
                 )
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .requestMatchers("/sign-in/**","/oauth2/**","/google/revoke","/google/login").permitAll()
                         .requestMatchers(AntPathRequestMatcher.antMatcher("/member/members/permit-all")).permitAll()
                         .requestMatchers("/google/**").access(memberAuthorizationManager)
+                        .requestMatchers("/file/**").authenticated()
                         .anyRequest().authenticated()
                 )
 //                .formLogin(formLogin -> formLogin
@@ -95,6 +108,11 @@ public class SecurityConfig {
         UrlBasedCorsConfigurationSource urlBasedCorsConfigurationSource = new UrlBasedCorsConfigurationSource();
         urlBasedCorsConfigurationSource.registerCorsConfiguration("/**",corsConfiguration);
         return urlBasedCorsConfigurationSource;
+    }
+
+    @Bean
+    public MemberAuthenticationProviderManager memberAuthenticationProviderManager(MemberAuthenticationProvider memberAuthenticationProvider) {
+        return new MemberAuthenticationProviderManager(memberAuthenticationProvider);
     }
 
     @Bean

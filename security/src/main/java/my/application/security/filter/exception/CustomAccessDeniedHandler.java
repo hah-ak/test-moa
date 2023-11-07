@@ -1,4 +1,4 @@
-package my.application.security.config;
+package my.application.security.filter.exception;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

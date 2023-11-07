@@ -15,6 +15,7 @@ class ApiApplicationTest {
     void memtest() {
         MemberEntity byId = memberRepository.findById("asdf@asdf.asdf");
         System.out.println(byId.getId());
+
     }
 
 }
