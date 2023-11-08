@@ -30,6 +30,7 @@ import org.springframework.security.oauth2.client.registration.InMemoryClientReg
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.intercept.AuthorizationFilter;
 import org.springframework.security.web.authentication.AnonymousAuthenticationFilter;
 import org.springframework.security.web.authentication.session.SessionAuthenticationStrategy;
 import org.springframework.security.web.context.NullSecurityContextRepository;
@@ -66,8 +67,8 @@ public class SecurityConfig {
                 .securityContext(securityContext->securityContext
                         .securityContextRepository(new NullSecurityContextRepository())
                 )
-//                .addFilterBefore(new MemberNullRepositoryAuthenticationFilter(), AnonymousAuthenticationFilter.class)
-                .addFilterBefore(new MemberAuthenticationFilter("/**",memberAuthenticationProviderManager), AnonymousAuthenticationFilter.class)
+                .addFilterBefore(new MemberNullRepositoryAuthenticationFilter(), AuthorizationFilter.class)
+//                .addFilterBefore(new MemberAuthenticationFilter("/**",memberAuthenticationProviderManager), AnonymousAuthenticationFilter.class)
                 .exceptionHandling(exception -> exception
                         .accessDeniedHandler(new CustomAccessDeniedHandler())
                         .authenticationEntryPoint(new MemberAuthenticationEntryPoint())
@@ -79,21 +80,7 @@ public class SecurityConfig {
                         .requestMatchers("/google/**").access(memberAuthorizationManager)
                         .requestMatchers("/file/**").authenticated()
                         .anyRequest().authenticated()
-                )
-//                .formLogin(formLogin -> formLogin
-//                        .usernameParameter("id")
-//                        .passwordParameter("password")
-//                        .loginProcessingUrl("/sign-in/sign-in-process")
-//                )
-//                .oauth2Login(oauth -> oauth
-//                        .loginProcessingUrl("/google/login")
-//                        .authorizationEndpoint( endpoint -> endpoint
-//                                .baseUri("/google/login")
-//                        )
-//                )
-        ;
-//                .oauth2Client(configure -> configure.authorizedClientRepository());
-//                .oauth2Login(Customizer.withDefaults());
+                );
         return http.build();
     }
 
@@ -108,16 +95,6 @@ public class SecurityConfig {
         UrlBasedCorsConfigurationSource urlBasedCorsConfigurationSource = new UrlBasedCorsConfigurationSource();
         urlBasedCorsConfigurationSource.registerCorsConfiguration("/**",corsConfiguration);
         return urlBasedCorsConfigurationSource;
-    }
-
-    @Bean
-    public MemberAuthenticationProviderManager memberAuthenticationProviderManager(MemberAuthenticationProvider memberAuthenticationProvider) {
-        return new MemberAuthenticationProviderManager(memberAuthenticationProvider);
-    }
-
-    @Bean
-    public MemberAuthenticationProvider memberAuthenticationProvider(MemberSignInUserDetailService userDetailService) {
-        return new MemberAuthenticationProvider(userDetailService);
     }
 
     @Bean

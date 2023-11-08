@@ -8,6 +8,7 @@ import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import my.application.security.services.member.MemberSignInUserDetails;
 import my.domain.mysql.entities.MemberEntity;
+import org.springframework.security.authentication.AccountExpiredException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -18,6 +19,7 @@ import java.io.IOException;
 
 public class MemberNullRepositoryAuthenticationFilter extends GenericFilterBean {
 
+    // 필터를 완전 커스터 마이징. authentication 을 만들어 준다.
         private final SecurityContextHolderStrategy securityContextHolderStrategy = SecurityContextHolder.getContextHolderStrategy();
 
         @Override
@@ -33,6 +35,8 @@ public class MemberNullRepositoryAuthenticationFilter extends GenericFilterBean 
 
             if ( usernamePasswordAuthenticationToken.isAuthenticated()) {
                 context.setAuthentication(usernamePasswordAuthenticationToken);
+            } else {
+                throw new AccountExpiredException("msssg");
             }
             chain.doFilter(request, response);
         }

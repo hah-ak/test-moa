@@ -1,23 +1,23 @@
 package my.application.security.filter.provider;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import my.application.security.filter.exception.MemberNotEnabledAuthenticationException;
+import my.application.security.filter.exception.AuthenticationExternalDataErrorException;
 import my.application.security.services.member.MemberSignInUserDetailService;
 import my.application.security.services.member.MemberSignInUserDetails;
+import org.springframework.security.authentication.AccountExpiredException;
 import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Component;
 
 @Slf4j
+@Component
+@RequiredArgsConstructor
 public class MemberAuthenticationProvider implements AuthenticationProvider {
 
     private final MemberSignInUserDetailService memberSignInUserDetailService;
-
-    public MemberAuthenticationProvider(MemberSignInUserDetailService memberSignInUserDetailService) {
-        this.memberSignInUserDetailService = memberSignInUserDetailService;
-    }
 
     @Override
     public boolean supports(Class<?> authentication) {
@@ -31,7 +31,7 @@ public class MemberAuthenticationProvider implements AuthenticationProvider {
         if (userDetails.isEnabled()) {
             return authentication;
         } else {
-            throw new MemberNotEnabledAuthenticationException("not enabled");
+            throw new AccountExpiredException("not enabled");
         }
 
     }

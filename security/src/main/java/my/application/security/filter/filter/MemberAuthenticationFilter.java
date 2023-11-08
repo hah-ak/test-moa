@@ -4,18 +4,14 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
+import my.application.security.filter.exception.AuthenticationExternalDataErrorException;
 import my.application.security.filter.manager.MemberAuthenticationProviderManager;
 import my.application.security.services.member.MemberSignInUserDetails;
 import my.domain.mysql.entities.MemberEntity;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.context.SecurityContextHolderStrategy;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
-import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 
@@ -24,16 +20,17 @@ public class MemberAuthenticationFilter extends AbstractAuthenticationProcessing
 
     public MemberAuthenticationFilter(String defaultFilterProcessesUrl, MemberAuthenticationProviderManager memberAuthenticationProviderManager) {
         super(defaultFilterProcessesUrl, memberAuthenticationProviderManager);
+        super.setContinueChainBeforeSuccessfulAuthentication(true);
     }
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException, IOException, ServletException {
-        String header = request.getHeader("MY-APP-CREDENTIAL");
-        MemberSignInUserDetails memberSignInUserDetails = new MemberSignInUserDetails(new MemberEntity("asdf@asdf.asdf","kim","1234",null));
+            String header = request.getHeader("MY-APP-CREDENTIAL");
+            MemberSignInUserDetails memberSignInUserDetails = new MemberSignInUserDetails(new MemberEntity("asdf@asdf.asdf","kim","1234",null));
+            UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(memberSignInUserDetails, "header", memberSignInUserDetails.getAuthorities());
+            usernamePasswordAuthenticationToken.setDetails("ip주소등등을 넣자");
 
-//            UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(memberSignInUserDetails, null, memberSignInUserDetails.getAuthorities());
-        UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(null, null);
 
-        return this.getAuthenticationManager().authenticate(usernamePasswordAuthenticationToken);
+            return this.getAuthenticationManager().authenticate(usernamePasswordAuthenticationToken);
     }
 }
