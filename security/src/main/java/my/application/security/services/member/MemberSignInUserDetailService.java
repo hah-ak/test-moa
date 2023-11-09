@@ -19,7 +19,7 @@ import java.util.Optional;
 public class MemberSignInUserDetailService implements UserDetailsService {
 
     private final MemberRepository memberRepository;
-    private final PasswordEncoder passwordEncoder;
+
     @Override
     public UserDetails loadUserByUsername(String id) throws UsernameNotFoundException {
         Optional<MemberEntity> memberEntity1 = getMemberEntity(id);

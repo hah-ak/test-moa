@@ -23,14 +23,9 @@ public class MainControllers {
 
     private final MemberSecurityService memberService;
     @PostMapping("/sign-in-process")
-    public MemberSignInUserDetails loginProcess(@ModelAttribute SignIn signIn, HttpServletRequest request, HttpServletResponse response) {
-        try {
-            request.login(signIn.id(), signIn.password());
-            request.getSession().setMaxInactiveInterval(60*30);
-            CookieUtils.createLoginCookie(request, response);
-        } catch (ServletException e) {
-            throw new RuntimeException(e);
-        }
+    public MemberSignInUserDetails loginProcess(HttpServletRequest request, HttpServletResponse response) {
+
+        CookieUtils.createLoginCookie(request, response);
 
         var auth = (Authentication) request.getUserPrincipal();
         return (MemberSignInUserDetails) auth.getPrincipal();

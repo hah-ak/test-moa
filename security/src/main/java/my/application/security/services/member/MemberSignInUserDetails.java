@@ -56,6 +56,6 @@ public class MemberSignInUserDetails implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return isAccountNonExpired() && isAccountNonExpired() && isAccountNonExpired();
+        return isAccountNonExpired() && isAccountNonLocked() && isCredentialsNonExpired();
     }
 }

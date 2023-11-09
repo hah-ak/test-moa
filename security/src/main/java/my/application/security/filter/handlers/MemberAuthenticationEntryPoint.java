@@ -1,6 +1,7 @@
-package my.application.security.filter.exception;
+package my.application.security.filter.handlers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -14,6 +15,11 @@ import java.io.IOException;
 public class MemberAuthenticationEntryPoint implements AuthenticationEntryPoint {
     // 인증되지 않으면 authenticationEntrypoint구성
     private final ObjectMapper objectMapper = new ObjectMapper();
+    public static final String SIGN_IN_URL = "/sign-in/sign-in-process";
+
+    public MemberAuthenticationEntryPoint() {
+        this.objectMapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
+    }
 
     @Getter
     private static class ErrorMessageObject {
@@ -32,6 +38,6 @@ public class MemberAuthenticationEntryPoint implements AuthenticationEntryPoint 
 //        response.sendError(HttpServletResponse.SC_BAD_REQUEST);
         response.setStatus(HttpServletResponse.SC_FORBIDDEN);
         response.setContentType(ContentType.APPLICATION_JSON.getMimeType());
-        response.getWriter().write(objectMapper.writeValueAsString(new ErrorMessageObject("messsage 도착", "http://url")));
+        response.getWriter().write(objectMapper.writeValueAsString(new ErrorMessageObject("entrypoint", "http://localhost:8080/" + SIGN_IN_URL)));
     }
 }
