@@ -1,8 +1,15 @@
 version: "3.8"
 services:
-  java-projects:
-    build: .
-
+#  api:
+#    build: ./domain-modules/secret-resources/dockerfiles/api
+#    volumes:
+#      - /gradlew:/java_app
+#      - /settings.gradle:/java_app
+#      - /build.gradle:/java_app
+#      - /gradlew.bat:/java_app
+#      - /api:/java_app
+#      - /domain-modules:/java_app
+#      - /security:/java_app
   redis:
     build: ./domain-modules/secret-resources/dockerfiles/redis
     ports:
@@ -10,7 +17,7 @@ services:
     networks:
       - myApp-network
     volumes:
-      - myApp-redis-volume:/data
+      - myApp-volume:/data
   mysql:
     build: ./domain-modules/secret-resources/dockerfiles/mysql
     ports:
@@ -18,14 +25,12 @@ services:
     networks:
       - myApp-network
     volumes:
-      - myApp-mysql-volume:/var/lib/mysql
+      - myApp-volume:/var/lib/mysql
+#  mail-server:
+#    build: ./domain-modules/secret-resources/dockerfiles/mail_server
 networks:
   myApp-network:
     external: true
 volumes:
-  myApp-redis-volume:
-    external: true
-  myApp-mysql-volume:
-    external: true
   myApp-volume:
     external: true
