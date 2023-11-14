@@ -1,0 +1,14 @@
+FROM gradle:jdk17
+
+COPY build.gradle ./
+COPY settings.gradle ./
+
+COPY api ./api
+COPY domain-modules ./domain-modules
+COPY security ./security
+
+CMD ["gradle", ":api:bootRun","-PskipDownload=true", "--args='spring.profiles.active=dev'"]
+
+
+
+

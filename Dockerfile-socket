@@ -1,0 +1,10 @@
+FROM gradle:jdk17
+
+COPY build.gradle ./
+COPY settings.gradle ./
+
+COPY socket ./socket
+COPY domain-modules ./domain-modules
+COPY security ./security
+
+CMD ["gradle", ":api:bootRun","-PskipDownload=true", "-Dspring.profiles.active=dev" ]

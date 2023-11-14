@@ -1,0 +1,10 @@
+FROM gradle:jdk17
+
+COPY build.gradle ./
+COPY settings.gradle ./
+
+COPY dispersion-queue ./dispersion-queue
+COPY domain-modules ./domain-modules
+COPY security ./security
+
+ENTRYPOINT ["gradle", ":api:bootRun","-PskipDownload=true", "--args='--spring.profiles.active=dev'" ]
