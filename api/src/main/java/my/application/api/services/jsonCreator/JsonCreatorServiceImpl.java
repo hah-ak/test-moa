@@ -3,7 +3,7 @@ package my.application.api.services.jsonCreator;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import my.application.api.services.file.FileConstants;
+import my.application.api.services.file.FileUtils;
 import my.application.api.services.file.JsonFileServiceImpl;
 import org.springframework.stereotype.Service;
 
@@ -35,6 +35,6 @@ public class JsonCreatorServiceImpl extends JsonFileServiceImpl implements JsonC
         Path json = Files.createTempFile("json" + ZonedDateTime.now(ZoneId.of("UTC")), ".json");
         objectMapper.writeValue(json.toFile(),content);
 
-        Files.copy(json, FileConstants.USER_HOME.resolve(this.JSON_DIRECTORY).resolve(fileName));
+        Files.copy(json, FileUtils.USER_HOME.resolve(FileUtils.JSON_DIRECTORY).resolve(fileName));
     }
 }

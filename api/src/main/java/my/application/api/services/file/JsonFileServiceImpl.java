@@ -17,10 +17,10 @@ import java.util.stream.Stream;
 @RequiredArgsConstructor
 public class JsonFileServiceImpl implements FileService {
 
-    protected final String JSON_DIRECTORY = "Desktop\\jsons";
+
     @Override
     public void uploadFile(MultipartFile multipartFile) throws IOException {
-        final Path path = FileConstants.USER_HOME.resolve(JSON_DIRECTORY).resolve(multipartFile.getName());
+        final Path path = FileUtils.USER_HOME.resolve(FileUtils.JSON_DIRECTORY).resolve(multipartFile.getName());
         multipartFile.transferTo(path);
     }
 
@@ -37,13 +37,13 @@ public class JsonFileServiceImpl implements FileService {
 
     @Override
     public List<File> getAllFiles() throws IOException {
-        try (Stream<Path> pathStream = Files.list(FileConstants.USER_HOME.resolve(JSON_DIRECTORY))) {
+        try (Stream<Path> pathStream = Files.list(FileUtils.USER_HOME.resolve(FileUtils.JSON_DIRECTORY))) {
             return pathStream.map(Path::toFile).toList();
         }
     }
 
     @Override
     public File getFile(String fileName) {
-        return FileConstants.USER_HOME.resolve(JSON_DIRECTORY).resolve(fileName).toFile();
+        return FileUtils.USER_HOME.resolve(FileUtils.JSON_DIRECTORY).resolve(fileName).toFile();
     }
 }

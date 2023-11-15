@@ -24,7 +24,7 @@ public class FileUploadController {
 //    private final FileUploadService videoFileUploadServiceImpl;
 
     private Optional<FileService> getBeans(String type) {
-        FileConstants.FILE_TYPES fileTypes1 = Arrays.stream(FileConstants.FILE_TYPES.values())
+        FileUtils.FILE_TYPES fileTypes1 = Arrays.stream(FileUtils.FILE_TYPES.values())
                 .filter(fileTypes -> fileTypes.getType().equals(type))
                 .findFirst()
                 .orElseThrow(() -> new NoSuchParameterException("illegal argument : " + type));
@@ -39,7 +39,7 @@ public class FileUploadController {
         return Optional.empty();
     }
 
-    private static Class<? extends FileService> getServiceClass(FileConstants.FILE_TYPES fileTypes1) {
+    private static Class<? extends FileService> getServiceClass(FileUtils.FILE_TYPES fileTypes1) {
         return switch (fileTypes1) {
             case PHOTO -> PhotoFileServiceImpl.class;
             case VIDEO -> VideoFileServiceImpl.class;
