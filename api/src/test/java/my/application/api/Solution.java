@@ -1,6 +1,8 @@
 package my.application.api;
 
 
+import org.junit.jupiter.api.Test;
+
 import java.util.ArrayList;
 
 public class Solution {
@@ -124,6 +126,11 @@ public class Solution {
             return yLength - 1;
         }
         return y;
+    }
+
+    @Test
+    void vvvoid() {
+        System.out.println(System.getProperty("user.home"));
     }
 
 }

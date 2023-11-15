@@ -24,16 +24,16 @@ import java.util.stream.Stream;
 @Service("photoFileUploadServiceImpl")
 @RequiredArgsConstructor
 public class PhotoFileServiceImpl implements FileService {
-    protected final String PHOTO_DIRECTORY = "Desktop\\photos";
+
     @Qualifier("fileUpload")
     private final ThreadPoolTaskExecutor threadPoolTaskExecutor;
 
     @Override
     public void uploadFile(MultipartFile multipartFile) throws IOException {
 
-        final Path FILE_PATH = FileConstants.USER_HOME
-                .resolve(PHOTO_DIRECTORY)
-                .resolve(ZonedDateTime.now(ZoneId.of("UTC")).format(FileConstants.FILE_DATE_TIME_FORMAT) + multipartFile.getName());
+        final Path FILE_PATH = FileUtils.USER_HOME
+                .resolve(FileUtils.PHOTO_DIRECTORY)
+                .resolve(ZonedDateTime.now(ZoneId.of("UTC")).format(FileUtils.FILE_DATE_TIME_FORMAT) + multipartFile.getName());
 
         boolean exists = Files.exists(FILE_PATH);
 
@@ -71,7 +71,7 @@ public class PhotoFileServiceImpl implements FileService {
 
     @Override
     public List<File> getAllFiles() throws IOException {
-        try (Stream<Path> fileList = Files.list(FileConstants.USER_HOME.resolve(PHOTO_DIRECTORY).toAbsolutePath())) {
+        try (Stream<Path> fileList = Files.list(FileUtils.USER_HOME.resolve(FileUtils.PHOTO_DIRECTORY).toAbsolutePath())) {
             return fileList.map(Path::toFile).toList();
         }
     }
