@@ -1,6 +1,8 @@
 version: "3.8"
 services:
   api:
+    container_name: myApp_api
+    restart: always
     build:
       context: .
       dockerfile: Dockerfile-api
@@ -8,34 +10,36 @@ services:
       - "8083:8083"
     networks:
       - myApp-network
-    volumes:
-      - myApp-volume:/app
     depends_on:
       mysql:
         condition: service_started
       redis:
         condition: service_started
   redis:
+    container_name: myApp_redis
     build: ./domain-modules/secret-resources/dockerfiles/redis
     ports:
       - "6379:6379"
     networks:
       - myApp-network
     volumes:
-      - myApp-volume:/redis/data
+      - myApp-redis-volume:/data
   mysql:
+    container_name: myApp_mysql
     build: ./domain-modules/secret-resources/dockerfiles/mysql
     ports:
       - "3306:3306"
     networks:
       - myApp-network
     volumes:
-      - myApp-volume:/mysql/data
+      - myApp-mysql-volume:/var/lib/mysql
 #  mail-server:
 #    build: ./domain-modules/secret-resources/dockerfiles/mail_server
 networks:
   myApp-network:
     external: true
 volumes:
-  myApp-volume:
+  myApp-redis-volume:
+    external: true
+  myApp-mysql-volume:
     external: true

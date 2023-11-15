@@ -42,7 +42,7 @@ public class GoogleController {
     private final GoogleClientSecrets secrets;
     private final MemberSecurityService memberSecurityService;
 
-    private final @Qualifier("desktopAppFlow") GoogleAuthorizationCodeFlow appCodeFlow;
+//    private final @Qualifier("desktopAppFlow") GoogleAuthorizationCodeFlow appCodeFlow;
     private final RestTemplate restTemplate;
 
     //oidc를 위한 흐름, increment credential 위한 흐름.

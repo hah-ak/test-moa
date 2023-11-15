@@ -1,5 +1,7 @@
 FROM gradle:jdk17
 
+WORKDIR /home/ubuntu/myApplication
+
 COPY build.gradle ./
 COPY settings.gradle ./
 
@@ -7,8 +9,4 @@ COPY api ./api
 COPY domain-modules ./domain-modules
 COPY security ./security
 
-CMD ["gradle", ":api:bootRun","-PskipDownload=true", "--args='spring.profiles.active=dev'"]
-
-
-
-
+ENTRYPOINT ["gradle",":api:bootRun", "--args='--spring.profiles.active=dev'"]

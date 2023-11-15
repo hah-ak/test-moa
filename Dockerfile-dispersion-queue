@@ -7,4 +7,8 @@ COPY dispersion-queue ./dispersion-queue
 COPY domain-modules ./domain-modules
 COPY security ./security
 
-ENTRYPOINT ["gradle", ":api:bootRun","-PskipDownload=true", "--args='--spring.profiles.active=dev'" ]
+RUN ["gradle", ":api:build","-PskipDownload=true", "-Dspring.profiles.active=dev'" ]
+
+COPY --from=builder ./api/build/libs/*.jar ./api.jar
+
+ENTRYPOINT ["java", "-jar", "api.jar"]

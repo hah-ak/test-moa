@@ -16,23 +16,26 @@ import org.springframework.security.oauth2.client.registration.InMemoryClientReg
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
 
+import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 
 @Configuration
 @ComponentScan(basePackages = {"my.application.security.services","my.domain.redis","my.domain.mysql"})
 @EnableRedisRepositories(basePackages = {"my.application.security.repositories"})
 public class SecurityPackageConfig {
+    // jar파일 생성시 파일경로가 jar:file: 경로가 되어 file reader 를 사용할 때 제대로 읽어오지 못해서 리더로 바꿔야함.
     @Bean
     @Primary
     public GoogleClientSecrets googleClientSecrets(ApplicationContext applicationContext) throws IOException {
         Resource resource = applicationContext.getResource("classpath:/client_secret.json");
-        return GoogleClientSecrets.load(GsonFactory.getDefaultInstance(), new FileReader(resource.getFile()));
+        return GoogleClientSecrets.load(GsonFactory.getDefaultInstance(), new BufferedReader(new InputStreamReader(resource.getInputStream())));
     }
     @Bean("deskTopApp")
     public GoogleClientSecrets googleClientSecrets2(ApplicationContext applicationContext) throws IOException {
         Resource resource = applicationContext.getResource("classpath:/desktopApp_secret.json");
-        return GoogleClientSecrets.load(GsonFactory.getDefaultInstance(), new FileReader(resource.getFile()));
+        return GoogleClientSecrets.load(GsonFactory.getDefaultInstance(), new BufferedReader(new InputStreamReader(resource.getInputStream())));
     }
     @Bean
     public ClientRegistrationRepository clientRegistrationRepository(GoogleClientSecrets googleClientSecrets) {
