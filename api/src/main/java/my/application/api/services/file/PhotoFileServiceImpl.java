@@ -64,7 +64,7 @@ public class PhotoFileServiceImpl implements FileService {
 
         countDownLatch.await();
 
-        if (ERROR_LIST.size() > 0) {
+        if (!ERROR_LIST.isEmpty()) {
             throw new IOException("upload 중 에러 : " + String.join(",",ERROR_LIST));
         }
     }

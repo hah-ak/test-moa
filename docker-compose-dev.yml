@@ -2,7 +2,6 @@ version: "3.8"
 services:
   api:
     container_name: myApp_api
-    restart: always
     build:
       context: .
       dockerfile: Dockerfile-api
@@ -15,6 +14,8 @@ services:
         condition: service_started
       redis:
         condition: service_started
+    volumes:
+      - myApp-service-volume:/home/service_files
   redis:
     container_name: myApp_redis
     build: ./domain-modules/secret-resources/dockerfiles/redis
@@ -39,6 +40,8 @@ networks:
   myApp-network:
     external: true
 volumes:
+  myApp-service-volume:
+    external: true
   myApp-redis-volume:
     external: true
   myApp-mysql-volume:

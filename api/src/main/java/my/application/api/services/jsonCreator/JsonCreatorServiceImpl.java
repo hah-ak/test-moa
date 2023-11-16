@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import my.application.api.services.file.FileUtils;
 import my.application.api.services.file.JsonFileServiceImpl;
 import org.springframework.stereotype.Service;
+import web.core.util.MyAppCommonUtil;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -17,8 +18,6 @@ import java.time.ZonedDateTime;
 @Service
 @RequiredArgsConstructor
 public class JsonCreatorServiceImpl extends JsonFileServiceImpl implements JsonCreatorService {
-
-    private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
     public String serializationObject(Object jsonObject) {
@@ -33,7 +32,7 @@ public class JsonCreatorServiceImpl extends JsonFileServiceImpl implements JsonC
     @Override
     public void uploadFile(String content, String fileName) throws IOException {
         Path json = Files.createTempFile("json" + ZonedDateTime.now(ZoneId.of("UTC")), ".json");
-        objectMapper.writeValue(json.toFile(),content);
+        MyAppCommonUtil.defaultObjectMapper.writeValue(json.toFile(),content);
 
         Files.copy(json, FileUtils.USER_HOME.resolve(FileUtils.JSON_DIRECTORY).resolve(fileName));
     }

@@ -5,7 +5,7 @@ import my.domain.mysql.repositories.member.MemberRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-@SpringBootTest(properties = {"spring.profiles.active=dev"})
+@SpringBootTest(properties = {"spring.profiles.active=local"})
 class ApiApplicationTest {
 
     @Autowired
@@ -15,7 +15,6 @@ class ApiApplicationTest {
     void memtest() {
         MemberEntity byId = memberRepository.findById("asdf@asdf.asdf");
         System.out.println(byId.getId());
-
     }
 
 }

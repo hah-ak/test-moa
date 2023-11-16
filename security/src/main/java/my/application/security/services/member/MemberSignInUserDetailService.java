@@ -23,7 +23,7 @@ public class MemberSignInUserDetailService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String id) throws UsernameNotFoundException {
         Optional<MemberEntity> memberEntity1 = getMemberEntity(id);
-        MemberEntity memberEntity = memberEntity1.orElseThrow(NoSuchElementException::new);
+        MemberEntity memberEntity = memberEntity1.orElseThrow(() -> new UsernameNotFoundException("user Not found"));
         return new MemberSignInUserDetails(memberEntity);
     }
 

@@ -30,16 +30,24 @@ public class MemberAuthenticationProvider implements AuthenticationProvider {
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         MemberSignInUserDetails principal = (MemberSignInUserDetails) authentication.getPrincipal();
-        UserDetails userDetails = memberSignInUserDetailService.loadUserByUsername(principal.getUsername());
-        String inputPassword = passwordEncoder.encode(principal.getPassword());
-        if (inputPassword.equals(userDetails.getPassword())) {
-            if (userDetails.isEnabled()) {
-                return new UsernamePasswordAuthenticationToken(userDetails, userDetails.getPassword(), userDetails.getAuthorities());
+        try {
+            UserDetails userDetails = memberSignInUserDetailService.loadUserByUsername(principal.getUsername());
+            String inputPassword = passwordEncoder.encode(principal.getPassword());
+            if (inputPassword.equals(userDetails.getPassword())) {
+                if (userDetails.isEnabled()) {
+                    return new UsernamePasswordAuthenticationToken(userDetails, userDetails.getPassword(), userDetails.getAuthorities());
+                } else {
+                    throw new AccountExpiredException("account problem");
+                }
             } else {
-                throw new AccountExpiredException("account problem");
+                throw new BadCredentialsException("bad Credential");
             }
-        } else {
-            throw new BadCredentialsException("bad Credential");
+        } catch (AuthenticationException e) {
+            log.error("authentication error : {}", e.getMessage());
+            throw e;
+        } catch (Exception e) {
+            log.error("any other error : {}", e.getMessage());
+            throw e;
         }
     }
 }

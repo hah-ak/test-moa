@@ -1,7 +1,5 @@
 FROM gradle:jdk17
-
-WORKDIR /home/ubuntu/myApplication
-
+WORKDIR /home/workdir/my_application
 COPY build.gradle ./
 COPY settings.gradle ./
 

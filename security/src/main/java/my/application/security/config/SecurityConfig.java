@@ -32,7 +32,11 @@ import java.util.List;
 public class SecurityConfig {
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http, MemberAuthenticationProcessingProviderManager memberAuthenticationProcessingProviderManager) throws Exception {
+    public SecurityFilterChain securityFilterChain(
+            HttpSecurity http,
+            MemberNullRepositoryAuthenticationFilter memberNullRepositoryAuthenticationFilter,
+            MemberAuthenticationProcessingFilter memberAuthenticationProcessingFilter
+    ) throws Exception {
         // .addFilterAt(new MemberAuthenticationFilter("/**", new MemberAuthenticationProviderManager(memberAuthenticationProvider)), SecurityContextHolderFilter.class) 이렇게 하면 전지역에서 authenticate를 시도하는 형태가되어 전부다 authenticate성공으로 보고 리다이렉트를 돌게되어 무한루프발행.
         // 리퀘스트가 생성되고 각 필터에서 그 상황에 맞는 필터링과정을 걸치고 이 과정에서 필요하다면 authentication 객체를 생성하고 그걸 활용해 authenticated인지 판단후 authorization을 authorization필터로 확인하는 과정임.
         http
@@ -44,9 +48,9 @@ public class SecurityConfig {
                         .securityContextRepository(new NullSecurityContextRepository())
                 )
                 // 일반적으로 authenticate를 동작하는 필터
-                .addFilterBefore(new MemberNullRepositoryAuthenticationFilter(memberAuthenticationProcessingProviderManager), AuthorizationFilter.class)
+                .addFilterBefore(memberNullRepositoryAuthenticationFilter, AuthorizationFilter.class)
                 // entry point를 통해 들어온 경우에 만 동작하는 필터가 된다. 즉 authenticate 실패한경우에만 동작.
-                .addFilterBefore(new MemberAuthenticationProcessingFilter(memberAuthenticationProcessingProviderManager), MemberNullRepositoryAuthenticationFilter.class)
+                .addFilterBefore(memberAuthenticationProcessingFilter, MemberNullRepositoryAuthenticationFilter.class)
                 .exceptionHandling(exception -> exception
                         .accessDeniedHandler(new CustomAccessDeniedHandler())
                         .authenticationEntryPoint(new MemberAuthenticationEntryPoint())
@@ -73,6 +77,7 @@ public class SecurityConfig {
         return urlBasedCorsConfigurationSource;
     }
 
+    // Bcrypt는 매번 내부적으로 임의의 salt를 이용해 digest 로 만듦, 그렇기 때문에 인코딩 할 때 마다 매번 다른 값이 나옴. 일치여부는 객체내장 함수 사용
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();

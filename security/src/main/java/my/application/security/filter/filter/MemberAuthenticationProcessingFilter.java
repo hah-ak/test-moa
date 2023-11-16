@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import my.application.security.entities.signIn.SignIn;
 import my.application.security.filter.handlers.MemberAuthenticationEntryPoint;
@@ -16,6 +17,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.MethodNotAllowedException;
@@ -24,16 +26,20 @@ import java.io.IOException;
 import java.util.List;
 
 @Slf4j
+@Component
 public class MemberAuthenticationProcessingFilter extends AbstractAuthenticationProcessingFilter {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
+    private final PasswordEncoder passwordEncoder;
 
+    @Autowired
     public MemberAuthenticationProcessingFilter(
-            MemberAuthenticationProcessingProviderManager memberAuthenticationProcessingProviderManager
+            MemberAuthenticationProcessingProviderManager memberAuthenticationProcessingProviderManager,
+            PasswordEncoder passwordEncoder
     ) {
         super(MemberAuthenticationEntryPoint.SIGN_IN_URL, memberAuthenticationProcessingProviderManager);
         super.setContinueChainBeforeSuccessfulAuthentication(true);
-
+        this.passwordEncoder = passwordEncoder;
 
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
     }
@@ -46,7 +52,8 @@ public class MemberAuthenticationProcessingFilter extends AbstractAuthentication
         UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = null;
         try {
             SignIn signIn = this.objectMapper.readValue(request.getReader(), SignIn.class);
-            MemberSignInUserDetails memberSignInUserDetails = new MemberSignInUserDetails(new MemberEntity(signIn.id(), null, signIn.password(), null));
+
+            MemberSignInUserDetails memberSignInUserDetails = new MemberSignInUserDetails(new MemberEntity(signIn.id(), null, passwordEncoder.encode(signIn.password()), null));
 
             usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(memberSignInUserDetails, signIn.password(), memberSignInUserDetails.getAuthorities());
             usernamePasswordAuthenticationToken.setDetails("ip주소등등을 넣자");

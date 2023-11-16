@@ -3,31 +3,27 @@ package my.application.api.services.file;
 import jakarta.annotation.PostConstruct;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.format.DateTimeFormatter;
 
+@Slf4j
+@Component
 public class FileUtils {
     public static final Path USER_HOME = Paths.get(System.getProperty("user.home")).toAbsolutePath();
     public static final Path USER_DIR = Paths.get(System.getProperty("user.dir")).toAbsolutePath();
     public static final DateTimeFormatter FILE_DATE_TIME_FORMAT= DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
 
-    public static final String PHOTO_DIRECTORY = "Desktop\\photos";
-    public static final String JSON_DIRECTORY = "Desktop\\jsons";
-    public static final String VIDEO_DIRECTORY = "Desktop\\videos";
-    @PostConstruct
-    private void setDefaultPath() throws IOException {
-        for (String path : new String[]{FileUtils.JSON_DIRECTORY, FileUtils.VIDEO_DIRECTORY, FileUtils.PHOTO_DIRECTORY}) {
-            Path resolve = FileUtils.USER_HOME.resolve(path);
-            if (!Files.isDirectory(resolve)) {
-                Files.createDirectory(resolve);
-            }
-        }
-    }
-
+    public static final String FILE_DIRECTORY = "service_files";
+    public static final String PHOTO_DIRECTORY = FILE_DIRECTORY + "\\photos";
+    public static final String JSON_DIRECTORY = FILE_DIRECTORY + "\\jsons";
+    public static final String VIDEO_DIRECTORY = FILE_DIRECTORY + "\\videos";
     @Getter
     @AllArgsConstructor
     public enum FILE_TYPES{
@@ -35,4 +31,17 @@ public class FileUtils {
         private final String type;
     }
 
+    @PostConstruct
+    private void setDefaultPath() throws IOException {
+        for (String path : new String[]{FILE_DIRECTORY,JSON_DIRECTORY, VIDEO_DIRECTORY, PHOTO_DIRECTORY}) {
+            try {
+                Path resolve = USER_HOME.resolve(path);
+                Files.createDirectory(resolve);
+            } catch (FileAlreadyExistsException fileAlreadyExistsException) {
+                if (!Files.isDirectory(Paths.get(fileAlreadyExistsException.getFile()))) {
+                    throw fileAlreadyExistsException;
+                }
+            }
+        }
+    }
 }
