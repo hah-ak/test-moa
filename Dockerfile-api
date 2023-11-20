@@ -1,10 +1,23 @@
 FROM gradle:jdk17
-WORKDIR /home/workdir/my_application
-COPY build.gradle ./
-COPY settings.gradle ./
+WORKDIR /home/workdir
 
-COPY api ./api
-COPY domain-modules ./domain-modules
-COPY security ./security
+COPY ./domain-modules/secret-resources/dockerfiles/api/ssh ./ssh
+RUN ["apt","install","git"]
+RUN ["git", "clone", "--recursive", "git@github.com:hah-ak/test-moa.git", "myApp"]
 
-ENTRYPOINT ["gradle",":api:bootRun", "--args='--spring.profiles.active=dev'"]
+CMD ["cd", "./myApp"]
+CMD ["git", "fetch"]
+CMD ["git", "checkout", "origin/main"]
+CMD ["git", "pull"]
+#COPY build.gradle ./
+#COPY settings.gradle ./
+#
+#COPY api ./api
+#COPY domain-modules ./domain-modules
+#COPY security ./security
+
+
+
+ENTRYPOINT  ["gradle",":api:bootRun", "--args='--spring.profiles.active=dev'"]
+#CMD ["gradle",":socket:bootRun", "--args='--spring.profiles.active=dev'"]
+#CMD ["gradle",":dispersion-queue:bootRun", "--args='--spring.profiles.active=dev'"]
