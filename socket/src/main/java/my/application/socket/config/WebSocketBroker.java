@@ -12,7 +12,7 @@ public class WebSocketBroker implements WebSocketMessageBrokerConfigurer {
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {
         registry.enableSimpleBroker("/chat","/topic"); // 클라이언트가 subscribe 해야하는 메시지브로커의 토픽들
-        registry.setApplicationDestinationPrefixes("/app"); // 클라이언트가 publish 해야하는 메시지브로커의 url 프리픽스(mapping 시 자동으로 붙을 prefix)
+        registry.setApplicationDestinationPrefixes("/app"); // 클라이언트가 publish 해야하는 메시지브로커의 url 프리픽스(mapping 시 자동으로 붙을 prefix) controller의 massagemapping annotation에 정의된 path
     }
 
     @Override

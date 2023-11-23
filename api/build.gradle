@@ -11,9 +11,10 @@ application {
 
 dependencies {
     implementation project(':domain-modules:cores:web-core')
-    implementation project(':security')
+    implementation project(':libraries:security')
     implementation project(':domain-modules:mysql-domain')
     implementation project(':domain-modules:redis-domain')
+    implementation project(':domain-modules:kafka-domain')
 
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
 //	implementation 'org.springframework.boot:spring-boot-starter-batch'

@@ -12,6 +12,7 @@ version '1.0-SNAPSHOT'
 
 dependencies {
     implementation project(':domain-modules:mysql-domain')
+    implementation project(':libraries:security')
 
     implementation 'org.springframework.boot:spring-boot-starter-websocket'
 

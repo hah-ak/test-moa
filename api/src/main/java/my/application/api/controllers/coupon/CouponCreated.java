@@ -1,4 +1,4 @@
-package my.application.broker.consumer.coupon;
+package my.application.api.controllers.coupon;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class CouponCreatedConsumer {
+public class CouponCreated {
 
     private final CouponRepository couponRepository;
     private final CouponFailedRepository couponFailedRepository;
