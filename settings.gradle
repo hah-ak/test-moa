@@ -11,5 +11,6 @@ include('libraries:security')
 
 include('api')
 include('socket')
+include('streaming')
 
 
