@@ -14,24 +14,21 @@ import java.time.format.DateTimeFormatter;
 
 @Slf4j
 @Service
-public class FileConvert {
+public class VideoConvertService implements VideoService{
     // ffmpeg cli 를 사용하기 위한 커넥터 클래스.
-    private final String window = "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe ";
-    private final String videoPath = "/video";
-    private final String streamPath = videoPath + "/stream";
+    private final String streamPath = VIDEO_PATH + "/stream";
     private final String extension = "m3u8";
-    private final String defaultShell = "/bin/sh ";
-    private final Path home = Paths.get(System.getProperty("user.home")).toAbsolutePath();
+
     private final String shell;
 
     @PostConstruct
     public void createDefaultDir() {
         try {
-            Path video = Path.of(home + videoPath);
+            Path video = Path.of(HOME + VIDEO_PATH);
             if (Files.notExists(video)) {
                 Files.createDirectory(video);
             }
-            Path stream = Path.of(home + streamPath);
+            Path stream = Path.of(HOME + streamPath);
             if (Files.notExists(stream)) {
                 Files.createDirectory(stream);
             }
@@ -40,8 +37,8 @@ public class FileConvert {
             throw new RuntimeException(e);
         }
     }
-    public FileConvert() {
-        shell = System.getProperty("os.name").toLowerCase().contains("window") ? window : defaultShell;
+    public VideoConvertService() {
+        shell = System.getProperty("os.name").toLowerCase().contains("window") ? WINDOW_SEHLL : DEFAULT_SHELL;
     }
     public void convertFile(String file) throws IOException {
         String m3u8 = String.format("ffmpeg -i %s -codec: copy -start_number 0 -hls_time 10 -hls_list_size 0 -f hls %s", file, createDirectory());
@@ -60,7 +57,7 @@ public class FileConvert {
         String yyyyMMddHHmmss = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
 
         String directoryPath = streamPath + "/" + yyyyMMddHHmmss.substring(0,9);
-        Path finalDirectoryPath = Paths.get(home + "/" + directoryPath);
+        Path finalDirectoryPath = Paths.get(HOME + "/" + directoryPath);
         try {
             if (Files.notExists(finalDirectoryPath)) {
                 Files.createDirectory(finalDirectoryPath);
