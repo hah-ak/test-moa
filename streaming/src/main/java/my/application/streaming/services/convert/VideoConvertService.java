@@ -1,7 +1,8 @@
-package my.application.streaming.services;
+package my.application.streaming.services.convert;
 
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
+import my.application.streaming.services.VideoService;
 import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
@@ -14,12 +15,12 @@ import java.time.format.DateTimeFormatter;
 
 @Slf4j
 @Service
-public class VideoConvertService implements VideoService{
+public class VideoConvertService implements VideoService {
     // ffmpeg cli 를 사용하기 위한 커넥터 클래스.
-    private final String streamPath = VIDEO_PATH + "/stream";
-    private final String extension = "m3u8";
-
-    private final String shell;
+    private final String STREAM_PATH = VIDEO_PATH + "/stream";
+    private final String EXTENSION = "m3u8";
+    private final String SHELL;
+    private final String COMMAND_OPTION;
 
     @PostConstruct
     public void createDefaultDir() {
@@ -28,7 +29,7 @@ public class VideoConvertService implements VideoService{
             if (Files.notExists(video)) {
                 Files.createDirectory(video);
             }
-            Path stream = Path.of(HOME + streamPath);
+            Path stream = Path.of(HOME + STREAM_PATH);
             if (Files.notExists(stream)) {
                 Files.createDirectory(stream);
             }
@@ -38,11 +39,15 @@ public class VideoConvertService implements VideoService{
         }
     }
     public VideoConvertService() {
-        shell = System.getProperty("os.name").toLowerCase().contains("window") ? WINDOW_SEHLL : DEFAULT_SHELL;
+        SHELL = System.getProperty("os.name").toLowerCase().contains("window") ? WINDOW_SEHLL : DEFAULT_SHELL;
+        COMMAND_OPTION =  System.getProperty("os.name").toLowerCase().contains("window") ? WINDOW_COMMAND_OPTION : DEFAULT_COMMAND_OPTION;
     }
     public void convertFile(String file) throws IOException {
-        String m3u8 = String.format("ffmpeg -i %s -codec: copy -start_number 0 -hls_time 10 -hls_list_size 0 -f hls %s", file, createDirectory());
-        Process exec = Runtime.getRuntime().exec(shell + m3u8);
+        //codex 을 libx264를 써서 h264인코딩을 한다.
+//        ffmpeg -i %s -codec: copy -start_number 0 -hls_time 10 -hls_list_size 0 -f hls %s
+        String m3u8 = String.format("ffmpeg -i %s -codec:v h264 -start_number 0 -hls_time 10 -hls_list_size 0 -f hls %s", file, createDirectory());
+        Process exec = Runtime.getRuntime().exec(SHELL + " " + COMMAND_OPTION + " " + m3u8);
+
         try (BufferedReader bufferedReader = new BufferedReader(exec.errorReader())) {
             StringBuilder allLine = new StringBuilder();
             String line;
@@ -50,13 +55,12 @@ public class VideoConvertService implements VideoService{
                 allLine.append(line);
             }
         }
-
     }
 
     public String createDirectory() {
         String yyyyMMddHHmmss = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
 
-        String directoryPath = streamPath + "/" + yyyyMMddHHmmss.substring(0,9);
+        String directoryPath = STREAM_PATH + "/" + yyyyMMddHHmmss.substring(0,9);
         Path finalDirectoryPath = Paths.get(HOME + "/" + directoryPath);
         try {
             if (Files.notExists(finalDirectoryPath)) {
@@ -66,6 +70,6 @@ public class VideoConvertService implements VideoService{
             throw new RuntimeException(e);
         }
 
-        return finalDirectoryPath + "/" + yyyyMMddHHmmss + "." + extension;
+        return finalDirectoryPath + "/" + yyyyMMddHHmmss + "." + EXTENSION;
     }
 }
