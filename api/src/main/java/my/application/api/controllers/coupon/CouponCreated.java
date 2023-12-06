@@ -16,7 +16,7 @@ public class CouponCreated {
 
     private final CouponRepository couponRepository;
     private final CouponFailedRepository couponFailedRepository;
-    @KafkaListener(topics = "coupon_create", groupId = "group_1")
+    @KafkaListener(topics = "coupon_create", groupId = "group_1", autoStartup = "false")
     public void listener(Long userId) {
         try {
             couponRepository.save(new CouponEntity(userId));

@@ -18,7 +18,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Configuration
-@EnableWebSocket
+//@EnableWebSocket
 public class WebSocketConfig implements WebSocketConfigurer {
 
     public static class MyHandler extends TextWebSocketHandler {

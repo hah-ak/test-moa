@@ -3,7 +3,7 @@ package my.application.socket;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = {"my.domain.mysql", "my.domain.redis", "my.application.security"})
 public class WebsocketApplication {
 
 	public static void main(String[] args) {

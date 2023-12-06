@@ -1,25 +1,32 @@
 package my.domain.kafka.config;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.LongDeserializer;
 import org.apache.kafka.common.serialization.LongSerializer;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.apache.kafka.common.serialization.StringSerializer;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.kafka.annotation.EnableKafka;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
+import org.springframework.kafka.config.KafkaListenerEndpointRegistry;
 import org.springframework.kafka.core.*;
+import web.core.util.EnvironmentValues;
 
 import java.util.HashMap;
 
+@Slf4j
 @PropertySource("classpath:kafka-domain-${spring.profiles.active}.properties")
+@EnableKafka
 @Configuration
 public class KafkaConfig {
+
+    private final boolean withoutKafka = EnvironmentValues.WITHOUT_KAFKA.equals("true");
+
     @Bean
     public ProducerFactory<String, Long> producerFactory() {
         HashMap<String, Object> hashMap = new HashMap<>();
@@ -31,13 +38,6 @@ public class KafkaConfig {
     @Bean
     public KafkaTemplate<String, Long> kafkaTemplate() {
         return new KafkaTemplate<>(producerFactory());
-    }
-
-    @Bean
-    @Primary
-    @ConfigurationProperties(prefix = "kafka.coupon.consumer")
-    public HashMap<String, Object> couponConsumerConfig() {
-        return new HashMap<>();
     }
 
     @Bean
@@ -55,7 +55,6 @@ public class KafkaConfig {
     public ConcurrentKafkaListenerContainerFactory<String, Long> kafkaListenerContainerFactory(ConsumerFactory<String, Long> consumerFactory) {
         ConcurrentKafkaListenerContainerFactory<String, Long> factory = new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(consumerFactory);
-
         return factory;
     }
 }

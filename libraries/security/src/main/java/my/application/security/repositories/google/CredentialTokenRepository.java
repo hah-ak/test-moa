@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface CredentialTokenRepository extends CrudRepository<CredentialToken, String> {
+
 }
