@@ -2,7 +2,7 @@ package my.application.security.controllers;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import my.application.security.entities.signIn.SignIn;
+import my.application.security.dto.signIn.SignIn;
 import my.application.security.filter.manager.MemberAuthenticationProcessingProviderManager;
 import my.application.security.filter.provider.MemberAuthenticationProvider;
 import my.application.security.services.member.MemberSecurityService;
@@ -21,13 +21,10 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.util.Assert;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.when;
 
 @WebMvcTest(value = MainControllers.class, includeFilters = @ComponentScan.Filter(classes = {EnableWebSecurity.class}), properties = {"spring.profiles.active=dev"})
 class MainControllersTest {

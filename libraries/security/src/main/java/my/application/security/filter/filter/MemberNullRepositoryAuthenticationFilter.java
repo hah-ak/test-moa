@@ -21,19 +21,21 @@ import org.springframework.web.filter.GenericFilterBean;
 
 import java.io.IOException;
 
+// session 이나 다른 저장소를 쓰지 않고, 오직 쿠키등을 쓰기위해 만들어본 클래스.
 @Slf4j
-@Component
+//@Component
 @RequiredArgsConstructor
-public class MemberNullRepositoryAuthenticationFilter extends GenericFilterBean {
+public class MemberNullRepositoryAuthenticationFilter {
+//        extends GenericFilterBean { // genericfilterbean과 같은 filter 클래스를 전부다 찾아서 빈으로 만들어 필터에 추가 하므로 조심할것.
 
     // 필터를 완전 커스터 마이징. authentication 을 만들어 준다.
     private final SecurityContextHolderStrategy securityContextHolderStrategy = SecurityContextHolder.getContextHolderStrategy();
     private final MemberAuthenticationProcessingProviderManager memberAuthenticationProcessingProviderManager;
 
-    @Override
+//    @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
 //        MemberSignInUserDetails memberSignInUserDetails = new MemberSignInUserDetails(new MemberEntity("asdf@asdf.asdf", "kim", "1234", null));
-        MemberSignInUserDetails memberSignInUserDetails = new MemberSignInUserDetails(MemberResolver.resolveArgument((HttpServletRequest) request));
+        MemberSignInUserDetails memberSignInUserDetails = null;
         UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
                 memberSignInUserDetails, null, memberSignInUserDetails.getAuthorities()
         );

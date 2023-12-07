@@ -2,7 +2,7 @@ package my.application.security.resolvers;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.constraints.NotNull;
-import my.application.security.entities.signIn.SignIn;
+import my.application.security.dto.token.MemberLoginToken;
 import my.domain.mysql.entities.MemberEntity;
 import org.springframework.core.MethodParameter;
 import org.springframework.web.bind.support.WebDataBinderFactory;
@@ -16,21 +16,22 @@ public class MemberResolver implements HandlerMethodArgumentResolver {
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
-        return MemberEntity.class.isAssignableFrom(parameter.getParameterType());
+        boolean assignableFrom = MemberLoginToken.class.isAssignableFrom(parameter.getParameterType());
+        return assignableFrom;
     }
 
     @Override
-    public MemberEntity resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
+    public MemberLoginToken resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
         return resolveArgument((HttpServletRequest) webRequest);
     }
 
     @NotNull
-    public static MemberEntity resolveArgument(HttpServletRequest servletRequest) {
+    public static MemberLoginToken resolveArgument(HttpServletRequest servletRequest) {
         return resolveArgument(servletRequest.getHeader("MY-APP-CREDENTIAL"));
     }
 
     @NotNull
-    public static MemberEntity resolveArgument(String request) {
-        return MyAppCommonUtil.defaultObjectMapper.convertValue(request, MemberEntity.class);
+    public static MemberLoginToken resolveArgument(String request) {
+        return MyAppCommonUtil.defaultObjectMapper.convertValue(request, MemberLoginToken.class);
     }
 }

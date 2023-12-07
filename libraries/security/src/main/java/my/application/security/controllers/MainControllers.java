@@ -1,12 +1,10 @@
 package my.application.security.controllers;
 
-import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import my.application.security.cookie.CookieUtils;
-import my.application.security.entities.signIn.SignIn;
-import my.application.security.entities.signUp.SignUp;
+import my.application.security.dto.signUp.SignUp;
 import my.application.security.services.member.MemberSecurityService;
 import my.application.security.services.member.MemberSignInUserDetails;
 import my.domain.mysql.entities.MemberEntity;

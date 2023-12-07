@@ -5,9 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import my.application.security.entities.signIn.SignIn;
+import my.application.security.dto.signIn.SignIn;
 import my.application.security.filter.handlers.MemberAuthenticationEntryPoint;
 import my.application.security.filter.manager.MemberAuthenticationProcessingProviderManager;
 import my.application.security.services.member.MemberSignInUserDetails;
@@ -25,6 +24,7 @@ import org.springframework.web.server.MethodNotAllowedException;
 import java.io.IOException;
 import java.util.List;
 
+// 인증시도 시에 (로그인 시) 타게되는 필터. ( authenticationEntryPoint 를 통해 들어오거나 직접 로그인하거나 등등)
 @Slf4j
 @Component
 public class MemberAuthenticationProcessingFilter extends AbstractAuthenticationProcessingFilter {

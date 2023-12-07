@@ -2,13 +2,11 @@ package my.application.security.services.member;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import my.application.security.entities.signIn.SignIn;
-import my.application.security.entities.signUp.SignUp;
+import my.application.security.dto.signIn.SignIn;
+import my.application.security.dto.signUp.SignUp;
 import my.domain.mysql.entities.MemberEntity;
 import my.domain.mysql.repositories.member.MemberRepository;
 import org.apache.commons.codec.digest.HmacAlgorithms;
-import org.apache.commons.codec.digest.HmacUtils;
-import org.springframework.boot.autoconfigure.security.oauth2.resource.OAuth2ResourceServerProperties;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 

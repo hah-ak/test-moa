@@ -1,10 +1,16 @@
 package my.application.socket.config;
 
+import org.aspectj.bridge.Message;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.http.server.ServerHttpResponse;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.annotation.web.socket.EnableWebSocketSecurity;
+import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.socket.*;
 import org.springframework.web.socket.config.annotation.EnableWebSocket;
 import org.springframework.web.socket.config.annotation.WebSocketConfigurer;
@@ -17,9 +23,10 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-@Configuration
-//@EnableWebSocket
-public class WebSocketConfig implements WebSocketConfigurer {
+
+//implements WebSocketConfigurer
+@Configuration//@EnableWebSocket
+public class WebSocketConfig  {
 
     public static class MyHandler extends TextWebSocketHandler {
 
@@ -90,22 +97,24 @@ public class WebSocketConfig implements WebSocketConfigurer {
 
         public void afterHandshake(ServerHttpRequest request, ServerHttpResponse response, WebSocketHandler wsHandler, Exception exception) {}
     }
-    @Bean
-    public MyHandler myHandler() {
-        return new MyHandler();
-    }
+//    @Bean
+//    public MyHandler myHandler() {
+//        return new MyHandler();
+//    }
+//
+//    @Bean
+//    public MyBinarySocketHandler myBinarySocketHandler() { return new MyBinarySocketHandler();}
+//
+//    @Bean
+//    public MyInterceptor myInterceptor() {
+//        return new MyInterceptor();
+//    }
+//    @Override
+//    public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
+//        registry.addHandler(myBinarySocketHandler(),"/room")
+//                .setAllowedOrigins("*")
+//                .addInterceptors(myInterceptor());
+//    }
 
-    @Bean
-    public MyBinarySocketHandler myBinarySocketHandler() { return new MyBinarySocketHandler();}
 
-    @Bean
-    public MyInterceptor myInterceptor() {
-        return new MyInterceptor();
-    }
-    @Override
-    public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-        registry.addHandler(myBinarySocketHandler(),"/room")
-                .setAllowedOrigins("*")
-                .addInterceptors(myInterceptor());
-    }
 }

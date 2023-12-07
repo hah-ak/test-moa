@@ -1,4 +1,4 @@
-package my.application.security.entities.signUp;
+package my.application.security.dto.signUp;
 
 public record SignUp(
         String id,
