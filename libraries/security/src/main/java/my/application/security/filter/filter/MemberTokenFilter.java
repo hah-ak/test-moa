@@ -11,6 +11,7 @@ import my.application.security.resolvers.MemberResolver;
 import my.domain.mysql.entities.MemberEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.context.SecurityContextHolderStrategy;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -20,6 +21,8 @@ import java.io.IOException;
 @Component
 @RequiredArgsConstructor
 public class MemberTokenFilter extends OncePerRequestFilter {
+
+    private final PasswordEncoder passwordEncoder;
 
     private final SecurityContextHolderStrategy securityContextHolderStrategy = SecurityContextHolder.getContextHolderStrategy();
     @Override
