@@ -17,6 +17,29 @@ services:
         condition: service_started
     volumes:
       - myApp-service-volume:/home/service_files
+  zookeeper:
+    container_name: myApp_zookeeper
+    build:
+      context: .
+      dockerfile: Dockerfile-zookeeper
+    ports:
+      - "2181:2181"
+    volumes:
+      - myApp-zookeeper-volume:/bitnami/zookeeper
+  kafka:
+    container_name : myApp_kafka
+    build:
+      context: .
+      dockerfile: Dockerfile-kafka
+    ports :
+      - "9092:9092"
+    environment:
+      - KAFKA_CFG_ZOOKEEPER_CONNECT=myApp_zookeeper:2181
+    depends_on:
+      zookeeper:
+        condition: service_started
+    volumes:
+      - myApp-kafka-volume:/bitnami/kafka
   redis:
     container_name: myApp_redis
     build: ./domain-modules/secret-resources/dockerfiles/redis
@@ -46,4 +69,8 @@ volumes:
   myApp-redis-volume:
     external: true
   myApp-mysql-volume:
+    external: true
+  myApp-kafka-volume:
+    external: true
+  myApp-zookeeper-volume:
     external: true

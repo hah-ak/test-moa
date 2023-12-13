@@ -1,0 +1,4 @@
+FROM bitnami/zookeeper:3.9.1
+
+ENV ALLOW_ANONYMOUS_LOGIN=yes
+ENV ZOO_ENABLE_AUTH=no

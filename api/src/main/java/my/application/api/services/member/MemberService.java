@@ -19,5 +19,9 @@ public class MemberService {
     public MemberEntity getMember(Integer memNo) {
         return memberRepository.findByMemNo(memNo);
     }
+    public MemberEntity getMember(String id) {
+        return memberRepository.findById(id);
+    }
+
 
 }

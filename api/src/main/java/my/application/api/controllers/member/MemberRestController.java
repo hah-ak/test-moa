@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import my.application.api.services.member.MemberService;
 import my.domain.mysql.entities.MemberEntity;
+import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,5 +24,10 @@ public class MemberRestController {
     @GetMapping("/members/permit-all")
     public List<MemberEntity> memberEntities() {
         return memberService.memberEntities();
+    }
+
+    @KafkaListener(topics = "member/data", groupId = "group_1")
+    public MemberEntity getMemberEntity(String userId) {
+        return memberService.getMember(userId);
     }
 }

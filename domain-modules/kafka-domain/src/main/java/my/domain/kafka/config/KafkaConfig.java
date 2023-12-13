@@ -36,7 +36,7 @@ public class KafkaConfig {
         return new DefaultKafkaProducerFactory<>(hashMap);
     }
     @Bean
-    public KafkaTemplate<String, Long> kafkaTemplate() {
+    public KafkaTemplate<?, ?> kafkaTemplate() {
         return new KafkaTemplate<>(producerFactory());
     }
 
