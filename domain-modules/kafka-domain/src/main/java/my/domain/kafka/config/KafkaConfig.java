@@ -30,7 +30,7 @@ public class KafkaConfig {
     @Bean
     public ProducerFactory<String, Long> producerFactory() {
         HashMap<String, Object> hashMap = new HashMap<>();
-        hashMap.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
+        hashMap.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "myApp_kafka:9092");
         hashMap.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
         hashMap.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, LongSerializer.class);
         return new DefaultKafkaProducerFactory<>(hashMap);
@@ -44,7 +44,7 @@ public class KafkaConfig {
     @Primary
     public ConsumerFactory<String, Long> consumerFactory() {
         HashMap<String, Object> config = new HashMap<>();
-        config.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG,"localhost:9092");
+        config.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG,"myApp_kafka:9092");
         config.put(ConsumerConfig.GROUP_ID_CONFIG,"group_1");
         config.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         config.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, LongDeserializer.class);

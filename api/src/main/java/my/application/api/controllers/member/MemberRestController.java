@@ -26,7 +26,7 @@ public class MemberRestController {
         return memberService.memberEntities();
     }
 
-    @KafkaListener(topics = "member/data", groupId = "group_1")
+    @KafkaListener(topics = "member", groupId = "group_1")
     public MemberEntity getMemberEntity(String userId) {
         return memberService.getMember(userId);
     }
