@@ -25,8 +25,6 @@ import java.util.HashMap;
 @Configuration
 public class KafkaConfig {
 
-    private final boolean withoutKafka = EnvironmentValues.WITHOUT_KAFKA.equals("true");
-
     @Bean
     public ProducerFactory<String, Long> producerFactory() {
         HashMap<String, Object> hashMap = new HashMap<>();

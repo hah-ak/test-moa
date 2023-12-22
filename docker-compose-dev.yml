@@ -32,9 +32,9 @@ services:
       - KAFKA_CFG_PROCESS_ROLES=controller,broker # 컨트롤러는 브로커를 관리하는 브로커이다.
       - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
       - KAFKA_CFG_LISTENERS=PLAINTEXT://:9092,CONTROLLER://:9093,EXTERNAL://:9094 # 호스트네임 ://:포트  이런 형태이다. 별다른 설정을 안한다면 기본적으로 프로토콜을 호스트네임으로 써서 만들어짐.
-      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT,EXTERNAL:PLAINTEXT # 호스트네임별로 붙을 프로토콜이다
+      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT,EXTERNAL:PLAINTEXT # 호스트네임별로 붙을 프로토콜이다 ssl,plaintext(http 등),sasl 등등
+      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://localhost:9092,EXTERNAL://localhost:9094 #컨슈머 및 프로듀서가 연결할때 사용할주소
       - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=0@kafka:9093
-
     networks:
       - myApp-network
     volumes:
@@ -70,6 +70,4 @@ volumes:
   myApp-mysql-volume:
     external: true
   myApp-kafka-volume:
-    external: true
-  myApp-zookeeper-volume:
     external: true
