@@ -41,3 +41,26 @@ dependencies {
 test {
     useJUnitPlatform()
 }
+bootRun {
+    def profile
+    if (!args.hasProperty("spring.profiles.active")) {
+        args += ["--spring.profiles.active=local"]
+        profile = 'local'
+    } else {
+        profile = args["spring.profiles.active"]
+    }
+
+    def port = 8080
+    if (!args.hasProperty("server.port")) {
+        if (profile == 'local') {
+            port = 8084
+        }
+        if (profile == 'dev') {
+            port = 8083
+        }
+        if (profile == 'prod') {
+            port = 8080
+        }
+    }
+    args += ["--server.port=${port}"]
+}
