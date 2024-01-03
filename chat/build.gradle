@@ -4,19 +4,22 @@ plugins {
 }
 
 application {
-    mainClass = 'my.application.streaming.StreamingApplication'
+    mainClass = 'my.application.socket.ChatApplication'
 }
 
 group 'my.application'
 version '1.0-SNAPSHOT'
 
 dependencies {
-    implementation project(':domain-modules:cores:web-core')
+    implementation project(':domain-modules:kafka-domain')
     implementation project(':domain-modules:mysql-domain')
     implementation project(':libraries:security')
-    implementation project(':domain-modules:kafka-domain')
+
+    implementation 'org.springframework.kafka:spring-kafka'
+    implementation 'org.springframework.boot:spring-boot-starter-websocket'
 
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
+    testImplementation 'org.springframework.kafka:spring-kafka-test'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 

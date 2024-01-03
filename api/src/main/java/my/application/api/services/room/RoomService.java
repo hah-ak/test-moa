@@ -1,12 +1,12 @@
 package my.application.api.services.room;
 
 import lombok.RequiredArgsConstructor;
-import my.domain.mysql.entities.MemberEntity;
-import my.domain.mysql.entities.MemberJoinRoomEntity;
-import my.domain.mysql.entities.RoomEntity;
-import my.domain.mysql.repositories.member.MemberJoinRoomRepository;
-import my.domain.mysql.repositories.member.MemberRepository;
-import my.domain.mysql.repositories.member.RoomRepository;
+import my.application.api.entities.MemberEntity;
+import my.application.api.entities.MemberJoinRoomEntity;
+import my.application.api.entities.RoomEntity;
+import my.application.api.repositories.member.MemberJoinRoomRepository;
+import my.application.api.repositories.member.MemberRepository;
+import my.application.api.repositories.member.RoomRepository;
 import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 

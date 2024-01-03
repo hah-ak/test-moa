@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import my.application.api.services.member.MemberService;
 import my.application.api.services.room.RoomService;
-import my.domain.mysql.entities.MemberJoinRoomEntity;
+import my.application.api.entities.MemberJoinRoomEntity;
 import org.springframework.web.bind.annotation.*;
 
 @Slf4j

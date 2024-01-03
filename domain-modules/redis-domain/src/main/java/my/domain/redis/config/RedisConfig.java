@@ -27,7 +27,6 @@ public class RedisConfig {
         private String host;
         private Integer port;
     }
-
     @Bean
     @ConfigurationProperties(prefix = "application.db.redis.zero")
     public RedisConfigurationProperties redisConfigurationProperties() {

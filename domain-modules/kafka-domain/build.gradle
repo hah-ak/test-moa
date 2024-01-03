@@ -11,10 +11,8 @@ jar {
 }
 
 dependencies {
-  api project(':domain-modules:cores:web-core')
-  implementation project(':domain-modules:mysql-domain')
-  implementation project(':domain-modules:redis-domain')
   api 'org.springframework.kafka:spring-kafka'
+  implementation 'org.springframework.boot:spring-boot-starter-validation'
   testImplementation 'org.springframework.kafka:spring-kafka-test'
 }
 

@@ -1,8 +1,8 @@
 package my.application.api.services.member;
 
 import lombok.RequiredArgsConstructor;
-import my.domain.mysql.entities.MemberEntity;
-import my.domain.mysql.repositories.member.MemberRepository;
+import my.application.api.entities.MemberEntity;
+import my.application.api.repositories.member.MemberRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

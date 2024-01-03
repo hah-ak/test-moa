@@ -10,7 +10,7 @@ include('domain-modules:secret-resources')
 include('libraries:security')
 
 include('api')
-include('socket')
+include('chat')
 include('streaming')
 
 

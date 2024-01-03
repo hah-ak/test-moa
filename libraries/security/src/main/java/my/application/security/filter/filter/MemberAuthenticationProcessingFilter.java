@@ -26,9 +26,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.server.MethodNotAllowedException;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 // 인증시도 시에 (로그인 시) 타게되는 필터. ( authenticationEntryPoint 를 통해 들어오거나 직접 로그인하거나 등등)
 @Slf4j

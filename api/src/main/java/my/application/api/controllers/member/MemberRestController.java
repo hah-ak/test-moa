@@ -3,7 +3,7 @@ package my.application.api.controllers.member;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import my.application.api.services.member.MemberService;
-import my.domain.mysql.entities.MemberEntity;
+import my.application.api.entities.MemberEntity;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.messaging.handler.annotation.SendTo;
@@ -33,6 +33,5 @@ public class MemberRestController {
     @KafkaListener(topics = "member.request.data", groupId = "group_1")
     public MemberEntity getMemberEntity(String userId) {
         return memberService.getMember(userId);
-
     }
 }
