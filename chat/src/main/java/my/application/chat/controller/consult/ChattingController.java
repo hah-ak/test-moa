@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 
 @Controller
@@ -13,7 +12,7 @@ import org.springframework.stereotype.Controller;
 public class ChattingController {
     @MessageMapping("/room/{number}/enter")
     @SendTo("/chatting/room/{number}/enter-notice")
-    public String room(@DestinationVariable("number") int number, Authentication authentication) {
+    public String room(@DestinationVariable("number") int number) {
         return "enter";
     }
 

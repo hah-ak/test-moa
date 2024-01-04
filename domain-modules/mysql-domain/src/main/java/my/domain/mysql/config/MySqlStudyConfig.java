@@ -14,15 +14,13 @@ import org.springframework.context.annotation.PropertySource;
 public class MySqlStudyConfig {
     @Value("spring.profiles.active")
     private String profile;
-    @Bean
-    @Qualifier("mysqlStudy")
+    @Bean("mysqlStudy")
     @ConfigurationProperties(prefix = "application.db.mysql.study")
     public DataSourceProperties hikariConfigStudy() {
         return new DataSourceProperties();
     }
 
-    @Bean
-    @Qualifier("mysqlStudySource")
+    @Bean("mysqlStudySource")
     @ConfigurationProperties(prefix = "application.db.mysql.my-app.study")
     public HikariDataSource hikariDataSourceStudy(@Qualifier("mysqlStudy") DataSourceProperties dataSourceProperties) {
         return profile.equals("local") ? dataSourceProperties.initializeDataSourceBuilder().type(HikariDataSource.class).build() : null;

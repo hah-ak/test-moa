@@ -11,7 +11,6 @@ application {
 
 dependencies {
     implementation project(':domain-modules:cores:web-core')
-    implementation project(':libraries:security')
     implementation project(':domain-modules:mysql-domain')
     implementation project(':domain-modules:redis-domain')
     implementation project(':domain-modules:kafka-domain')
