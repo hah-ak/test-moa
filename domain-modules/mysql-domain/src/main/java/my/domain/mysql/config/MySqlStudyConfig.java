@@ -12,7 +12,7 @@ import org.springframework.context.annotation.PropertySource;
 @Configuration
 @PropertySource("classpath:domain-mysql-${spring.profiles.active}.properties")
 public class MySqlStudyConfig {
-    @Value("spring.profiles.active")
+    @Value("${spring.profiles.active}")
     private String profile;
     @Bean("mysqlStudy")
     @ConfigurationProperties(prefix = "application.db.mysql.study")

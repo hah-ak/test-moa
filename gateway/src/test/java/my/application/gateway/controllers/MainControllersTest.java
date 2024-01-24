@@ -3,12 +3,14 @@ package my.application.gateway.controllers;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import my.application.gateway.dto.signIn.SignIn;
+import my.application.gateway.entities.mysql.member.MemberAuthorityEntity;
+import my.application.gateway.entities.mysql.member.MemberEntity;
+import my.application.gateway.filter.authority.MemberUserRoleAuthority;
 import my.application.gateway.filter.manager.MemberAuthenticationProcessingProviderManager;
 import my.application.gateway.filter.provider.MemberAuthenticationProvider;
 import my.application.gateway.services.member.MemberSecurityService;
 import my.application.gateway.services.member.MemberSignInUserDetailService;
 import my.application.gateway.services.member.MemberSignInUserDetails;
-import my.domain.mysql.entities.MemberEntity;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
@@ -22,9 +24,9 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.mockito.BDDMockito.given;
 
 @WebMvcTest(value = MainControllers.class, includeFilters = @ComponentScan.Filter(classes = {EnableWebSecurity.class}), properties = {"spring.profiles.active=dev"})
 class MainControllersTest {
@@ -58,7 +60,7 @@ class MainControllersTest {
     void loginProcess() throws Exception {
         // given
         given(memberSignInUserDetailService.loadUserByUsername("asdf@asdf.asdf"))
-                .willReturn(new MemberSignInUserDetails(new MemberEntity("asdf@asdf.asdf","kim", passwordEncoder.encode("1234"),null)));
+                .willReturn(new MemberSignInUserDetails(new MemberEntity("asdf@asdf.asdf","kim", passwordEncoder.encode("1234"),null, MemberUserRoleAuthority.authority)));
 
         SignIn signIn = new SignIn("asdf@asdf.asdf","1234");
 

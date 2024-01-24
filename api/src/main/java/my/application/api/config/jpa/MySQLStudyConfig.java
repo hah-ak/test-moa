@@ -24,7 +24,7 @@ public class MySQLStudyConfig {
     @Bean("studyLocalContainerEntityManagerFactoryBean")
     public LocalContainerEntityManagerFactoryBean entityManagerFactoryBean(@Qualifier("mysqlStudySource") HikariDataSource hikariDataSource) {
         HashMap<String, Object> properties = new HashMap<>();
-        properties.put("hibernate.hbm2ddl.auto", "validate");
+        properties.put("hibernate.ddl.auto", "update");
         properties.put("hibernate.default_batch_fetch_size", 1000);
         properties.put("hibernate.format_sql", true);
         properties.put("hibernate.use_sql_comments", true);
@@ -37,7 +37,7 @@ public class MySQLStudyConfig {
         LocalContainerEntityManagerFactoryBean localContainerEntityManagerFactoryBean = new LocalContainerEntityManagerFactoryBean();
         localContainerEntityManagerFactoryBean.setDataSource(hikariDataSource);
         localContainerEntityManagerFactoryBean.setJpaPropertyMap(properties);
-        localContainerEntityManagerFactoryBean.setPackagesToScan("my.application.api.entities.mysql");
+        localContainerEntityManagerFactoryBean.setPackagesToScan("my.application.api.entities.study");
         localContainerEntityManagerFactoryBean.setJpaVendorAdapter(hibernateJpaVendorAdapter);
         localContainerEntityManagerFactoryBean.setJpaDialect(new HibernateJpaDialect());
         return localContainerEntityManagerFactoryBean;
