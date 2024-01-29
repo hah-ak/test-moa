@@ -24,13 +24,13 @@ public class MySQLStudyConfig {
     @Bean("studyLocalContainerEntityManagerFactoryBean")
     public LocalContainerEntityManagerFactoryBean entityManagerFactoryBean(@Qualifier("mysqlStudySource") HikariDataSource hikariDataSource) {
         HashMap<String, Object> properties = new HashMap<>();
-        properties.put("hibernate.ddl.auto", "update");
+//        properties.put("hibernate.ddl.auto", "create");
         properties.put("hibernate.default_batch_fetch_size", 1000);
         properties.put("hibernate.format_sql", true);
         properties.put("hibernate.use_sql_comments", true);
 
         HibernateJpaVendorAdapter hibernateJpaVendorAdapter = new HibernateJpaVendorAdapter();
-        hibernateJpaVendorAdapter.setGenerateDdl(false);
+//        hibernateJpaVendorAdapter.setGenerateDdl(true);
         hibernateJpaVendorAdapter.setShowSql(true);
         hibernateJpaVendorAdapter.setDatabasePlatform("org.hibernate.dialect.MySQLDialect");
 

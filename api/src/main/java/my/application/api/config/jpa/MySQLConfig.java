@@ -1,6 +1,7 @@
 package my.application.api.config.jpa;
 
 import com.zaxxer.hikari.HikariDataSource;
+import org.springframework.boot.autoconfigure.orm.jpa.JpaProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
@@ -25,7 +26,7 @@ public class MySQLConfig {
     @Primary
     public LocalContainerEntityManagerFactoryBean entityManagerFactoryBean(HikariDataSource hikariDataSource) {
         HashMap<String, Object> properties = new HashMap<>();
-        properties.put("hibernate.ddl.auto", "update");
+        properties.put("hibernate.ddl.auto", "create");
         properties.put("hibernate.default_batch_fetch_size", 1000);
         properties.put("hibernate.format_sql", true);
         properties.put("hibernate.use_sql_comments", true);
