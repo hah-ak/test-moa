@@ -1,0 +1,23 @@
+@startuml
+
+autoactivate on
+
+participant "user" as us
+box "BACKEND"
+participant "server" as sv
+participant "db"
+end box
+
+us -> sv : GET /reservation
+sv --> us : 요청 페이지 기본 정보
+group 예약 업체 지정
+ autonumber 1 "(0)"
+us -> sv : GET /reservation/업체명
+sv -> db : 업체정보 요청
+db -> sv : 업체정보 전달
+sv --> us : 유저에게 정보 전달
+end group
+
+
+
+@enduml
