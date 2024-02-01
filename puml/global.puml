@@ -1,0 +1,26 @@
+@startuml
+
+participant native as na
+participant video_server as ms
+participant api_server as api
+
+group step1 : 최초 영상 업로드
+
+    na -> ms : 1. 영상 업로드
+    activate ms
+    ms -> ms : 2. 영상 인코딩
+    ms --> na : 3. 업로드 종료후 패킷
+    ms --> na : 4. 인코딩 종료후 패킷
+    deactivate ms
+end group
+
+group step2 : 최종 정보 저장
+    na -> na : validation
+    na -> ms : 추가후 바로 삭제한\n동영상 삭제
+    na -> api : 최종 저장
+    activate api
+    api --> na : 저장 완료
+    deactivate api
+end group
+
+@enduml

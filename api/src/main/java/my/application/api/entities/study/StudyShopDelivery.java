@@ -10,7 +10,7 @@ public class StudyShopDelivery {
     @Id @GeneratedValue
     @Column(name = "delivery_id")
     private Long id;
-    @OneToOne(mappedBy = "id")
+    @OneToOne(mappedBy = "delivery")
     private StudyShopOrder order;
 
     private String city;

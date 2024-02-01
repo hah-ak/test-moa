@@ -20,13 +20,12 @@ public class StudyShopOrder {
     private StudyShopMember member;
 
     @OneToMany(mappedBy = "order")
-    @JoinColumn(name = "order_item_id") // 없으면 조인테이블이 생성되어버림.
+//    @JoinColumn(name = "order_item_id") // 단방향에서, 없으면 조인테이블이 생성되어버림.
     private List<StudyShopOrderItem> orderItems = new ArrayList<>();
 
     @OneToOne
     @JoinColumn(name = "delivery_id")
     private StudyShopDelivery delivery;
-
 
     private LocalDateTime orderDate;
 

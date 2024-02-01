@@ -3,6 +3,9 @@ package my.application.api.services.study;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.EntityTransaction;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Root;
 import lombok.RequiredArgsConstructor;
 import my.application.api.entities.study.StudyMember;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -37,6 +40,20 @@ public class JpaService {
             // 자바 컬렉션같이 레퍼런스 값의 변화를 주면 그 자체가 업데이트 쿼리가 되어 persist가 필요 없음.  ==> commit 시점에 결국 모든변경(dirty checking)에 대해서 업데이트, 인서트를 해준단 소리
             // flush를 직접호출하거나, jpql, commit 호출 시 db에 반영 ( jpql, commit내부에 flush가 있음)
             // jpa에서 최종적으로 변경감지하고 상태를 기억하는 것은 flush후 1차 캐시에 있는 스냅샷들과 비교후 쓰기지연 저장소에 있는 쿼리들 수행함으로서 진행.
+
+            // jpql 객체를 대상으로 검색 즉 객체를 테이블처럼 검색하는 쿼리임.
+            // 동적쿼리 짜기가 힘듦
+            entityManager.createQuery("select m from StudyMember m where m.role = 'ADMIN'");
+
+            //criteria
+            // 동적쿼리는 짜긴 좋은데 그냥 힘듦.
+            CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+            CriteriaQuery<StudyMember> query = criteriaBuilder.createQuery(StudyMember.class);
+
+            Root<StudyMember> from = query.from(StudyMember.class);
+
+            CriteriaQuery<StudyMember> where = query.select(from).where(criteriaBuilder.equal(from.get("name"), "test"));
+            List<StudyMember> resultList = entityManager.createQuery(where).getResultList();
             transaction.commit(); // db에 직접적으로 실행하는 단계(쿼리실행)
         } catch (Exception e) {
             transaction.rollback();

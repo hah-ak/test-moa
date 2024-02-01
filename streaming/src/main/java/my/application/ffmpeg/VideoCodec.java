@@ -7,6 +7,7 @@ import lombok.Getter;
 @Getter
 public enum VideoCodec {
     StreamSpecifier(":v"),
-    H264("h264");
+    H264("h264"),
+    H265("h265");
     private String codec;
 }

@@ -1,17 +1,19 @@
 package my.application.streaming.services.convert;
 
 import jakarta.annotation.PostConstruct;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.extern.slf4j.Slf4j;
 import my.application.streaming.services.VideoService;
 import org.springframework.stereotype.Service;
 
-import java.io.BufferedReader;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 @Slf4j
 @Service
@@ -42,10 +44,12 @@ public class VideoConvertService implements VideoService {
         SHELL = System.getProperty("os.name").toLowerCase().contains("window") ? WINDOW_SEHLL : DEFAULT_SHELL;
         COMMAND_OPTION =  System.getProperty("os.name").toLowerCase().contains("window") ? WINDOW_COMMAND_OPTION : DEFAULT_COMMAND_OPTION;
     }
-    public void convertFile(String file) throws IOException {
+    public void convertFile(String filePath) throws IOException {
         //codex 을 libx264를 써서 h264인코딩을 한다.
 //        ffmpeg -i %s -codec: copy -start_number 0 -hls_time 10 -hls_list_size 0 -f hls %s
-        String m3u8 = String.format("ffmpeg -i %s -codec:v h264 -start_number 0 -hls_time 10 -hls_list_size 0 -f hls %s", file, createDirectory());
+        String dirName = createDirName();
+        Path directory = createDirectory(dirName);
+        String m3u8 = String.format("ffmpeg -i %s -codec:v h264 -start_number 0 -hls_time 10 -hls_segment_filename '%s_%%06d.ts' -f hls %s", filePath, directory + "/" + dirName, directory + "/" + dirName + "." + EXTENSION);
         Process exec = Runtime.getRuntime().exec(SHELL + " " + COMMAND_OPTION + " " + m3u8);
 
         try (BufferedReader bufferedReader = new BufferedReader(exec.errorReader())) {
@@ -56,11 +60,12 @@ public class VideoConvertService implements VideoService {
             }
         }
     }
+    private String createDirName() {
+        return LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
+    }
 
-    public String createDirectory() {
-        String yyyyMMddHHmmss = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
-
-        String directoryPath = STREAM_PATH + "/" + yyyyMMddHHmmss.substring(0,9);
+    public Path createDirectory(String dirName) {
+        String directoryPath = STREAM_PATH + "/" + dirName;
         Path finalDirectoryPath = Paths.get(HOME + "/" + directoryPath);
         try {
             if (Files.notExists(finalDirectoryPath)) {
@@ -70,6 +75,7 @@ public class VideoConvertService implements VideoService {
             throw new RuntimeException(e);
         }
 
-        return finalDirectoryPath + "/" + yyyyMMddHHmmss + "." + EXTENSION;
+        return finalDirectoryPath;
     }
+
 }
