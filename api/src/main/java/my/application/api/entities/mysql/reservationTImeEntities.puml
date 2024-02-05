@@ -1,0 +1,10 @@
+@startuml
+
+entity ReservationTime {
+    - id : Long
+    - clientId : Long
+    - MainServiceId : Long
+    - StaffId : Long
+}
+
+@enduml

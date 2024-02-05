@@ -54,6 +54,7 @@ public class JpaService {
 
             CriteriaQuery<StudyMember> where = query.select(from).where(criteriaBuilder.equal(from.get("name"), "test"));
             List<StudyMember> resultList = entityManager.createQuery(where).getResultList();
+            // querydsl
             transaction.commit(); // db에 직접적으로 실행하는 단계(쿼리실행)
         } catch (Exception e) {
             transaction.rollback();
