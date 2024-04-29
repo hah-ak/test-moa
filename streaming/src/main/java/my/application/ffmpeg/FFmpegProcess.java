@@ -20,7 +20,6 @@ public class FFmpegProcess {
         private FFmpegProcess fFmpegProcess;
         public Builder(String input, String output) {
             this.fFmpegProcess = new FFmpegProcess(input, output);
-
         }
 
     }

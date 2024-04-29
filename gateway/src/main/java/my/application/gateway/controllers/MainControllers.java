@@ -9,6 +9,7 @@ import my.application.gateway.entities.mysql.member.MemberEntity;
 import my.application.gateway.services.member.MemberSecurityService;
 import my.application.gateway.services.member.MemberSignInUserDetails;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,11 +23,8 @@ public class MainControllers {
     private final MemberSecurityService memberService;
     @PostMapping("/sign-in-process")
     public MemberSignInUserDetails loginProcess(HttpServletRequest request, HttpServletResponse response) {
-
         CookieUtils.createLoginCookie(request, response);
-
-        var auth = (Authentication) request.getUserPrincipal();
-        return (MemberSignInUserDetails) auth.getPrincipal();
+        return (MemberSignInUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     }
 
     @PostMapping("/sign-up-process")

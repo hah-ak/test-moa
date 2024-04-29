@@ -7,18 +7,19 @@ import org.junit.jupiter.api.Test;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
+import java.util.concurrent.ExecutionException;
 
 class VideoConvertServiceTest {
 
     VideoConvertService videoConvertService = new VideoConvertService();
 
-    @BeforeAll
-    static void befor() {
-        new VideoConvertService().createDefaultDir();
-    }
+//    @BeforeAll
+//    static void befor() {
+//        new VideoConvertService().createDefaultDir();
+//    }
 
     @Test
-    void convertFile() throws IOException {
+    void convertFile() throws IOException, ExecutionException, InterruptedException {
         videoConvertService.convertFile("C:\\Users\\PC\\Desktop\\videos\\개웃김.mp4");
         // 일반적인 동영상 스트리밍은 hls파일들을 일정간격으로 호출해서 받아감.
     }

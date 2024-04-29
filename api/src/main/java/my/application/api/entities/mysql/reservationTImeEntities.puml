@@ -1,5 +1,12 @@
 @startuml
 
+entity TimeTable {
+    - id : Long
+    - time : LocalDateTime
+    - isHoliday : boolean
+    - is
+}
+
 entity ReservationTime {
     - id : Long
     - clientId : Long

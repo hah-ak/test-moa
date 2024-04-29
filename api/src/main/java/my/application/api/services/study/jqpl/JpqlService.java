@@ -10,9 +10,9 @@ import lombok.extern.slf4j.Slf4j;
 import my.application.api.entities.study.jpql.JpqlMember;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-import org.springframework.web.servlet.support.RequestContext;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -33,6 +33,7 @@ public class JpqlService {
         EntityTransaction transaction = entityManager.getTransaction();
         try {
             transaction.begin();
+            System.out.println(entityManager);
 
 //            JpqlMember jpqlMember = new JpqlMember();
 //            JpqlTeam jpqlTeam = new JpqlTeam();
@@ -125,6 +126,13 @@ public class JpqlService {
 //            fetch join
 //            지속적으로 셀렉트 쿼리문이 생기는 걸 막고 한번에 가져옴. (lazy여도 가져옴)
             List<JpqlMember> resultList = entityManager.createQuery("select m from JpqlMember m inner join fetch m.team", JpqlMember.class).getResultList();
+
+//            객체그래프, 어떤 일대다 상황에서 조인할때 알리아스와 웨어문을 통해 일부 값들을 가져와서 사용할경우 영속성 컨텍스트에 특정값과 관련된 모든 값이 아니라
+//            일부의 값만 들어간상황이 되어 문제가되는 일이 생길 수 있음.
+//            특별한 상황이 아니라면 따로따로 불러서 처리함. (JPA의 의도를 따라가는 방식)
+
+//            벌크 연산
+//            컨텍스트 안쓰고 데이터베이스에 한번에 DML 쿼리 실행
 
             transaction.commit();
         } catch (Exception e) {
