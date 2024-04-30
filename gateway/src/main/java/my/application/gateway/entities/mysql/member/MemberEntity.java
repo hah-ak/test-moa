@@ -3,13 +3,10 @@ package my.application.gateway.entities.mysql.member;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
-import my.application.gateway.filter.authority.MemberAuthorities;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity(name = "member")
 @Getter
@@ -25,10 +22,10 @@ public class MemberEntity {
     private String password;
     private String imageName;
     @Column(nullable = false)
-    private String role;
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private MemberAuthorities authority;
+    private MemberRole role;
+//    @Enumerated(EnumType.STRING)
+//    @Column(nullable = false)
+//    private MemberAuthority authority;
     @CreatedDate
     private LocalDateTime createDateTime;
     @DateTimeFormat
@@ -39,7 +36,7 @@ public class MemberEntity {
 
     }
     @Builder
-    public MemberEntity(String id, String name, String password, String imageName, boolean suspended, String role) {
+    public MemberEntity(String id, String name, String password, String imageName, boolean suspended, MemberRole role) {
         this.id = id;
         this.name = name;
         this.password = password;
@@ -49,7 +46,7 @@ public class MemberEntity {
     }
 
     @Builder
-    public MemberEntity(String id, String name, String password, String imageName, String role) {
+    public MemberEntity(String id, String name, String password, String imageName, MemberRole role) {
         this(id, name, password, imageName, false, role);
     }
 }

@@ -2,9 +2,7 @@ package my.application.gateway.services.member;
 
 import my.application.gateway.entities.mysql.member.MemberEntity;
 import my.application.gateway.filter.authority.MemberAdminRoleAuthority;
-import my.application.gateway.filter.authority.MemberAuthority;
-import my.application.gateway.filter.authority.MemberFileAuthority;
-import my.application.gateway.filter.authority.MemberUserRoleAuthority;
+import my.application.gateway.entities.mysql.member.MemberAuthority;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -20,14 +18,6 @@ public class MemberSignInUserDetails implements UserDetails {
     private List<MemberAuthority> authorities = new ArrayList<>();
     public MemberSignInUserDetails(MemberEntity memberEntity) {
         this.memberEntity = memberEntity;
-
-        memberEntity.getAuthority().forEach(auth -> {
-            switch (auth.getAuthority()) {
-                case MemberUserRoleAuthority.authority -> new MemberUserRoleAuthority();
-                case MemberAdminRoleAuthority.authority -> new MemberAdminRoleAuthority();
-                case MemberFileAuthority.authority -> new MemberFileAuthority();
-            }
-        });
     }
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

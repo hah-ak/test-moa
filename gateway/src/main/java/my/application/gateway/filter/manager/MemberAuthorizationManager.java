@@ -6,9 +6,12 @@ import my.application.gateway.filter.authority.MemberRoleHierarchy;
 import org.springframework.security.authorization.AuthorizationDecision;
 import org.springframework.security.authorization.AuthorizationManager;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.access.intercept.RequestAuthorizationContext;
 import org.springframework.stereotype.Component;
 
+import java.util.Collection;
 import java.util.function.Supplier;
 
 @Slf4j
@@ -21,7 +24,8 @@ public class MemberAuthorizationManager implements AuthorizationManager<RequestA
     public AuthorizationDecision check(Supplier<Authentication> authentication, RequestAuthorizationContext object) {
         log.error("authorization manager check");
 
-        memberRoleHierarchy.getReachableGrantedAuthorities(authentication.get().getAuthorities())
+        Collection<? extends GrantedAuthority> reachableGrantedAuthorities = memberRoleHierarchy.getReachableGrantedAuthorities(authentication.get().getAuthorities());
+
         return new AuthorizationDecision(authentication.get().getAuthorities().contains(memberUserRoleAuthority));
     }
 
