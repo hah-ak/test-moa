@@ -22,7 +22,7 @@ import java.util.Objects;
         transactionManagerRef = "platformTransactionManager"
 )
 public class MySQLConfig {
-    @Bean("localContainerEntityManagerFactoryBean")
+    @Bean(EntityMangerBeanName.APP_BEAN)
     @Primary
     public LocalContainerEntityManagerFactoryBean entityManagerFactoryBean(HikariDataSource hikariDataSource) {
         HashMap<String, Object> properties = new HashMap<>();

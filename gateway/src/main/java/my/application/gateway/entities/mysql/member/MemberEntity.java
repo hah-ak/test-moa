@@ -7,6 +7,8 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity(name = "member")
 @Getter
@@ -21,11 +23,8 @@ public class MemberEntity {
     @Column(nullable = false)
     private String password;
     private String imageName;
-    @Column(nullable = false)
-    private MemberRole role;
-//    @Enumerated(EnumType.STRING)
-//    @Column(nullable = false)
-//    private MemberAuthority authority;
+    @OneToMany(mappedBy = "member", fetch = FetchType.EAGER)
+    private Set<MemberRoleEntity> roles = new HashSet<>();
     @CreatedDate
     private LocalDateTime createDateTime;
     @DateTimeFormat
@@ -36,17 +35,17 @@ public class MemberEntity {
 
     }
     @Builder
-    public MemberEntity(String id, String name, String password, String imageName, boolean suspended, MemberRole role) {
+    public MemberEntity(String id, String name, String password, String imageName, boolean suspended, Set<MemberRoleEntity> roles) {
         this.id = id;
         this.name = name;
         this.password = password;
         this.imageName = imageName;
         this.suspended = suspended;
-        this.role = role;
+        this.roles = roles;
     }
 
     @Builder
-    public MemberEntity(String id, String name, String password, String imageName, MemberRole role) {
-        this(id, name, password, imageName, false, role);
+    public MemberEntity(String id, String name, String password, String imageName, Set<MemberRoleEntity> roles) {
+        this(id, name, password, imageName, false, roles);
     }
 }

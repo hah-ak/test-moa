@@ -22,6 +22,8 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.HashSet;
+
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -58,7 +60,7 @@ class MainControllersTest {
     void loginProcess() throws Exception {
         // given
         given(memberSignInUserDetailService.loadUserByUsername("asdf@asdf.asdf"))
-                .willReturn(new MemberSignInUserDetails(new MemberEntity("asdf@asdf.asdf","kim", passwordEncoder.encode("1234"),null, MemberUserRoleAuthority.authority)));
+                .willReturn(new MemberSignInUserDetails(new MemberEntity("asdf@asdf.asdf","kim", passwordEncoder.encode("1234"),null, new HashSet<>())));
 
         SignIn signIn = new SignIn("asdf@asdf.asdf","1234");
 

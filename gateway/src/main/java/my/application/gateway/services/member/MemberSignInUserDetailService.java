@@ -2,6 +2,7 @@ package my.application.gateway.services.member;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import my.application.gateway.entities.mysql.member.MemberPrivilege;
 import my.application.gateway.entities.mysql.member.MemberEntity;
 import my.application.gateway.repositories.mysql.member.MemberRepository;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -10,6 +11,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+import java.util.Set;
 
 @Slf4j
 @Service
@@ -27,5 +29,9 @@ public class MemberSignInUserDetailService implements UserDetailsService {
 
     private Optional<MemberEntity> getMemberEntity(String id) {
         return Optional.ofNullable(memberRepository.findById(id));
+    }
+
+    private Set<MemberPrivilege> getAuthorities(MemberEntity memberEntity) {
+        return memberEntity.getMemberRole().getMemberRoleAuthorities();
     }
 }

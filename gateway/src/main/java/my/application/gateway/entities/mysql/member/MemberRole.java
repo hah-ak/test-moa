@@ -1,19 +1,22 @@
 package my.application.gateway.entities.mysql.member;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
-
-import java.util.List;
+import org.springframework.security.core.GrantedAuthority;
 
 @Getter
-public enum MemberRole {
-    ROLE_ADMIN_ALL(List.of(MemberAuthority.values())),
-    ROLE_ADMIN_0(List.of(MemberAuthority.values())),
-    ROLE_USER(List.of(MemberAuthority.values())),
-    ANONYMOUS(List.of(MemberAuthority.PERMIT_ALL));
+@AllArgsConstructor
+public enum MemberRole implements GrantedAuthority {
+    ROLE_ADMIN("ADMIN"),
+    ROLE_USER("USER"),
+    ANONYMOUS("ANONYMOUS");
 
-    private final List<MemberAuthority> authorities;
+    private final String authority;
 
-    MemberRole(List<MemberAuthority> authorities) {
-        this.authorities = authorities;
+    @Override
+    public String getAuthority() {
+        return this.authority;
     }
+
+
 }

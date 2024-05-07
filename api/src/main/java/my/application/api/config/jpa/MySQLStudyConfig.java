@@ -22,7 +22,7 @@ import java.util.Objects;
         transactionManagerRef = "studyPlatformTransactionManager"
 )
 public class MySQLStudyConfig {
-    @Bean("studyLocalContainerEntityManagerFactoryBean")
+    @Bean(EntityMangerBeanName.STUDY_BEAN)
     public LocalContainerEntityManagerFactoryBean entityManagerFactoryBean(@Qualifier("mysqlStudySource") HikariDataSource hikariDataSource) {
         HashMap<String, Object> properties = new HashMap<>();
         properties.put("hibernate.hbm2ddl.auto", "update");

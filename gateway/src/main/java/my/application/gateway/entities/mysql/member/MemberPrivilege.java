@@ -4,7 +4,7 @@ import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 
 @Getter
-public enum MemberAuthority implements GrantedAuthority {
+public enum MemberPrivilege implements GrantedAuthority {
 
     FILE_UPLOAD("FILE_UPLOAD"),
     FILE_DOWNLOAD("FILE_DOWNLOAD"),
@@ -14,7 +14,7 @@ public enum MemberAuthority implements GrantedAuthority {
 
     private final String authority;
 
-    MemberAuthority(String authority) {
+    MemberPrivilege(String authority) {
         this.authority = authority;
     }
 }

@@ -8,13 +8,12 @@ import org.springframework.stereotype.Component;
 import java.util.Collection;
 import java.util.HashSet;
 
-@Component
 public class MemberRoleHierarchy implements RoleHierarchy {
 
     @Override
     public Collection<? extends GrantedAuthority> getReachableGrantedAuthorities(Collection<? extends GrantedAuthority> authorities) {
 
-        return ;
+        return null;
     }
 
 }

@@ -34,6 +34,7 @@ public class DefaultHttpSecurity {
     }
 
     public void setDefaultAuthorizationRequest(HttpSecurity httpSecurity) throws Exception {
+        // 역할은 권한의 덩어리, 그러므로 권한을 찾을때 역할도 그 안에 있으면 찾을 수 있도록 시큐리티는 설계되어있음.(hasRole도 결국 hasAuthority로 찾도록 내부적설계됨)
         httpSecurity.authorizeHttpRequests(auth -> auth
                 .requestMatchers("/admin/**").hasRole("ADMIN")
                 .requestMatchers("/sign-in/**", "/oauth2/**", "/google/revoke", "/google/login").permitAll()

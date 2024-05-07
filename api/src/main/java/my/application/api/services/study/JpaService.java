@@ -7,6 +7,7 @@ import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Root;
 import lombok.RequiredArgsConstructor;
+import my.application.api.config.jpa.EntityMangerBeanName;
 import my.application.api.entities.study.StudyMember;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -17,7 +18,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class JpaService {
 
-    @Qualifier("studyLocalContainerEntityManagerFactoryBean")
+    @Qualifier(EntityMangerBeanName.STUDY_BEAN)
     private final EntityManagerFactory entityManagerFactory;
     public void first() {
 

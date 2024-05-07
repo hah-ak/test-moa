@@ -8,9 +8,9 @@ import lombok.Getter;
 
 @Entity
 @Getter
-public class MemberAuthorityEntity {
+public class PrivilegeEntity {
 
     @Id
     @Enumerated(EnumType.STRING)
-    private MemberAuthority memberAuthority;
+    private MemberPrivilege privilege;
 }

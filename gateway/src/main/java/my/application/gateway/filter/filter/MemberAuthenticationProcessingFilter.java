@@ -35,20 +35,17 @@ public class MemberAuthenticationProcessingFilter extends AbstractAuthentication
     private final ObjectMapper objectMapper = new ObjectMapper();
     private final PasswordEncoder passwordEncoder;
     private final MemberRepository memberRepository;
-    private final MemberAuthorityRepository memberAuthorityRepository;
 
     @Autowired
     public MemberAuthenticationProcessingFilter(
             MemberAuthenticationProcessingProviderManager memberAuthenticationProcessingProviderManager,
             PasswordEncoder passwordEncoder,
-            MemberRepository memberRepository,
-            MemberAuthorityRepository memberAuthorityRepository
+            MemberRepository memberRepository
     ) {
         super(MemberAuthenticationEntryPoint.SIGN_IN_URL, memberAuthenticationProcessingProviderManager);
         super.setContinueChainBeforeSuccessfulAuthentication(true);
         this.passwordEncoder = passwordEncoder;
         this.memberRepository = memberRepository;
-        this.memberAuthorityRepository = memberAuthorityRepository;
 
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
     }

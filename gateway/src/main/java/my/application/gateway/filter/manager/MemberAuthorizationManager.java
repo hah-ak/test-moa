@@ -2,16 +2,16 @@ package my.application.gateway.filter.manager;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import my.application.gateway.filter.authority.MemberRoleHierarchy;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
 import org.springframework.security.authorization.AuthorizationDecision;
 import org.springframework.security.authorization.AuthorizationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.access.intercept.RequestAuthorizationContext;
 import org.springframework.stereotype.Component;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.function.Supplier;
 
 @Slf4j
@@ -19,19 +19,16 @@ import java.util.function.Supplier;
 @RequiredArgsConstructor
 public class MemberAuthorizationManager implements AuthorizationManager<RequestAuthorizationContext> {
 
-    private final MemberRoleHierarchy memberRoleHierarchy;
+    private final RoleHierarchy roleHierarchy;
+
     @Override
     public AuthorizationDecision check(Supplier<Authentication> authentication, RequestAuthorizationContext object) {
-        log.error("authorization manager check");
-
-        Collection<? extends GrantedAuthority> reachableGrantedAuthorities = memberRoleHierarchy.getReachableGrantedAuthorities(authentication.get().getAuthorities());
-
-        return new AuthorizationDecision(authentication.get().getAuthorities().contains(memberUserRoleAuthority));
+        Collection<? extends GrantedAuthority> reachableGrantedAuthorities = roleHierarchy.getReachableGrantedAuthorities(authentication.get().getAuthorities());
+        return new AuthorizationDecision(!reachableGrantedAuthorities.isEmpty());
     }
 
     @Override
     public void verify(Supplier<Authentication> authentication, RequestAuthorizationContext object) {
-        log.error("authorization verify");
         AuthorizationManager.super.verify(authentication, object);
     }
 }

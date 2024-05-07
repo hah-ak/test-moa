@@ -42,7 +42,7 @@ public class MemberTokenFilter extends OncePerRequestFilter {
             SecurityContext context = securityContextHolderStrategy.getContext();
             MemberEntity member = memberRepository.findById(memberLoginToken.id());
             MemberSignInUserDetails memberSignInUserDetails = new MemberSignInUserDetails(member);
-            context.setAuthentication(new UsernamePasswordAuthenticationToken(memberSignInUserDetails, memberLoginToken.password(), List.of(member.getAuthority())));
+            context.setAuthentication(new UsernamePasswordAuthenticationToken(memberSignInUserDetails, memberLoginToken.password(), member.getRoles()));
         }
 
         filterChain.doFilter(request, response);

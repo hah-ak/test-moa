@@ -1,16 +1,23 @@
 package my.application.gateway.entities.mysql.member;
 
 import jakarta.persistence.*;
-
-import java.util.Set;
+import lombok.Getter;
 
 @Entity
+@Getter
 public class MemberRoleEntity {
+    @Id @GeneratedValue(strategy = GenerationType.AUTO)
+    private long id;
 
-    @Id
-    @Enumerated(EnumType.STRING)
-    private MemberRole memberRole;
+    @ManyToOne
+    private MemberEntity member;
+    @ManyToOne
+    private RoleEntity role;
 
-    @OneToMany(targetEntity = MemberRoleAuthorityEntity.class, mappedBy = "memberRole")
-    private Set<MemberRoleAuthorityEntity> memberRoleAuthorities;
+    public MemberRoleEntity() {}
+
+    public MemberRoleEntity(MemberEntity member, RoleEntity role) {
+        this.member = member;
+        this.role = role;
+    }
 }

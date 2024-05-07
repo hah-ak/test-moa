@@ -5,7 +5,9 @@ import lombok.extern.slf4j.Slf4j;
 import my.application.gateway.dto.signIn.SignIn;
 import my.application.gateway.dto.signUp.SignUp;
 import my.application.gateway.entities.mysql.member.MemberEntity;
-import my.application.gateway.filter.authority.MemberUserRoleAuthority;
+import my.application.gateway.entities.mysql.member.MemberRole;
+import my.application.gateway.entities.mysql.member.MemberRoleEntity;
+import my.application.gateway.entities.mysql.member.RoleEntity;
 import my.application.gateway.repositories.mysql.member.MemberRepository;
 import org.apache.commons.codec.digest.HmacAlgorithms;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -25,9 +27,10 @@ public class MemberSecurityService {
                 .password(passwordEncoder.encode(signUp.password()))
                 .name(signUp.name())
                 .imageName(signUp.imageName())
-                .role(new MemberUserRoleAuthority().getAuthority())
                 .build();
         MemberEntity save = memberRepository.save(memberEntity);
+        new MemberRoleEntity(memberEntity, );
+
 
         return save;
     }
