@@ -10,7 +10,6 @@ import my.application.gateway.dto.signIn.SignIn;
 import my.application.gateway.entities.mysql.member.MemberEntity;
 import my.application.gateway.filter.handlers.MemberAuthenticationEntryPoint;
 import my.application.gateway.filter.manager.MemberAuthenticationProcessingProviderManager;
-import my.application.gateway.repositories.mysql.member.MemberAuthorityRepository;
 import my.application.gateway.repositories.mysql.member.MemberRepository;
 import my.application.gateway.services.member.MemberSignInUserDetails;
 import org.springframework.beans.factory.annotation.Autowired;

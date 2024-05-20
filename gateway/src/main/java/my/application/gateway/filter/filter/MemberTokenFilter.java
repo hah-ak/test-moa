@@ -20,7 +20,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-import java.util.List;
 
 @Slf4j
 @Component
@@ -32,9 +31,7 @@ public class MemberTokenFilter extends OncePerRequestFilter {
     private final MemberRepository memberRepository;
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-
         MemberLoginToken memberLoginToken = MemberResolver.resolveArgument(request);
-
         if (memberLoginToken == null) {
 
         }
@@ -42,7 +39,7 @@ public class MemberTokenFilter extends OncePerRequestFilter {
             SecurityContext context = securityContextHolderStrategy.getContext();
             MemberEntity member = memberRepository.findById(memberLoginToken.id());
             MemberSignInUserDetails memberSignInUserDetails = new MemberSignInUserDetails(member);
-            context.setAuthentication(new UsernamePasswordAuthenticationToken(memberSignInUserDetails, memberLoginToken.password(), member.getRoles()));
+            context.setAuthentication(new UsernamePasswordAuthenticationToken(memberSignInUserDetails, memberLoginToken.password(), memberSignInUserDetails.getAuthorities()));
         }
 
         filterChain.doFilter(request, response);

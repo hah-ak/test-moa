@@ -1,7 +1,6 @@
 package my.application.gateway.entities.mysql.member;
 
 import jakarta.persistence.*;
-import lombok.Builder;
 import lombok.Getter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -23,6 +22,7 @@ public class MemberEntity {
     @Column(nullable = false)
     private String password;
     private String imageName;
+    @Column(nullable = false)
     @OneToMany(mappedBy = "member", fetch = FetchType.EAGER)
     private Set<MemberRoleEntity> roles = new HashSet<>();
     @CreatedDate
@@ -31,21 +31,17 @@ public class MemberEntity {
     private LocalDateTime passwordUpdateDateTime;
     private boolean suspended; //정지
 
-    protected MemberEntity() {
+    protected MemberEntity() {}
 
-    }
-    @Builder
-    public MemberEntity(String id, String name, String password, String imageName, boolean suspended, Set<MemberRoleEntity> roles) {
+    public MemberEntity(String id, String name, String password, String imageName, boolean suspended) {
         this.id = id;
         this.name = name;
         this.password = password;
         this.imageName = imageName;
         this.suspended = suspended;
-        this.roles = roles;
     }
 
-    @Builder
-    public MemberEntity(String id, String name, String password, String imageName, Set<MemberRoleEntity> roles) {
-        this(id, name, password, imageName, false, roles);
+    public MemberEntity(String id, String name, String password, String imageName) {
+        this(id, name, password, imageName, false);
     }
 }

@@ -30,8 +30,4 @@ public class MemberSignInUserDetailService implements UserDetailsService {
     private Optional<MemberEntity> getMemberEntity(String id) {
         return Optional.ofNullable(memberRepository.findById(id));
     }
-
-    private Set<MemberPrivilege> getAuthorities(MemberEntity memberEntity) {
-        return memberEntity.getMemberRole().getMemberRoleAuthorities();
-    }
 }

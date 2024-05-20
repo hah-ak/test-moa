@@ -1,5 +1,10 @@
 package my.application.gateway.services.member;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.EntityTransaction;
+import jakarta.persistence.PersistenceContext;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import my.application.gateway.dto.signIn.SignIn;
@@ -13,6 +18,8 @@ import org.apache.commons.codec.digest.HmacAlgorithms;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -20,19 +27,31 @@ public class MemberSecurityService {
 
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
+    @PersistenceContext
+    private final EntityManager entityManager;
 
+    @Transactional
     public MemberEntity signUpProcess(SignUp signUp) {
-        MemberEntity memberEntity = MemberEntity.builder()
-                .id(signUp.id())
-                .password(passwordEncoder.encode(signUp.password()))
-                .name(signUp.name())
-                .imageName(signUp.imageName())
-                .build();
-        MemberEntity save = memberRepository.save(memberEntity);
-        new MemberRoleEntity(memberEntity, );
 
+        MemberEntity memberEntity = new MemberEntity(
+                signUp.id(),
+                passwordEncoder.encode(signUp.password()),
+                signUp.name(),
+                signUp.imageName()
+        );
+        MemberEntity save = memberRepository.save(memberEntity);
+
+        setRole(save);
 
         return save;
+    }
+
+    @Transactional
+    protected void setRole(MemberEntity save) {
+        RoleEntity roleEntity = entityManager.find(RoleEntity.class, MemberRole.ROLE_USER);
+        MemberRoleEntity memberRoleEntity = new MemberRoleEntity(save, roleEntity);
+        entityManager.persist(memberRoleEntity);
+
     }
 
     public MemberEntity signInProcess(SignIn signIn) {
@@ -40,7 +59,6 @@ public class MemberSecurityService {
         MemberEntity byId = memberRepository.findById(signIn.id());
         if (byId.getPassword().equals(passwordEncoder.encode(signIn.password()))) {
             HmacAlgorithms hmacSha256 = HmacAlgorithms.HMAC_SHA_256;
-//            HmacUtils.getInitializedMac()
         }
         return byId;
     }

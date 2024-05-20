@@ -1,10 +1,8 @@
 package my.application.streaming.services.download;
 
-import jakarta.annotation.PostConstruct;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.HttpServerErrorException;
-import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.BufferedOutputStream;
@@ -77,7 +75,7 @@ public abstract class VideoDownloadAbstract implements VideoDownload {
         return strings;
     }
 
-    public <T> T sendRequest(String url,Class<T> returnClass) throws HttpStatusCodeException {
+    public <T> T sendRequest(String url,Class<T> returnClass) {
         ResponseEntity<T> exchange = restTemplate.exchange(url, HttpMethod.GET, null, returnClass);
         if (exchange.getStatusCode().is2xxSuccessful()) {
             return exchange.getBody();

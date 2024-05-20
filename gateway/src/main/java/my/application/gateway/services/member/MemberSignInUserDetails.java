@@ -1,13 +1,12 @@
 package my.application.gateway.services.member;
 
 import my.application.gateway.entities.mysql.member.MemberEntity;
-import my.application.gateway.entities.mysql.member.MemberPrivilege;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.*;
+import java.util.Collection;
 
 public class MemberSignInUserDetails implements UserDetails {
 

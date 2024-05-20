@@ -2,15 +2,20 @@ package my.application.streaming.services.convert;
 
 import lombok.extern.slf4j.Slf4j;
 import my.application.streaming.services.VideoService;
+import my.application.streaming.services.download.VideoDownload;
+import my.application.streaming.services.download.VideoDownloadAbstract;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpStatusCodeException;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InvalidObjectException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.concurrent.*;
 
 @Slf4j
@@ -80,6 +85,37 @@ public class VideoConvertService implements VideoService {
         }
 
         return finalDirectoryPath;
+    }
+
+    public void customConvert() {
+        new VideoDownload() {
+            @Override
+            public void createFile(String url) throws IOException {
+
+            }
+        };
+
+        new VideoDownloadAbstract("") {
+            @Override
+            public void setDefaultDir() throws IOException {
+                super.setDefaultDir();
+            }
+
+            @Override
+            public void createFile(String m3u8Url) throws IOException {
+                super.createFile(m3u8Url);
+            }
+
+            @Override
+            public List<String> getM3U8Info(String m3u8Url) throws InvalidObjectException {
+                return super.getM3U8Info(m3u8Url);
+            }
+
+            @Override
+            public <T> T sendRequest(String url, Class<T> returnClass) throws HttpStatusCodeException {
+                return super.sendRequest(url, returnClass);
+            }
+        };
     }
 
 }
