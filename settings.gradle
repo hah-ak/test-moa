@@ -4,8 +4,12 @@ include('domain-modules:cores:mysql-core')
 include('domain-modules:cores:redis-core')
 include('domain-modules:mysql-domain')
 include('domain-modules:redis-domain')
+include('domain-modules:kafka-domain')
 include('domain-modules:secret-resources')
+
+include('gateway')
 include('api')
-include('security')
-include('dispersion-queue')
-include('socket')
+include('chat')
+include('streaming')
+
+

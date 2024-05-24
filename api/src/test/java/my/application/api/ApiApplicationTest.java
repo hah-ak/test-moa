@@ -1,20 +1,24 @@
 package my.application.api;
 
-import my.domain.mysql.entities.MemberEntity;
-import my.domain.mysql.repositories.member.MemberRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.kafka.core.KafkaTemplate;
+
 @SpringBootTest(properties = {"spring.profiles.active=local"})
 class ApiApplicationTest {
 
+//    @Autowired
+//    private MemberRepository memberRepository;
+
     @Autowired
-    private MemberRepository memberRepository;
+    KafkaTemplate<String, String> kafkaTemplate;
 
     @Test
     void memtest() {
-        MemberEntity byId = memberRepository.findById("asdf@asdf.asdf");
-        System.out.println(byId.getId());
+//        MemberEntity byId = memberRepository.findById("asdf@asdf.asdf");
+//        System.out.println(byId.getId());
+        kafkaTemplate.send("member.request.data","asdf@asdf.asdf");
     }
 
 }

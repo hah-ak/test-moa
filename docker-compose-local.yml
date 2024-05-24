@@ -1,0 +1,74 @@
+version: "3.8"
+services:
+  api:
+    container_name: myApp_api
+    build:
+      context: .
+      dockerfile: Dockerfile-api
+    ports:
+      - "8083:8083"
+    networks:
+      - myApp-network
+    depends_on:
+      mysql:
+        condition: service_started
+      redis:
+        condition: service_started
+      kafka:
+        condition: service_started
+    volumes:
+      - myApp-service-volume:/home/service_files
+    environment:
+      - ACTIVE_PROFILE=dev
+  kafka:
+    container_name : myApp_kafka
+    build:
+      context: .
+      dockerfile: Dockerfile-kafka
+    ports :
+      - "9094:9094"
+    environment:
+      - KAFKA_CFG_NODE_ID=0
+      - KAFKA_CFG_PROCESS_ROLES=controller,broker # 컨트롤러는 브로커를 관리하는 브로커이다.
+      - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
+      - KAFKA_CFG_LISTENERS=INTERNAL://:9092,CONTROLLER://:9093,EXTERNAL://:9094 # 호스트네임 ://:포트  이런 형태이다. 별다른 설정을 안한다면 기본적으로 프로토콜을 호스트네임으로 써서 만들어짐.
+      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT # 호스트네임별로 붙을 프로토콜이다 ssl,plaintext(http 등),sasl 등등
+      - KAFKA_CFG_ADVERTISED_LISTENERS=INTERNAL://myApp_kafka:9092,EXTERNAL://localhost:9094 #컨슈머 및 프로듀서가 연결할때 사용할주소, 호스트에서 사용시 ip/localhost , 내부에서는 컨테이너명
+      - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=0@localhost:9093
+      - KAFKA_CFG_INTER_BROKER_LISTENER_NAME=INTERNAL
+    networks:
+      - myApp-network
+    volumes:
+      - myApp-kafka-volume:/bitnami/kafka
+  redis:
+    container_name: myApp_redis
+    build: ./domain-modules/secret-resources/dockerfiles/redis
+    ports:
+      - "6379:6379"
+    networks:
+      - myApp-network
+    volumes:
+      - myApp-redis-volume:/data
+  mysql:
+    container_name: myApp_mysql
+    build: ./domain-modules/secret-resources/dockerfiles/mysql
+    ports:
+      - "3306:3306"
+    networks:
+      - myApp-network
+    volumes:
+      - myApp-mysql-volume:/var/lib/mysql
+#  mail-server:
+#    build: ./domain-modules/secret-resources/dockerfiles/mail_server
+networks:
+  myApp-network:
+    external: true
+volumes:
+  myApp-service-volume:
+    external: true
+  myApp-redis-volume:
+    external: true
+  myApp-mysql-volume:
+    external: true
+  myApp-kafka-volume:
+    external: true

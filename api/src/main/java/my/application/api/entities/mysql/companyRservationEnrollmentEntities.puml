@@ -1,0 +1,84 @@
+@startuml
+entity Company {
+    - id : Long
+    - name : String
+    - simpleExp : String
+    - businessDay : String
+    - holidayClosed : Boolean
+}
+
+entity CompanyReservation {
+    - id : Long
+    - companyId : Long
+    - companyInfo : Company
+    - mainServices : List<CompanyReservationMainService>
+}
+note left of CompanyReservation::id
+    업체 예약 시스템 id값
+end note
+note left of CompanyReservation::companyId
+    업체 id
+end note
+note left of CompanyReservation::mainService
+    예약 상세 서비스 클래스 리스트
+end note
+
+entity CompanyReservationMainService {
+    - id : Long
+    - revCompanyId : Long
+    - content : String
+    - openTime : LocalDateTime
+    - closeTime : LocalDateTime
+    - startBreakTime : LocalDateTime
+    - endBreakTime : LocalDateTime
+    - term : Integer
+    - ServiceDayOfTheWeek : String
+    - staff : List<StaffMainServiceTable>
+    - detailServices : List<CompanyReservationDetailService>
+}
+note left of CompanyReservationMainService::revCompanyId
+    reservationCompany 외래키
+end note
+note left of CompanyReservationMainService::content
+    서비스 내용
+end note
+note left of CompanyReservationMainService::openTime
+    서비스 시작 시간
+end note
+note left of CompanyReservationMainService::closeTime
+    서비스 종료 시간
+end note
+note left of CompanyReservationMainService::term
+    서비스 간격
+end note
+
+entity CompanyReservationDetailService {
+    - id : Long
+    - mainServiceId : CompanyReservationMainService
+    - introduce : String
+    - price : Integer
+}
+
+entity Staff {
+    - id : Long
+    - companyId : Long
+    - name : String
+    - rank : String
+    - introduce : String
+}
+
+entity StaffMainServiceTable {
+    - id : Long
+    - StaffId : Staff
+    - MainServiceId : MainService
+}
+
+Company "1" -- "0..*" CompanyReservation
+Company "1" -- "1..*" Staff
+CompanyReservation "1" -- "0..*" CompanyReservationMainService
+CompanyReservationMainService "1" - "1..*" StaffMainServiceTable
+Staff "1" -- "1..*" StaffMainServiceTable
+CompanyReservationMainService "1" -- "1..*" CompanyReservationDetailService
+
+
+@enduml

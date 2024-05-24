@@ -1,0 +1,21 @@
+@startuml
+
+entity ClientClientReservationTable {
+    - id : Long
+    - clientIdId : Client
+    - clientReservationId : ClientReservation
+}
+
+entity ClientReservation {
+    - id : Long
+    - time : LocalDateTime
+    - message : String
+    - service : CompanyReservationDetailService
+    - staff : Staff
+}
+
+ClientClientReservationTable "1..*" -- "1" ClientReservation
+
+
+
+@enduml

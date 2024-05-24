@@ -1,0 +1,30 @@
+plugins {
+    id 'application'
+    id "io.freefair.lombok"
+}
+
+application {
+    mainClass = 'my.application.streaming.StreamingApplication'
+}
+
+group 'my.application'
+version '1.0-SNAPSHOT'
+
+dependencies {
+    implementation project(':domain-modules:cores:web-core')
+    implementation project(':domain-modules:mysql-domain')
+    implementation project(':domain-modules:kafka-domain')
+
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+    // https://mvnrepository.com/artifact/org.apache.httpcomponents.client5/httpclient5
+    implementation group: 'org.apache.httpcomponents.client5', name: 'httpclient5', version: '5.2.1'
+
+    // https://mvnrepository.com/artifact/org.apache.httpcomponents.client5/httpclient5-fluent
+    implementation group: 'org.apache.httpcomponents.client5', name: 'httpclient5-fluent', version: '5.2.1'
+}
+
+test {
+    useJUnitPlatform()
+}

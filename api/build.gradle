@@ -11,13 +11,12 @@ application {
 
 dependencies {
     implementation project(':domain-modules:cores:web-core')
-    implementation project(':security')
     implementation project(':domain-modules:mysql-domain')
     implementation project(':domain-modules:redis-domain')
+    implementation project(':domain-modules:kafka-domain')
 
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
 //	implementation 'org.springframework.boot:spring-boot-starter-batch'
-    implementation 'org.springframework.kafka:spring-kafka'
     testImplementation 'org.springframework.batch:spring-batch-test'
     testImplementation 'org.springframework.kafka:spring-kafka-test'
     implementation 'org.springframework.boot:spring-boot-starter-aop'
@@ -40,4 +39,27 @@ dependencies {
 
 test {
     useJUnitPlatform()
+}
+bootRun {
+    def profile
+    if (!args.hasProperty("spring.profiles.active")) {
+        args += ["--spring.profiles.active=local"]
+        profile = 'local'
+    } else {
+        profile = args["spring.profiles.active"]
+    }
+
+    def port = 8080
+    if (!args.hasProperty("server.port")) {
+        if (profile == 'local') {
+            port = 8084
+        }
+        if (profile == 'dev') {
+            port = 8083
+        }
+        if (profile == 'prod') {
+            port = 8080
+        }
+    }
+    args += ["--server.port=${port}"]
 }
