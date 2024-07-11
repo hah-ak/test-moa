@@ -9,6 +9,7 @@ import jakarta.persistence.criteria.Root;
 import lombok.RequiredArgsConstructor;
 import my.application.api.config.jpa.EntityMangerBeanName;
 import my.application.api.entities.study.StudyMember;
+import my.application.api.services.study.middle.Generics;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
@@ -27,7 +28,6 @@ public class JpaService {
         //---
         EntityTransaction transaction = entityManager.getTransaction();
         transaction.begin();
-
         try {
 //            List<StudyMember> resultList = entityManager.createQuery("select s from StudyMember as s", StudyMember.class).getResultList();
             StudyMember jpaMember = new StudyMember();

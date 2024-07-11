@@ -5,7 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 @EnableScheduling
-@SpringBootApplication(scanBasePackages = {"my.application.api", "my.domain.mysql", "my.domain.redis", "my.application.gateway"}) //entity 및 enable repository  에 영향을 주지 않으므로 추가가 필요함.
+@SpringBootApplication(scanBasePackages = {"my.application.api", "my.domain.mysql", "my.domain.redis"}) //entity 및 enable repository  에 영향을 주지 않으므로 추가가 필요함.
 public class ApiApplication {
 
 	public static void main(String[] args) {

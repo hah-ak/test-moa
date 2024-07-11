@@ -14,6 +14,7 @@ import org.springframework.transaction.PlatformTransactionManager;
 
 import java.util.HashMap;
 import java.util.Objects;
+import java.util.Properties;
 
 @Configuration
 @EnableJpaRepositories(

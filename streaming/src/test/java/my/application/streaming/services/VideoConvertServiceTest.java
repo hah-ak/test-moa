@@ -1,12 +1,14 @@
 package my.application.streaming.services;
 
 import my.application.streaming.services.convert.VideoConvertService;
+import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
+import java.util.HashMap;
 import java.util.concurrent.ExecutionException;
 
 class VideoConvertServiceTest {
@@ -31,7 +33,4 @@ class VideoConvertServiceTest {
         System.out.println("name = " + name);
         System.out.println(files.length);
     }
-
-
-
 }

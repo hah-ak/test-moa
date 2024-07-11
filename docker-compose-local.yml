@@ -17,7 +17,7 @@ services:
       kafka:
         condition: service_started
     volumes:
-      - myApp-service-volume:/home/service_files
+      - myApp-api-volume:/home/service_files
     environment:
       - ACTIVE_PROFILE=dev
   kafka:
@@ -64,7 +64,7 @@ networks:
   myApp-network:
     external: true
 volumes:
-  myApp-service-volume:
+  myApp-api-volume:
     external: true
   myApp-redis-volume:
     external: true

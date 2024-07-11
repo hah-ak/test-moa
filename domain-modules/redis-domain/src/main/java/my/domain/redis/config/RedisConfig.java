@@ -1,5 +1,8 @@
 package my.domain.redis.config;
 
+import io.lettuce.core.RedisClient;
+import io.lettuce.core.RedisURI;
+import io.lettuce.core.api.StatefulRedisConnection;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
@@ -41,6 +44,17 @@ public class RedisConfig {
         configuration.setPort(properties.getPort());
         configuration.setHostName(properties.getHost());
         return new LettuceConnectionFactory(configuration);
+    }
+
+    @Bean
+    public RedisClient redisClient(RedisConfigurationProperties properties) {
+        return RedisClient.create(RedisURI.Builder
+                        .redis(properties.getHost(), properties.getPort())
+                        .withDatabase(properties.getDatabase())
+                        .withPassword(properties.getPassword())
+                        .withLibraryName("application")
+                .build()
+        );
     }
 
     @Bean
