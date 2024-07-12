@@ -1,5 +1,7 @@
 package my.application.gateway.config;
 
+import com.google.common.net.HttpHeaders;
+import com.nimbusds.jwt.SignedJWT;
 import io.github.bucket4j.distributed.ExpirationAfterWriteStrategy;
 import io.github.bucket4j.distributed.proxy.AsyncProxyManager;
 import io.github.bucket4j.redis.lettuce.Bucket4jLettuce;
@@ -10,6 +12,10 @@ import io.lettuce.core.api.StatefulRedisConnection;
 import io.lettuce.core.codec.ByteArrayCodec;
 import io.lettuce.core.codec.RedisCodec;
 import io.lettuce.core.codec.StringCodec;
+import io.micrometer.common.util.StringUtils;
+import lombok.RequiredArgsConstructor;
+import my.application.gateway.utils.MyAppJwtUtils;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.cloud.circuitbreaker.resilience4j.Resilience4JCircuitBreakerFactory;
 import org.springframework.cloud.circuitbreaker.resilience4j.Resilience4JConfigBuilder;
 import org.springframework.cloud.client.circuitbreaker.Customizer;
@@ -21,16 +27,24 @@ import org.springframework.cloud.gateway.server.mvc.handler.HandlerFunctions;
 import org.springframework.cloud.gateway.server.mvc.predicate.GatewayRequestPredicates;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.servlet.function.HandlerFilterFunction;
 import org.springframework.web.servlet.function.RouterFunction;
 import org.springframework.web.servlet.function.ServerResponse;
 
+import javax.naming.AuthenticationException;
 import java.time.Duration;
+import java.util.List;
+import java.util.Map;
 
 @Configuration
+@RequiredArgsConstructor
 public class MvcConfig implements WebMvcConfigurer {
+
+    private final RedisTemplate<String, List<Map<String, String>>> redisTemplate;
 
     @Bean
     public Customizer<Resilience4JCircuitBreakerFactory> circuitBreakerFactoryCustomizer() {
@@ -62,21 +76,42 @@ public class MvcConfig implements WebMvcConfigurer {
                 .filter(CircuitBreakerFilterFunctions.circuitBreaker("circuit"))
                 .filter(Bucket4jFilterFunctions.rateLimit(c -> c.setCapacity(5)
                         .setPeriod(Duration.ofMinutes(1))
-                        .setKeyResolver(request -> request.servletRequest().getRemoteHost())
+                        .setKeyResolver(request -> request.headers().firstHeader(HttpHeaders.X_FORWARDED_FOR))
                         .setStatusCode(HttpStatus.TOO_MANY_REQUESTS)
                         .setHeaderName("TOO-MANY-REQUESTS")
                 ))
+                .filter(JWTFilterFunctions())
                 .before(BeforeFilterFunctions.addRequestHeader("gateway","ok"))
                 .build();
     }
 
-    @Bean
-    public RestTemplate restTemplate() {
-        return new RestTemplate();
+    private HandlerFilterFunction<ServerResponse, ServerResponse> JWTFilterFunctions() {
+        return (request, next) -> {
+            String jwt = request.headers().firstHeader("JWT");
+
+            if (StringUtils.isBlank(jwt)) {
+                return next.handle(request);
+            }
+
+            try {
+                SignedJWT signedJWT = MyAppJwtUtils.parseJWT(jwt);
+                List<Map<String, String>> loginInfos = redisTemplate.opsForValue().get(signedJWT.getJWTClaimsSet().getClaim("email"));
+
+                assert loginInfos != null;
+                Map<String, String> loginMap = loginInfos.stream()
+                        .filter(map -> map.get("SESSIONID").equals(request.headers().firstHeader("SESSIONID")))
+                        .findFirst()
+                        .orElseThrow(AuthenticationException::new);
+
+                return next.handle(request);
+            } catch (Exception e) {
+                return ServerResponse.badRequest().build();
+            }
+        };
     }
 
     @Bean
-    public AsyncProxyManager<String> proxyManager(RedisClient redisClient) {
+    public AsyncProxyManager<String> proxyManager(@Qualifier("BucketRedisClient") RedisClient redisClient) {
         StatefulRedisConnection<String, byte[]> connect = redisClient.connect(RedisCodec.of(StringCodec.UTF8, ByteArrayCodec.INSTANCE));
         var proxyManagerBuilder = Bucket4jLettuce
                 .casBasedBuilder(connect)
