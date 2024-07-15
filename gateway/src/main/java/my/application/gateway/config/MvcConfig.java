@@ -69,7 +69,7 @@ public class MvcConfig implements WebMvcConfigurer {
         return GatewayRouterFunctions.route("after_route")
                 .route(
                         GatewayRequestPredicates.path("/ws/**"),
-                        HandlerFunctions.http("ws://localhost:8083"))
+                        HandlerFunctions.http("ws://localhost:9000"))
                 .route(
                         GatewayRequestPredicates.path("/**"),
                         HandlerFunctions.http("http://localhost:8100"))
@@ -87,7 +87,7 @@ public class MvcConfig implements WebMvcConfigurer {
 
     private HandlerFilterFunction<ServerResponse, ServerResponse> JWTFilterFunctions() {
         return (request, next) -> {
-            String jwt = request.headers().firstHeader("JWT");
+            String jwt = request.headers().firstHeader("MY_APP_TOKEN");
 
             if (StringUtils.isBlank(jwt)) {
                 return next.handle(request);

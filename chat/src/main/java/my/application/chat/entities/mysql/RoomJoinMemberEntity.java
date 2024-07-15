@@ -1,0 +1,17 @@
+package my.application.chat.entities.mysql;
+
+import jakarta.persistence.*;
+import lombok.Getter;
+
+@Entity
+@Getter
+public class RoomJoinMemberEntity {
+
+    @Id @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
+
+    @OneToOne(mappedBy = "id")
+    private RoomEntity room;
+
+    private Long memberNumber;
+}

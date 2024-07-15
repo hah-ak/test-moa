@@ -21,21 +21,5 @@ public class SecurityPackageConfig {
         Resource resource = applicationContext.getResource("classpath:/client_secret.json");
         return GoogleClientSecrets.load(GsonFactory.getDefaultInstance(), new BufferedReader(new InputStreamReader(resource.getInputStream())));
     }
-//    @Bean
-//    public ClientRegistrationRepository clientRegistrationRepository(GoogleClientSecrets googleClientSecrets) {
-//        return new InMemoryClientRegistrationRepository(this.googleClientRegistration(googleClientSecrets));
-//    }
-//    private ClientRegistration googleClientRegistration(GoogleClientSecrets googleClientSecrets) {
-//        return ClientRegistration.withRegistrationId("google")
-//                .clientId(googleClientSecrets.getWeb().getClientId())
-//                .clientSecret(googleClientSecrets.getWeb().getClientSecret())
-//                .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
-//                .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
-//                .redirectUri(googleClientSecrets.getWeb().getRedirectUris().get(0))
-//                .scope(Oauth2Scopes.OPENID, Oauth2Scopes.USERINFO_EMAIL, Oauth2Scopes.USERINFO_PROFILE)
-//                .tokenUri(googleClientSecrets.getWeb().getTokenUri())
-//                .authorizationUri(googleClientSecrets.getWeb().getAuthUri())
-//                .clientName("Google")
-//                .build();
-//    }
+
 }

@@ -18,7 +18,6 @@ import java.util.List;
 public class MemberRestController {
 
     private final MemberService memberService;
-//    private final KafkaTemplate<String, MemberEntity> kafkaTemplate;
 
     @GetMapping("")
     public MemberEntity getMember(@RequestParam(name = "mem_no") Integer memNo) {
@@ -28,10 +27,4 @@ public class MemberRestController {
     public List<MemberEntity> memberEntities() {
         return memberService.memberEntities();
     }
-
-//    @SendTo
-//    @KafkaListener(topics = "member.request.data", groupId = "group_1")
-//    public MemberEntity getMemberEntity(String userId) {
-//        return memberService.getMember(userId);
-//    }
 }

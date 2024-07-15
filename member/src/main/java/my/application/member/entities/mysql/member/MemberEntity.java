@@ -6,8 +6,6 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Set;
 
 @Entity(name = "member")
 @Getter
@@ -22,9 +20,6 @@ public class MemberEntity {
     @Column(nullable = false)
     private String password;
     private String imageName;
-    @Column(nullable = false)
-    @OneToMany(mappedBy = "member", fetch = FetchType.EAGER)
-    private Set<MemberRoleEntity> roles = new HashSet<>();
     @CreatedDate
     private LocalDateTime createDateTime;
     @DateTimeFormat

@@ -14,7 +14,7 @@ import org.springframework.context.annotation.PropertySource;
 public class MySQLDefaultConfig {
 
     @Bean
-    @Qualifier("mysqlMyApp")
+    @Primary
     @ConfigurationProperties(prefix = "application.db.mysql.my-app")
     public DataSourceProperties hikariConfig() {
         return new DataSourceProperties();
@@ -23,7 +23,7 @@ public class MySQLDefaultConfig {
     @Bean
     @Primary
     @ConfigurationProperties(prefix = "application.db.mysql.my-app.hikari")
-    public HikariDataSource hikariDataSource(@Qualifier("mysqlMyApp") DataSourceProperties dataSourceProperties) {
+    public HikariDataSource hikariDataSource(DataSourceProperties dataSourceProperties) {
         return dataSourceProperties.initializeDataSourceBuilder().type(HikariDataSource.class).build();
     }
 

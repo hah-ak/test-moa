@@ -33,6 +33,7 @@ public class RedisConfig {
     }
 
     @Bean
+    @Primary
     @ConfigurationProperties(prefix = "application.db.redis.zero")
     public RedisConfigurationProperties redisConfigurationProperties() {
         return new RedisConfigurationProperties();

@@ -14,7 +14,13 @@ public class MemberSignInUserDetails implements UserDetails {
     private Collection<? extends GrantedAuthority> authorities;
     public MemberSignInUserDetails(MemberEntity memberEntity) {
         this.memberEntity = memberEntity;
-        this.authorities = memberEntity.getRoles().stream().map(e -> e.getRole().getMemberRole()).toList();
+
+    }
+    public Integer getUserNumber() {
+        return this.memberEntity.getMemNo();
+    }
+    public String getUserNickName() {
+        return memberEntity.getName();
     }
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

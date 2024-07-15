@@ -47,16 +47,6 @@ public class FileUploadController {
         };
     }
 
-    @GetMapping("/test/test")
-    public String a() {
-        return "a";
-    }
-
-    @GetMapping("/test")
-    public String b() {
-        return "b";
-    }
-
     @GetMapping("/{type}/all")
     public List<File> getAllPhoto(@PathVariable String type) throws IOException {
         return getBeans(type).orElseThrow().getAllFiles();
