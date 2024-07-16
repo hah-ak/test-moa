@@ -2,9 +2,10 @@ package my.domain.redis.config;
 
 import io.lettuce.core.RedisClient;
 import io.lettuce.core.RedisURI;
-import io.lettuce.core.api.StatefulRedisConnection;
 import lombok.Getter;
 import lombok.Setter;
+import my.domain.redis.RedisCommonTemplate;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -13,7 +14,6 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.repository.configuration.EnableRedisRepositories;
 
 
@@ -32,16 +32,16 @@ public class RedisConfig {
         private Integer port;
     }
 
-    @Bean
-    @Primary
-    @ConfigurationProperties(prefix = "application.db.redis.zero")
+    @Bean("redisCommonProperties")
+    @ConfigurationProperties(prefix = "application.db.redis.common")
     public RedisConfigurationProperties redisConfigurationProperties() {
         return new RedisConfigurationProperties();
     }
 
-    @Bean
+    @Bean("redisCommonFactory")
     @Primary
-    public LettuceConnectionFactory lettuceConnectionFactory(RedisConfigurationProperties properties) {
+    public LettuceConnectionFactory lettuceConnectionFactory(
+            @Qualifier("redisCommonProperties") RedisConfigurationProperties properties) {
         RedisStandaloneConfiguration configuration = new RedisStandaloneConfiguration();
         configuration.setPassword(properties.getPassword());
         configuration.setDatabase(properties.getDatabase());
@@ -50,9 +50,9 @@ public class RedisConfig {
         return new LettuceConnectionFactory(configuration);
     }
 
-    @Bean
-    @Primary
-    public RedisClient redisClient(RedisConfigurationProperties properties) {
+    @Bean("redisCommonClient")
+    public RedisClient redisClient(
+            @Qualifier("redisCommonProperties") RedisConfigurationProperties properties) {
         return RedisClient.create(RedisURI.Builder
                         .redis(properties.getHost(), properties.getPort())
                         .withDatabase(properties.getDatabase())
@@ -63,9 +63,9 @@ public class RedisConfig {
     }
 
     @Bean
-    @Primary
-    public <K,V> RedisTemplate<K, V> redisTemplate(LettuceConnectionFactory lettuceConnectionFactory) {
-        RedisTemplate<K, V> kvRedisTemplate = new RedisTemplate<>();
+    public <K,V> RedisCommonTemplate<K, V> redisTemplate(
+            @Qualifier("redisCommonFactory") LettuceConnectionFactory lettuceConnectionFactory) {
+        RedisCommonTemplate<K, V> kvRedisTemplate = new RedisCommonTemplate<>();
         kvRedisTemplate.setConnectionFactory(lettuceConnectionFactory);
         return kvRedisTemplate;
     }

@@ -11,8 +11,14 @@ jar {
 }
 
 dependencies {
-  api project(':domain-modules:cores:redis-core')
+  api project(':domain-modules:secret-resources')
+  api 'org.springframework.boot:spring-boot-starter-validation'
+  api 'org.springframework.boot:spring-boot-starter-data-jpa'
+  api 'org.springframework.boot:spring-boot-starter-data-redis'
   api 'com.google.apis:google-api-services-oauth2:v2-rev20200213-1.32.1'
+  api 'org.springframework.session:spring-session-core'
+  api 'org.springframework.session:spring-session-data-redis'
+
 }
 
 test {

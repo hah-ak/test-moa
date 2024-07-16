@@ -1,7 +1,5 @@
 rootProject.name = 'myApplication'
-include('domain-modules:cores:web-core')
-include('domain-modules:cores:mysql-core')
-include('domain-modules:cores:redis-core')
+include('domain-modules:web-core')
 include('domain-modules:mysql-domain')
 include('domain-modules:redis-domain')
 include('domain-modules:kafka-domain')

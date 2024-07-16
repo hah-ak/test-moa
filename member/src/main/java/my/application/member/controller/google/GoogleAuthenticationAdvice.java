@@ -1,11 +1,9 @@
 package my.application.member.controller.google;
 
-import com.google.api.client.auth.oauth2.TokenResponseException;
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import my.application.gateway.resolvers.MyAppHeaderToken;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -33,10 +31,10 @@ public class GoogleAuthenticationAdvice {
         }
     }
 
-    @ExceptionHandler(TokenResponseException.class)
-    public void tokenResponseException(HttpServletResponse response, HttpServletRequest request, MyAppHeaderToken myAppHeaderToken, TokenResponseException exception) throws IOException {
-        switch (exception.getDetails().getError()) {
-            case INVALID_GRANT -> googleController.refresh(request, response, myAppHeaderToken);
-        }
-    }
+//    @ExceptionHandler(TokenResponseException.class)
+//    public void tokenResponseException(HttpServletResponse response, HttpServletRequest request, MyAppHeaderToken myAppHeaderToken, TokenResponseException exception) throws IOException {
+//        switch (exception.getDetails().getError()) {
+//            case INVALID_GRANT -> googleController.refresh(request, response, myAppHeaderToken);
+//        }
+//    }
 }

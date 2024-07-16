@@ -15,7 +15,12 @@ public class RoomEntity {
     private String type;
 
     @OneToMany(targetEntity = RoomJoinMemberEntity.class)
-    private List<RoomJoinMemberEntity> rooms;
+    private List<RoomJoinMemberEntity> members;
+
+    public RoomEntity(Integer maxUser, String type) {
+        this.maxUser = maxUser;
+        this.type = type;
+    }
 
     public RoomEntity() {}
 }

@@ -14,4 +14,10 @@ public class RoomJoinMemberEntity {
     private RoomEntity room;
 
     private Long memberNumber;
+
+    public RoomJoinMemberEntity() {}
+    public RoomJoinMemberEntity(RoomEntity room, Long memberNumber) {
+        this.room = room;
+        this.memberNumber = memberNumber;
+    }
 }

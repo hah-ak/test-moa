@@ -2,6 +2,7 @@ package my.application.gateway.services;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import my.domain.redis.RedisCommonTemplate;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -22,7 +23,7 @@ public class RateLimitService {
         booleanDefaultRedisScript.setResultType(Boolean.class);
         return booleanDefaultRedisScript;
     }
-    private final RedisTemplate<String, String> redisTemplate;
+    private final RedisCommonTemplate<String, String> redisTemplate;
     private final DefaultRedisScript<Boolean> ratelimitScript = ratelimitScript();
 
 

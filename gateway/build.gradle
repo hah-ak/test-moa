@@ -11,8 +11,7 @@ application {
 }
 
 dependencies {
-    implementation project(':domain-modules:cores:web-core')
-    implementation project(':domain-modules:redis-domain')
+    implementation project(':domain-modules:web-core')
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-aop'
 

@@ -1,6 +1,6 @@
 package my.application.member.services.member;
 
-import my.application.member.entities.mysql.member.MemberEntity;
+import my.application.member.entities.mysql.MemberEntity;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -16,7 +16,7 @@ public class MemberSignInUserDetails implements UserDetails {
         this.memberEntity = memberEntity;
 
     }
-    public Integer getUserNumber() {
+    public Long getUserNumber() {
         return this.memberEntity.getMemNo();
     }
     public String getUserNickName() {

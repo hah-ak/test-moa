@@ -15,10 +15,13 @@ import io.lettuce.core.codec.StringCodec;
 import io.micrometer.common.util.StringUtils;
 import lombok.RequiredArgsConstructor;
 import my.application.gateway.utils.MyAppJwtUtils;
+import my.domain.redis.RedisCommonTemplate;
+import my.domain.redis.RedisSessionTemplate;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.cloud.circuitbreaker.resilience4j.Resilience4JCircuitBreakerFactory;
 import org.springframework.cloud.circuitbreaker.resilience4j.Resilience4JConfigBuilder;
 import org.springframework.cloud.client.circuitbreaker.Customizer;
+import org.springframework.cloud.gateway.server.mvc.filter.AfterFilterFunctions;
 import org.springframework.cloud.gateway.server.mvc.filter.BeforeFilterFunctions;
 import org.springframework.cloud.gateway.server.mvc.filter.Bucket4jFilterFunctions;
 import org.springframework.cloud.gateway.server.mvc.filter.CircuitBreakerFilterFunctions;
@@ -27,12 +30,11 @@ import org.springframework.cloud.gateway.server.mvc.handler.HandlerFunctions;
 import org.springframework.cloud.gateway.server.mvc.predicate.GatewayRequestPredicates;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.function.HandlerFilterFunction;
 import org.springframework.web.servlet.function.RouterFunction;
+import org.springframework.web.servlet.function.ServerRequest;
 import org.springframework.web.servlet.function.ServerResponse;
 
 import javax.naming.AuthenticationException;
@@ -44,7 +46,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class MvcConfig implements WebMvcConfigurer {
 
-    private final RedisTemplate<String, List<Map<String, String>>> redisTemplate;
+    private final RedisSessionTemplate<String, List<Map<String, String>>> redisTemplate;
 
     @Bean
     public Customizer<Resilience4JCircuitBreakerFactory> circuitBreakerFactoryCustomizer() {
@@ -66,7 +68,8 @@ public class MvcConfig implements WebMvcConfigurer {
     @Bean
     public RouterFunction<ServerResponse> gatewayRouter() {
 //        GatewayRequestPredicates.after(ZonedDateTime.parse("2017-01-20T17:42:47.789-07:00[America/Denver]"))
-        return GatewayRouterFunctions.route("after_route")
+        return GatewayRouterFunctions
+                .route("after_route")
                 .route(
                         GatewayRequestPredicates.path("/ws/**"),
                         HandlerFunctions.http("ws://localhost:9000"))
@@ -78,10 +81,11 @@ public class MvcConfig implements WebMvcConfigurer {
                         .setPeriod(Duration.ofMinutes(1))
                         .setKeyResolver(request -> request.headers().firstHeader(HttpHeaders.X_FORWARDED_FOR))
                         .setStatusCode(HttpStatus.TOO_MANY_REQUESTS)
-                        .setHeaderName("TOO-MANY-REQUESTS")
+                        .setHeaderName(HttpStatus.TOO_MANY_REQUESTS.name())
                 ))
                 .filter(JWTFilterFunctions())
                 .before(BeforeFilterFunctions.addRequestHeader("gateway","ok"))
+                .after(AfterFilterFunctions.removeResponseHeader("MEMBER_NUMBER"))
                 .build();
     }
 
@@ -99,11 +103,16 @@ public class MvcConfig implements WebMvcConfigurer {
 
                 assert loginInfos != null;
                 Map<String, String> loginMap = loginInfos.stream()
-                        .filter(map -> map.get("SESSIONID").equals(request.headers().firstHeader("SESSIONID")))
+                        .filter(map -> map.get("JSESSIONID").equals(request.headers().firstHeader("JSESSIONID")))
                         .findFirst()
                         .orElseThrow(AuthenticationException::new);
 
-                return next.handle(request);
+                ServerRequest newRequest = ServerRequest.from(request)
+                        .headers(httpHeaders -> httpHeaders.add("MEMBER_NUMBER", loginMap.getOrDefault("NUMBER", "-1")))
+                        .headers(httpHeaders -> httpHeaders.add("MEMBER_NICK_NAME",loginMap.getOrDefault("NICK_NAME", "")))
+                        .build();
+
+                return next.handle(newRequest);
             } catch (Exception e) {
                 return ServerResponse.badRequest().build();
             }

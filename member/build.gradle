@@ -11,9 +11,8 @@ application {
 }
 
 dependencies {
-    implementation project(':domain-modules:cores:web-core')
+    implementation project(':domain-modules:web-core')
     implementation project(':domain-modules:mysql-domain')
-    implementation project(':domain-modules:redis-domain')
     implementation project(':domain-modules:kafka-domain')
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-security' // security와 ldap접목을 위한 security 코어가 필요

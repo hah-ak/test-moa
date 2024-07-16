@@ -7,7 +7,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import my.application.member.dto.token.MemberLoginToken;
-import my.application.member.entities.mysql.member.MemberEntity;
+import my.application.member.entities.mysql.MemberEntity;
 import my.application.member.repositories.mysql.member.MemberRepository;
 import my.application.member.resolvers.MemberResolver;
 import my.application.member.services.member.MemberSignInUserDetails;

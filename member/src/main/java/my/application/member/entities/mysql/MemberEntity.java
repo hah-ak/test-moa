@@ -1,4 +1,4 @@
-package my.application.member.entities.mysql.member;
+package my.application.member.entities.mysql;
 
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 public class MemberEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer memNo;
+    private Long memNo;
     @Column(unique = true, nullable = false)
     private String id;
     @Column(nullable = false)
