@@ -7,11 +7,11 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
 
-@Entity(name = "member")
+
 @Getter
+@Entity(name = "member")
 public class MemberEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long memNo;
     @Column(unique = true, nullable = false)
     private String id;

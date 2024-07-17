@@ -10,7 +10,7 @@ import my.application.member.dto.signIn.SignIn;
 import my.application.member.entities.mysql.MemberEntity;
 import my.application.member.filter.handlers.MemberAuthenticationEntryPoint;
 import my.application.member.filter.manager.MemberAuthenticationProcessingProviderManager;
-import my.application.member.repositories.mysql.member.MemberRepository;
+import my.application.member.repositories.mysql.MemberRepository;
 import my.application.member.services.member.MemberSignInUserDetails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;

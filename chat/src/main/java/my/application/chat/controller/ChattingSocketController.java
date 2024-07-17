@@ -34,7 +34,7 @@ public class ChattingSocketController {
             return "존재하지 않는 방입니다.";
         }
         RoomEntity roomEntity = byId.get();
-        for (RoomJoinMemberEntity member : byId.get().getMembers()) {
+        for (RoomJoinMemberEntity member : byId.get().getJoinMembers()) {
             if (member.getMemberNumber().equals(memberNumber)) {
                 return null;
             }

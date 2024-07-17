@@ -3,7 +3,7 @@ package my.application.member.services.member;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import my.application.member.entities.mysql.MemberEntity;
-import my.application.member.repositories.mysql.member.MemberRepository;
+import my.application.member.repositories.mysql.MemberRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;

@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import my.application.member.dto.signUp.SignUp;
 import my.application.member.entities.mysql.MemberEntity;
-import my.application.member.repositories.mysql.member.MemberRepository;
+import my.application.member.repositories.mysql.MemberRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 

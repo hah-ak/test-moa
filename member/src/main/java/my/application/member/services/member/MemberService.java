@@ -2,7 +2,7 @@ package my.application.member.services.member;
 
 import lombok.RequiredArgsConstructor;
 import my.application.member.entities.mysql.MemberEntity;
-import my.application.member.repositories.mysql.member.MemberRepository;
+import my.application.member.repositories.mysql.MemberRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

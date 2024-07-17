@@ -10,7 +10,7 @@ public class RoomJoinMemberEntity {
     @Id @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @OneToOne(mappedBy = "id")
+    @ManyToOne
     private RoomEntity room;
 
     private Long memberNumber;

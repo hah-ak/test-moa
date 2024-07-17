@@ -33,13 +33,13 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
 
-        httpSecurity.authorizeHttpRequests(auth -> auth.requestMatchers("/**").permitAll())
+//        httpSecurity.authorizeHttpRequests(auth -> auth.requestMatchers("/**").permitAll())
 //                        .requestMatchers("/admin/**").hasRole("ADMIN")
 //                        .requestMatchers("/sign-in/**", "/oauth2/**", "/google/revoke", "/google/login").permitAll()
 //                        .requestMatchers(AntPathRequestMatcher.antMatcher("/member/members/permit-all")).permitAll())
-                .exceptionHandling(exception -> exception
-                        .accessDeniedHandler(null)
-                );
+//                .exceptionHandling(exception -> exception
+//                        .accessDeniedHandler(null)
+//                );
 
         return httpSecurity.build();
     }

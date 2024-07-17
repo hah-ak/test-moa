@@ -1,4 +1,4 @@
-package my.application.member.repositories.mysql.member;
+package my.application.member.repositories.mysql;
 
 
 import my.application.member.entities.mysql.MemberEntity;

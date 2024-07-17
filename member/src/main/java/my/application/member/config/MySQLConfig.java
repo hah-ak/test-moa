@@ -1,7 +1,6 @@
-package my.application.chat.config;
+package my.application.member.config;
 
 import com.zaxxer.hikari.HikariDataSource;
-import org.springframework.boot.autoconfigure.orm.jpa.JpaProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
@@ -14,11 +13,10 @@ import org.springframework.transaction.PlatformTransactionManager;
 
 import java.util.HashMap;
 import java.util.Objects;
-import java.util.Properties;
 
 @Configuration
 @EnableJpaRepositories(
-        basePackages = {"my.application.chat.repositories.mysql"},
+        basePackages = {"my.application.member.repositories.mysql"},
         entityManagerFactoryRef = "localContainerEntityManagerFactoryBean",
         transactionManagerRef = "platformTransactionManager"
 )
@@ -40,7 +38,7 @@ public class MySQLConfig {
         LocalContainerEntityManagerFactoryBean localContainerEntityManagerFactoryBean = new LocalContainerEntityManagerFactoryBean();
         localContainerEntityManagerFactoryBean.setDataSource(hikariDataSource);
         localContainerEntityManagerFactoryBean.setJpaPropertyMap(properties);
-        localContainerEntityManagerFactoryBean.setPackagesToScan("my.application.chat.entities.mysql");
+        localContainerEntityManagerFactoryBean.setPackagesToScan("my.application.member.entities.mysql");
         localContainerEntityManagerFactoryBean.setJpaVendorAdapter(hibernateJpaVendorAdapter);
         localContainerEntityManagerFactoryBean.setJpaDialect(new HibernateJpaDialect());
         return localContainerEntityManagerFactoryBean;

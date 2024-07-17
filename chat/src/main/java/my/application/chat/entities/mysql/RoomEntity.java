@@ -14,8 +14,8 @@ public class RoomEntity {
     private Integer maxUser;
     private String type;
 
-    @OneToMany(targetEntity = RoomJoinMemberEntity.class)
-    private List<RoomJoinMemberEntity> members;
+    @OneToMany(mappedBy = "room")
+    private List<RoomJoinMemberEntity> joinMembers;
 
     public RoomEntity(Integer maxUser, String type) {
         this.maxUser = maxUser;

@@ -1,5 +1,6 @@
 package my.application.gateway.config;
 
+import com.google.common.collect.Lists;
 import com.google.common.net.HttpHeaders;
 import com.nimbusds.jwt.SignedJWT;
 import io.github.bucket4j.distributed.ExpirationAfterWriteStrategy;
@@ -21,16 +22,16 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.cloud.circuitbreaker.resilience4j.Resilience4JCircuitBreakerFactory;
 import org.springframework.cloud.circuitbreaker.resilience4j.Resilience4JConfigBuilder;
 import org.springframework.cloud.client.circuitbreaker.Customizer;
-import org.springframework.cloud.gateway.server.mvc.filter.AfterFilterFunctions;
-import org.springframework.cloud.gateway.server.mvc.filter.BeforeFilterFunctions;
-import org.springframework.cloud.gateway.server.mvc.filter.Bucket4jFilterFunctions;
-import org.springframework.cloud.gateway.server.mvc.filter.CircuitBreakerFilterFunctions;
+import org.springframework.cloud.gateway.server.mvc.filter.*;
 import org.springframework.cloud.gateway.server.mvc.handler.GatewayRouterFunctions;
 import org.springframework.cloud.gateway.server.mvc.handler.HandlerFunctions;
 import org.springframework.cloud.gateway.server.mvc.predicate.GatewayRequestPredicates;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.function.HandlerFilterFunction;
 import org.springframework.web.servlet.function.RouterFunction;
@@ -38,6 +39,7 @@ import org.springframework.web.servlet.function.ServerRequest;
 import org.springframework.web.servlet.function.ServerResponse;
 
 import javax.naming.AuthenticationException;
+import java.net.InetSocketAddress;
 import java.time.Duration;
 import java.util.List;
 import java.util.Map;
@@ -45,6 +47,8 @@ import java.util.Map;
 @Configuration
 @RequiredArgsConstructor
 public class MvcConfig implements WebMvcConfigurer {
+
+
 
     private final RedisSessionTemplate<String, List<Map<String, String>>> redisTemplate;
 
@@ -65,26 +69,45 @@ public class MvcConfig implements WebMvcConfigurer {
                 .build());
     }
 
+    @Override
+    public void addCorsMappings(CorsRegistry registry) {
+        registry.addMapping("/**")
+                .allowedMethods("*")
+                .allowedOrigins("http://localhost:[*]");
+    }
+
     @Bean
     public RouterFunction<ServerResponse> gatewayRouter() {
 //        GatewayRequestPredicates.after(ZonedDateTime.parse("2017-01-20T17:42:47.789-07:00[America/Denver]"))
         return GatewayRouterFunctions
-                .route("after_route")
+                .route("common_route")
                 .route(
-                        GatewayRequestPredicates.path("/ws/**"),
-                        HandlerFunctions.http("ws://localhost:9000"))
+                        GatewayRequestPredicates.path("/chat/**"),
+                        HandlerFunctions.http("http://localhost:9100"))
                 .route(
-                        GatewayRequestPredicates.path("/**"),
+                        GatewayRequestPredicates.path("/api/**"),
                         HandlerFunctions.http("http://localhost:8100"))
+                .route(
+                        GatewayRequestPredicates.path("/member/**"),
+                        HandlerFunctions.http("http://localhost:8110"))
                 .filter(CircuitBreakerFilterFunctions.circuitBreaker("circuit"))
                 .filter(Bucket4jFilterFunctions.rateLimit(c -> c.setCapacity(5)
                         .setPeriod(Duration.ofMinutes(1))
-                        .setKeyResolver(request -> request.headers().firstHeader(HttpHeaders.X_FORWARDED_FOR))
+                        .setKeyResolver(request -> request.remoteAddress().orElse(new InetSocketAddress("unknown", 0)).toString())
                         .setStatusCode(HttpStatus.TOO_MANY_REQUESTS)
                         .setHeaderName(HttpStatus.TOO_MANY_REQUESTS.name())
                 ))
                 .filter(JWTFilterFunctions())
                 .before(BeforeFilterFunctions.addRequestHeader("gateway","ok"))
+                .before(BeforeFilterFunctions.rewritePath("/(api|member)/(?<segment>.*)","/${segment}"))
+                .before(serverRequest -> {
+                    if (serverRequest.path().contains("/chat")) {
+                        return ServerRequest.from(serverRequest)
+                                .headers(httpHeaders -> httpHeaders.replace("Upgrade", List.of("websocket")))
+                                .build();
+                    }
+                    return serverRequest;
+                })
                 .after(AfterFilterFunctions.removeResponseHeader("MEMBER_NUMBER"))
                 .build();
     }
@@ -92,7 +115,6 @@ public class MvcConfig implements WebMvcConfigurer {
     private HandlerFilterFunction<ServerResponse, ServerResponse> JWTFilterFunctions() {
         return (request, next) -> {
             String jwt = request.headers().firstHeader("MY_APP_TOKEN");
-
             if (StringUtils.isBlank(jwt)) {
                 return next.handle(request);
             }
