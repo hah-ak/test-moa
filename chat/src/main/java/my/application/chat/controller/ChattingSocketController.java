@@ -8,15 +8,17 @@ import my.application.chat.repositories.mysql.RoomJoinMemberRepository;
 import my.application.chat.repositories.mysql.RoomRepository;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 
+import java.util.Map;
 import java.util.Optional;
 
 @Controller
-@MessageMapping("/pub/chat")
-@SendTo("/sub/chat")
+@MessageMapping("/chat/pub")
+@SendTo("/chat/sub")
 @RequiredArgsConstructor
 public class ChattingSocketController {
 
@@ -42,6 +44,11 @@ public class ChattingSocketController {
 
         roomJoinMemberRepository.save(new RoomJoinMemberEntity(roomEntity, memberNumber));
         return nickName + "님이 대화방에 입장 하셨습니다.";
+    }
+
+    @MessageMapping("/message.{roomID}")
+    public void message(@DestinationVariable Long roomID, @Payload Map<String,Object> data, HttpServletRequest request) {
+        simpMessagingTemplate.convertAndSend("/sub/chat", data.get("message"));
     }
 
 }

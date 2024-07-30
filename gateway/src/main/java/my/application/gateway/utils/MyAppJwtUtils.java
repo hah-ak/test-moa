@@ -6,7 +6,7 @@ import com.nimbusds.jose.crypto.RSASSASigner;
 import com.nimbusds.jose.crypto.RSASSAVerifier;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
-import web.core.util.SecretKeyUtil;
+import my.secret.source.SecretKeyUtil;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -15,7 +15,6 @@ import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.security.interfaces.RSAPublicKey;
 import java.text.ParseException;
-import java.util.Enumeration;
 
 public class MyAppJwtUtils {
 

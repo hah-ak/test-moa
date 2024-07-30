@@ -11,10 +11,14 @@ application {
 }
 
 dependencies {
-    implementation project(':domain-modules:web-core')
-    implementation 'org.springframework.boot:spring-boot-starter-validation'
-    implementation 'org.springframework.boot:spring-boot-starter-aop'
+    implementation project(":domain-modules:secret-resources")
 
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+//    implementation 'org.springframework.session:spring-session-core'
+//    implementation 'org.springframework.session:spring-session-data-redis'
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis-reactive'
+    implementation 'org.springframework.cloud:spring-cloud-starter-circuitbreaker-reactor-resilience4j'
+    implementation 'org.springframework.cloud:spring-cloud-starter-gateway'
 
     implementation 'com.google.auth:google-auth-library-oauth2-http:1.19.0'
 
@@ -23,8 +27,6 @@ dependencies {
 
     implementation 'org.springframework.security:spring-security-oauth2-jose:6.1.1'
 
-    implementation 'org.springframework.cloud:spring-cloud-starter-circuitbreaker-reactor-resilience4j'
-    implementation 'org.springframework.cloud:spring-cloud-starter-gateway-mvc'
 
     implementation 'com.bucket4j:bucket4j_jdk17-redis-common:8.13.1' // 내부에 코어 있음
     implementation 'com.bucket4j:bucket4j_jdk17-lettuce:8.13.1'

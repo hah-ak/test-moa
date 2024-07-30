@@ -7,7 +7,7 @@ import com.nimbusds.jose.crypto.RSASSAVerifier;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
 import my.application.member.services.member.MemberSignInUserDetails;
-import web.core.util.SecretKeyUtil;
+import my.secret.source.SecretKeyUtil;
 
 import java.io.IOException;
 import java.io.InputStream;

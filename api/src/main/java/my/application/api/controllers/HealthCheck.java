@@ -2,13 +2,13 @@ package my.application.api.controllers;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/health")
+@RequiredArgsConstructor
 public class HealthCheck {
 
     @AllArgsConstructor
@@ -19,7 +19,7 @@ public class HealthCheck {
         private String serverName;
     }
 
-    @GetMapping(value = "/check")
+    @GetMapping(value = "/health/check")
     public Object check() {
         return new HealthCheckResponse("OK","API");
     }

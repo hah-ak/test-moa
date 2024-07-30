@@ -25,10 +25,10 @@ public class ApiTest {
         int a = 4;
         Child child = new Child();
         print(child);
-
     }
 
     void print(Parent parent) {
         parent.print();
     }
+
 }
