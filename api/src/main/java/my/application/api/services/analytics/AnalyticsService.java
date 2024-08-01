@@ -32,7 +32,6 @@ public class AnalyticsService {
                             .setCredentialsProvider(FixedCredentialsProvider.create(credentials))
                             .build();
         } catch (IOException e) {
-            System.out.println(e);
             throw new RuntimeException(e);
         }
     }
@@ -40,7 +39,6 @@ public class AnalyticsService {
     public String getRunReport() {
         try (BetaAnalyticsDataClient betaAnalyticsDataClient = BetaAnalyticsDataClient.create(betaAnalyticsDataSettings)) {
             LocalDate utc = LocalDate.now(ZoneId.of("UTC"));
-//            347020421 여보야
 //            451919449 내꺼
             RunReportRequest eventCount = RunReportRequest.newBuilder()
                     .setProperty("properties/" + "451919449")
