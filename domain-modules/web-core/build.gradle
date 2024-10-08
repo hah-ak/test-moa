@@ -14,8 +14,6 @@ dependencies {
   api project(':domain-modules:secret-resources')
   api project(':domain-modules:redis-domain')
   api 'org.springframework.boot:spring-boot-starter-web'
-
-
 }
 
 test {

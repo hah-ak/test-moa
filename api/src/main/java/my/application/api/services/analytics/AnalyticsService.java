@@ -49,10 +49,14 @@ public class AnalyticsService {
                     .setDimensionFilter(FilterExpression.newBuilder()
                             .setFilter(Filter.newBuilder()
                                     .setFieldName("eventName")
-                                    .setStringFilter(Filter.StringFilter.newBuilder().setMatchType(Filter.StringFilter.MatchType.EXACT).setValue("session_start").build()).build()).build())
+                                    .setStringFilter(Filter.StringFilter.newBuilder()
+                                            .setMatchType(Filter.StringFilter.MatchType.FULL_REGEXP)
+                                            .setValue("push[M|F]Click.*").build()
+                                    ).build()
+                            ).build())
                     .addDateRanges(DateRange.newBuilder()
-                            .setStartDate("2024-07-25")
-                            .setEndDate("2024-07-27")
+                            .setStartDate("2024-08-04")
+                            .setEndDate("2024-08-05")
                             .build())
                     .build();
 

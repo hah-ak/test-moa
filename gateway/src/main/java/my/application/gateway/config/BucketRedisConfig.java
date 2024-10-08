@@ -33,7 +33,7 @@ import static my.application.gateway.config.FluxGateWayConfig.RedisConfiguration
 public class BucketRedisConfig {
 
     @Bean("BucketRedisConfig")
-    @ConfigurationProperties(prefix = "application.db.redis.one")
+    @ConfigurationProperties(prefix = "application.db.redis.bucket")
     public RedisConfigurationProperties redisConfigurationProperties() {
         return new RedisConfigurationProperties();
     }

@@ -3,8 +3,7 @@ entity Company {
     - id : Long
     - name : String
     - simpleExp : String
-    - businessDay : String
-    - holidayClosed : Boolean
+    - taxId : String
 }
 
 entity CompanyReservation {
@@ -33,7 +32,7 @@ entity CompanyReservationMainService {
     - endBreakTime : LocalDateTime
     - term : Integer
     - ServiceDayOfTheWeek : String
-    - staff : List<StaffMainServiceTable>
+    - staff : List<StaffMainService>
     - detailServices : List<CompanyReservationDetailService>
 }
 note left of CompanyReservationMainService::revCompanyId
@@ -67,17 +66,17 @@ entity Staff {
     - introduce : String
 }
 
-entity StaffMainServiceTable {
+entity StaffMainService {
     - id : Long
-    - StaffId : Staff
-    - MainServiceId : MainService
+    - staff : Staff
+    - companyMainService : CompanyReservationMainService
 }
 
 Company "1" -- "0..*" CompanyReservation
 Company "1" -- "1..*" Staff
 CompanyReservation "1" -- "0..*" CompanyReservationMainService
-CompanyReservationMainService "1" - "1..*" StaffMainServiceTable
-Staff "1" -- "1..*" StaffMainServiceTable
+CompanyReservationMainService "1" - "1..*" StaffMainService
+Staff "1" -- "1..*" StaffMainService
 CompanyReservationMainService "1" -- "1..*" CompanyReservationDetailService
 
 
