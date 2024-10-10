@@ -2,7 +2,7 @@ package my.application.api.entities.mysql.reservation;
 
 import java.util.List;
 
-public class CompanyReservation {
+public class CompanyReservationService {
     private Long id;
     private Long companyId;
     private Company companyInfo;
