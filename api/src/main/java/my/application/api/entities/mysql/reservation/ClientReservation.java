@@ -6,6 +6,5 @@ public class ClientReservation {
     private Long id;
     private LocalDateTime time;
     private String message;
-    private CompanyReservationDetailService service;
     private Staff staff;
 }

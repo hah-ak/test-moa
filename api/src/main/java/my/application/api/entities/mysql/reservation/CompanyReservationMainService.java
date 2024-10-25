@@ -14,5 +14,4 @@ public class CompanyReservationMainService {
     private Integer term;
     private String ServiceDayOfTheWeek;
     private List<StaffMainService> staff;
-    private List<CompanyReservationDetailService> detailServices;
 }

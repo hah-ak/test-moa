@@ -47,7 +47,17 @@ dependencies {
 test {
     useJUnitPlatform()
 }
+tasks.register("forbiddenStringsCheck") {
+    doLast {
+        def sourceDir = file("src/main/java/my/application/api")
+        def forbiddenStrings = ["data"]
+        rootProject.ext.checkForbiddenCode(sourceDir, forbiddenStrings)
+    }
+}
+
 bootRun {
+    dependsOn forbiddenStringsCheck
+
     def profile
     if (!args.hasProperty("spring.profiles.active")) {
         args += ["--spring.profiles.active=local"]

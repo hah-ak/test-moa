@@ -41,3 +41,20 @@ subprojects {
         implementation 'io.opentelemetry:opentelemetry-sdk-extension-autoconfigure'
     }
 }
+
+ext {
+    defaultForbiddenStrings = ["LocalDateTime"]
+    checkForbiddenCode = { sourceDir, forbiddenStrings ->
+        sourceDir.eachFileRecurse { file ->
+            if (file.name.endsWith(".java")) {
+                def fileContent = file.text
+                forbiddenStrings.addAll(ext.defaultForbiddenStrings)
+                forbiddenStrings.each { forbidden ->
+                    if (fileContent.contains(forbidden)) {
+                        throw new GradleException("forbidden text exist")
+                    }
+                }
+            }
+        }
+    }
+}
