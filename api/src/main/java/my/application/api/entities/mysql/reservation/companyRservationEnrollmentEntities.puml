@@ -8,6 +8,23 @@ entity Company {
     - businessWeekTimeTable : BusinessWeekTimeTable
     - exceptionDayOffTimeTable : ExceptionDayOffTimeTable
     - exceptionBusinessTimeTable : ExceptionBusinessTimeTable
+    - services : List<CompanyService>
+}
+
+entity CompanyService {
+    - id : Long
+    - company : Company
+    - content : String
+    - img : URL
+    - staff : List<Staff>
+}
+
+entity Staff {
+    - id : Long
+    - companyId : Long
+    - name : String
+    - rank : String
+    - introduce : String
 }
 
 entity BusinessWeekTimeTable {
@@ -21,43 +38,35 @@ entity BusinessWeekTimeTable {
 }
 
 entity ExceptionDayOffTimeTable {
-        - id : Long
-        - time : LocalDateTime
-        - company : Company
-        - reason : String
+    - id : Long
+    - time : Time
+    - date : LocalDate
+    - company : Company
+    - reason : String
 }
 
 entity ExceptionBusinessTimeTable {
-        - id : Long
-        - time : LocalDateTime
-        - company : Company
-        - reason : String
+    - id : Long
+    - time : Time
+    - date : LocalDate
+    - company : Company
+    - reason : String
 }
 
-entity CompanyReservationService {
+entity StaffServiceInfo {
     - id : Long
-    - companyId : Long
-    - companyInfo : Company
-    - mainServices : List<CompanyReservationMainService>
+    - staff : Staff
+    - service : CompanyService
+    - price : int
+    - currency : String
+    - staffExplain : String
+    - reservationReceipts : List<ReservationReceipt>
+    - eachStaffServiceTimeTable : List<EachStaffServiceTimeTable>
 }
-note top of CompanyReservationService
-    id : 업체 예약 시스템 id값
-    companyId : 업체 id
-    mainService : 예약 상세 서비스 클래스 리스트
-end note
 
-entity CompanyReservationMainService {
+entity EachStaffServiceTimeTable {
     - id : Long
-    - revCompanyId : Long
-    - content : String
-    - timeTable : EachServiceTimeTable
-    - term : Integer
-    - ServiceDayOfTheWeek : String
-    - staff : List<StaffMainService>
-}
-entity EachServiceTimeTable {
-    - id : Long
-    - service : CompanyReservationMainService
+    - service : CompanyService
     - dayOfTheWeek : int
     - startBreakTime : Time
     - endBreakTime : Time
@@ -65,71 +74,28 @@ entity EachServiceTimeTable {
     - exceptionOpenTime : Time
     - exceptionCloseTime : Time
 }
-note left of CompanyReservationMainService::revCompanyId
-    reservationCompany 외래키
-end note
-note left of CompanyReservationMainService::content
-    서비스 내용
-end note
-note left of CompanyReservationMainService::openTime
-    서비스 시작 시간
-end note
-note left of CompanyReservationMainService::closeTime
-    서비스 종료 시간
-end note
-note left of CompanyReservationMainService::term
-    서비스 간격
-end note
 
-entity Staff {
-    - id : Long
-    - companyId : Long
-    - name : String
-    - rank : String
-    - introduce : String
-}
+entity ReservationReceipt {
+        - id : Long
+        - serviceDate : LocalDate
+        - serviceTime : Time
+        - message : String
+        - staffServiceInfo : StaffServiceInfo
+        - member : Integer
+    }
 
-entity StaffServiceInfo {
-    - id : Long
-    - staff : Staff
-    - companyMainService : CompanyReservationMainService
-    - price : int
-    - staffExplain : String
 
-}
-
-entity ClientClientReservation {
-    - id : Long
-    - clientIdId : Client
-    - clientReservationId : ClientReservation
-}
-note right of ClientClientReservation
- 클라이언트와 클라이언트의 주문을
- 연결만 해주는 테이블
- 하나의 클라이언트는 여러 ClientClientReservation을
- 가질 수 있다.
-end note
-
-entity ClientReservation {
-    - id : Long
-    - serviceDate : LocalDate
-    - serviceTime : Time
-    - message : String
-    - staff : Staff
-}
-
-ClientClientReservation "1..*" -- "1" ClientReservation
-Staff "1" -- "0..*" ClientReservation
+StaffServiceInfo "1" -- "0..*" ReservationReceipt
 Staff "1" -- "1..*" StaffServiceInfo
 
 Company "1" -- "0..*" BusinessWeekTimeTable
 Company "1" -- "0..*" ExceptionDayOffTimeTable
 Company "1" -- "0..*" ExceptionBusinessTimeTable
-Company "1" -- "0..*" CompanyReservationService
 Company "1" -- "1..*" Staff
-CompanyReservationService "1" -- "0..*" CompanyReservationMainService
-CompanyReservationMainService "1" - "1..*" Staff
-CompanyReservationMainService "1" -- "1..*" EachServiceTimeTable
+Company "1" -- "1..*" CompanyService
+
+StaffServiceInfo "1" -right- "1..*" EachStaffServiceTimeTable
+CompanyService "1" -right- "1..*" Staff
 
 
 @enduml
