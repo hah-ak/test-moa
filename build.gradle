@@ -3,9 +3,22 @@ plugins {
     id 'io.spring.dependency-management' version '1.1.0' apply false
     id "io.freefair.lombok" version "8.6" apply false
 }
-
 ext {
     set("springCloudVersion", "2023.0.2")
+    defaultForbiddenStrings = ["LocalDateTime"]
+    checkForbiddenCode = { sourceDir, forbiddenStrings ->
+        sourceDir.eachFileRecurse { file ->
+            if (file.name.endsWith(".java")) {
+                def fileContent = file.text
+                forbiddenStrings.addAll(ext.defaultForbiddenStrings)
+                forbiddenStrings.each { forbidden ->
+                    if (fileContent.contains(forbidden)) {
+                        throw new GradleException("forbidden text exist")
+                    }
+                }
+            }
+        }
+    }
 }
 
 group = 'my.application'
@@ -39,22 +52,5 @@ subprojects {
         implementation 'io.opentelemetry:opentelemetry-exporter-logging'
         implementation 'io.opentelemetry.semconv:opentelemetry-semconv:1.27.0-alpha'
         implementation 'io.opentelemetry:opentelemetry-sdk-extension-autoconfigure'
-    }
-}
-
-ext {
-    defaultForbiddenStrings = ["LocalDateTime"]
-    checkForbiddenCode = { sourceDir, forbiddenStrings ->
-        sourceDir.eachFileRecurse { file ->
-            if (file.name.endsWith(".java")) {
-                def fileContent = file.text
-                forbiddenStrings.addAll(ext.defaultForbiddenStrings)
-                forbiddenStrings.each { forbidden ->
-                    if (fileContent.contains(forbidden)) {
-                        throw new GradleException("forbidden text exist")
-                    }
-                }
-            }
-        }
     }
 }

@@ -5,7 +5,7 @@ include('domain-modules:redis-domain')
 include('domain-modules:kafka-domain')
 include('domain-modules:secret-resources')
 
-include('member')
+include('user')
 include('gateway')
 include('api')
 include('chat')
