@@ -14,6 +14,7 @@ public class ReservationReceipt {
     private Time serviceTime;
     private String message;
     // 식별자들만 받는다.
+    private Long staff;
     private Long staffServiceInfo;
     private Long member;
 
@@ -21,6 +22,7 @@ public class ReservationReceipt {
         this.serviceDate = dto.date();
         this.serviceTime = dto.time();
         this.message = dto.message();
+        this.staff = dto.staff();
         this.staffServiceInfo = dto.serviceNumber();
         this.member = member;
     }

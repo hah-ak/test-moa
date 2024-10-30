@@ -1,4 +1,4 @@
-package web.core.util;
+package web.core;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 

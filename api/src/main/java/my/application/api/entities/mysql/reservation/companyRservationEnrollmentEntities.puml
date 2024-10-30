@@ -19,12 +19,6 @@ entity CompanyService {
     - staff : List<Staff>
 }
 
-entity StaffCompanyServiceMapping {
-    - id : Long
-    - staff : Staff
-    - service : CompanyService
-}
-
 entity Staff {
     - id : Long
     - companyId : Long
@@ -72,7 +66,6 @@ entity StaffServiceInfo {
 
 entity EachStaffServiceTimeTable {
     - id : Long
-    - service : CompanyService
     - dayOfTheWeek : int
     - startBreakTime : Time
     - endBreakTime : Time
@@ -82,27 +75,31 @@ entity EachStaffServiceTimeTable {
 }
 
 entity ReservationReceipt {
-        - id : Long
-        - serviceDate : LocalDate
-        - serviceTime : Time
-        - message : String
-        - staffServiceInfo : StaffServiceInfo
-        - member : Integer
-    }
+    - id : Long
+    - serviceDate : LocalDate
+    - serviceTime : Time
+    - message : String
+    - staffServiceInfo : StaffServiceInfo
+    - member : Integer
+}
 
+entity StaffScheduleTable {
+    - id : Long
+    - staff : Staff
+    - receipt : ReservationReceipt
+}
 
+CompanyService "1" -- "0..*" StaffServiceInfo
 StaffServiceInfo "1" -- "0..*" ReservationReceipt
 Staff "1" -- "1..*" StaffServiceInfo
 
-Company "1" -- "0..*" BusinessWeekTimeTable
-Company "1" -- "0..*" ExceptionDayOffTimeTable
-Company "1" -- "0..*" ExceptionBusinessTimeTable
+Company "1" -left- "0..*" BusinessWeekTimeTable
+Company "1" -up- "0..*" ExceptionDayOffTimeTable
+Company "1" -up- "0..*" ExceptionBusinessTimeTable
 Company "1" -- "1..*" Staff
 Company "1" -- "1..*" CompanyService
 
-StaffServiceInfo "1" -right- "1..*" EachStaffServiceTimeTable
-CompanyService "1" -right- "1..*" StaffCompanyServiceMapping
-Staff "1" -left- "1..*" StaffCompanyServiceMapping
+StaffServiceInfo "1" -left- "1..*" EachStaffServiceTimeTable
 
 
 @enduml

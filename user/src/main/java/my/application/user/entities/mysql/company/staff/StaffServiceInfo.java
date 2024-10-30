@@ -2,11 +2,13 @@ package my.application.user.entities.mysql.company.staff;
 
 
 import jakarta.persistence.*;
+import lombok.Getter;
 import my.application.user.entities.mysql.company.CompanyService;
 
 import java.util.List;
 
 @Entity
+@Getter
 public class StaffServiceInfo {
     @Id @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;

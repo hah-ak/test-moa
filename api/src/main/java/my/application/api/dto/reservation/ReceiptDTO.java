@@ -7,6 +7,7 @@ public record ReceiptDTO (
         String message,
         LocalDate date,
         Time time,
+        Long staff,
         Long serviceNumber
 ){
 }

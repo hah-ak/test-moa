@@ -1,12 +1,11 @@
 package my.application.api.services.jsonCreator;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import my.application.api.services.file.FileUtils;
 import my.application.api.services.file.JsonFileServiceImpl;
 import org.springframework.stereotype.Service;
-import web.core.util.MyAppCommonUtil;
+import web.core.MyAppCommonUtil;
 
 import java.io.IOException;
 import java.nio.file.Files;
