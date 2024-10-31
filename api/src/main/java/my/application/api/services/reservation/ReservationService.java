@@ -5,13 +5,11 @@ import lombok.RequiredArgsConstructor;
 import my.application.api.dto.reservation.ReceiptDTO;
 import my.application.api.entities.mysql.reservation.ReservationReceipt;
 import my.application.api.repositories.mysql.ClientReservationReceiptRepository;
-import org.springframework.boot.actuate.info.InfoEndpoint;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
-import reactor.core.Disposable;
 import reactor.core.publisher.Mono;
 import web.core.CommonProperty;
 
@@ -22,7 +20,6 @@ import java.util.List;
 public class ReservationService {
 
     private final ClientReservationReceiptRepository receiptRepository;
-    private final InfoEndpoint infoEndpoint;
     private final CommonProperty commonProperty;
 
     public List<ReservationReceipt> userReceipts(Long member) {
@@ -34,19 +31,17 @@ public class ReservationService {
         return build.method(HttpMethod.POST).uri("/company/staff/service-info")
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue("{staffNumber:" + staffNumber + "}")
-                .exchangeToMono(clientResponse -> clientResponse.bodyToMono(new ParameterizedTypeReference<List<Long>>() {
-                }))
-                .doOnError(throwable -> {
-                    throw new RuntimeException(throwable.getMessage());
-                });
+                .exchangeToMono(clientResponse -> clientResponse.bodyToMono(new ParameterizedTypeReference<List<Long>>() {}))
+                .doOnError(throwable -> {throw new RuntimeException(throwable.getMessage());});
     }
 
-    public List<ReservationReceipt> staffReceipts(List<Long> serviceInfos) {
-
-        return serviceInfos.stream()
-                .map(receiptRepository::findAllByStaffServiceInfo)
-                .flatMap(List::stream)
-                .toList();
+    public Mono<List<ReservationReceipt>> staffReceipts(Long staffNumber) {
+        return staffServiceInfos(staffNumber)
+                .map(serviceInfos -> serviceInfos.stream()
+                        .map(receiptRepository::findAllByStaffServiceInfo)
+                        .flatMap(List::stream)
+                        .toList()
+                );
     }
 
     @Transactional

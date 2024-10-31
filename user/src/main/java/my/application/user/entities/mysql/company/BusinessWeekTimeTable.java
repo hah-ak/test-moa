@@ -1,13 +1,15 @@
 package my.application.user.entities.mysql.company;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
+import lombok.Getter;
 
 import java.sql.Time;
 
 @Entity
+@Getter
+@Table(uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"dayOfTheWeek","company"}),
+})
 public class BusinessWeekTimeTable {
     @Id @GeneratedValue
     private Long id;

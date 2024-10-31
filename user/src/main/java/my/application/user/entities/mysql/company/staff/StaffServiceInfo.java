@@ -3,7 +3,7 @@ package my.application.user.entities.mysql.company.staff;
 
 import jakarta.persistence.*;
 import lombok.Getter;
-import my.application.user.entities.mysql.company.CompanyService;
+import my.application.user.entities.mysql.company.CompanyServiceProduct;
 
 import java.util.List;
 
@@ -15,7 +15,7 @@ public class StaffServiceInfo {
     @ManyToOne(fetch = FetchType.LAZY)
     private Staff staff;
     @ManyToOne(fetch = FetchType.LAZY)
-    private CompanyService service;
+    private CompanyServiceProduct service;
     private Integer price;
     private String currency;
     private String staffExplain;
