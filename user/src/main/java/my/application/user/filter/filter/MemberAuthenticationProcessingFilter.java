@@ -28,14 +28,14 @@ import java.util.List;
 
 // 인증시도 시에 (로그인 시) 타게되는 필터. ( authenticationEntryPoint 를 통해 들어오거나 직접 로그인하거나 등등)
 @Slf4j
-@Component
+//@Component
 public class MemberAuthenticationProcessingFilter extends AbstractAuthenticationProcessingFilter {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
     private final PasswordEncoder passwordEncoder;
     private final MemberRepository memberRepository;
 
-    @Autowired
+//    @Autowired
     public MemberAuthenticationProcessingFilter(
             MemberAuthenticationProcessingProviderManager memberAuthenticationProcessingProviderManager,
             PasswordEncoder passwordEncoder,

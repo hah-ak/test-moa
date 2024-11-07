@@ -1,5 +1,6 @@
 package my.application.user.services.member;
 
+import lombok.Getter;
 import my.application.user.entities.mysql.MemberEntity;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -10,7 +11,8 @@ import java.util.Collection;
 
 public class MemberSignInUserDetails implements UserDetails {
 
-    private MemberEntity memberEntity;
+    @Getter
+    private final MemberEntity memberEntity;
     private Collection<? extends GrantedAuthority> authorities;
     public MemberSignInUserDetails(MemberEntity memberEntity) {
         this.memberEntity = memberEntity;

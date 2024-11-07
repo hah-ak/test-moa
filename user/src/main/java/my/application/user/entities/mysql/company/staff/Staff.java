@@ -18,4 +18,13 @@ public class Staff {
     private String introduce;
     @OneToMany(mappedBy = "staff")
     private List<StaffServiceInfo> services;
+
+    protected Staff() {}
+    public Staff(Company company, String name, String rank, String introduce, List<StaffServiceInfo> services) {
+        this.company = company;
+        this.name = name;
+        this.rank = rank;
+        this.introduce = introduce;
+        this.services = services;
+    }
 }

@@ -10,13 +10,12 @@ entity Company {
     - exceptionBusinessTimeTable : ExceptionBusinessTimeTable
     - services : List<CompanyService>
 }
-
 entity CompanyService {
     - id : Long
     - company : Company
     - content : String
     - img : URL
-    - staff : List<Staff>
+    - staffServiceInfo : List<StaffServiceInfo>
 }
 
 entity Staff {
@@ -100,6 +99,4 @@ Company "1" -- "1..*" Staff
 Company "1" -- "1..*" CompanyService
 
 StaffServiceInfo "1" -left- "1..*" EachStaffServiceTimeTable
-
-
 @enduml

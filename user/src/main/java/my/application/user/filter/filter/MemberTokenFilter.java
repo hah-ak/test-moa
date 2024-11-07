@@ -11,6 +11,8 @@ import my.application.user.entities.mysql.MemberEntity;
 import my.application.user.repositories.mysql.MemberRepository;
 import my.application.user.resolvers.MemberResolver;
 import my.application.user.services.member.MemberSignInUserDetails;
+import org.apache.kafka.common.errors.AuthorizationException;
+import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -33,7 +35,7 @@ public class MemberTokenFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         MemberLoginToken memberLoginToken = MemberResolver.resolveArgument(request);
         if (memberLoginToken == null) {
-
+            throw new AuthorizationException("cannot find authorization");
         }
         else {
             SecurityContext context = securityContextHolderStrategy.getContext();

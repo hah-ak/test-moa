@@ -16,9 +16,19 @@ public class StaffServiceInfo {
     private Staff staff;
     @ManyToOne(fetch = FetchType.LAZY)
     private CompanyServiceProduct service;
-    private Integer price;
+    private Long price;
     private String currency;
     private String staffExplain;
     @OneToMany(mappedBy = "staffServiceInfo")
     private List<EachStaffServiceTimeTable> eachStaffServiceTimeTables;
+
+    protected StaffServiceInfo() {}
+    public StaffServiceInfo(Staff staff, CompanyServiceProduct service, Long price, String currency, String staffExplain, List<EachStaffServiceTimeTable> eachStaffServiceTimeTables) {
+        this.staff = staff;
+        this.service = service;
+        this.price = price;
+        this.currency = currency;
+        this.staffExplain = staffExplain;
+        this.eachStaffServiceTimeTables = eachStaffServiceTimeTables;
+    }
 }
