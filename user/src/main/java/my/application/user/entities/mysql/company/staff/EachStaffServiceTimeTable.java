@@ -5,12 +5,14 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import my.application.user.dto.company.staff.StaffServiceInfoDTO;
 
 import java.sql.Time;
 
 @Entity
+@Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class EachStaffServiceTimeTable {
     @Id
@@ -47,5 +49,19 @@ public class EachStaffServiceTimeTable {
         this.endBreakTime = timeTable.getEndBreakTime();
         this.exceptionOpenTime = timeTable.getExceptionOpenTime();
         this.exceptionCloseTime = timeTable.getExceptionCloseTime();
+    }
+
+    public void updateEachStaffServiceTimeTable(
+            Integer dayOfTheWeek,
+            Time startBreakTime,
+            Time endBreakTime,
+            Time exceptionOpenTime,
+            Time exceptionCloseTime
+    ) {
+        this.dayOfTheWeek = dayOfTheWeek;
+        this.startBreakTime = startBreakTime;
+        this.endBreakTime = endBreakTime;
+        this.exceptionOpenTime = exceptionOpenTime;
+        this.exceptionCloseTime = exceptionCloseTime;
     }
 }

@@ -27,4 +27,11 @@ public class Staff {
         this.introduce = introduce;
         this.services = services;
     }
+
+    public void updateStaff(String name, String rank, String introduce, List<StaffServiceInfo> services) {
+        this.name = name;
+        this.rank = rank;
+        this.introduce = introduce;
+        this.services = services;
+    }
 }

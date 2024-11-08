@@ -10,11 +10,14 @@ import java.util.List;
 
 @Getter
 public class StaffServiceInfoDTO {
-
+    @NotNull
+    private Long id;
     @NotNull
     private Long companyServiceProduct;
     @NotNull
     private Long price;
+    @NotNull
+    private String explain;
     @NotNull
     private String currency;
     private List<TimeTable> timetable = new ArrayList<>();

@@ -31,4 +31,17 @@ public class StaffServiceInfo {
         this.staffExplain = staffExplain;
         this.eachStaffServiceTimeTables = eachStaffServiceTimeTables;
     }
+
+    public void updateStaffServiceInfo(
+        Long price,
+        String currency,
+        String staffExplain,
+        List<EachStaffServiceTimeTable> eachStaffServiceTimeTables
+    ) {
+        this.price = price;
+        this.currency = currency;
+        this.staffExplain = staffExplain;
+        this.eachStaffServiceTimeTables = eachStaffServiceTimeTables;
+    }
+
 }
