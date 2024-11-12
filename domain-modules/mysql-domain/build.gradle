@@ -1,6 +1,7 @@
 plugins {
   id 'java-library'
   id "io.freefair.lombok"
+
 }
 
 group 'my.domain'
@@ -10,6 +11,9 @@ jar {
   enabled = true
 }
 
+ext {
+  set('querydslVersion', '5.1.0')
+}
 dependencies {
   api project(':domain-modules:secret-resources')
   api 'org.springframework.boot:spring-boot-starter-validation'

@@ -35,13 +35,11 @@ public class StaffServiceInfo {
     public void updateStaffServiceInfo(
         Long price,
         String currency,
-        String staffExplain,
-        List<EachStaffServiceTimeTable> eachStaffServiceTimeTables
+        String staffExplain
     ) {
         this.price = price;
         this.currency = currency;
         this.staffExplain = staffExplain;
-        this.eachStaffServiceTimeTables = eachStaffServiceTimeTables;
     }
 
 }

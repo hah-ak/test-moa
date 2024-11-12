@@ -19,6 +19,7 @@ ext {
             }
         }
     }
+    querydslGradle = rootProject.file("domain-modules/mysql-domain/querydsl.gradle")
 }
 
 group = 'my.application'
