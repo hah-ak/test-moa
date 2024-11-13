@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import my.application.user.entities.mysql.company.Company;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -16,7 +17,7 @@ public class Staff {
     private String name;
     private String rank;
     private String introduce;
-    @OneToMany(mappedBy = "staff")
+    @OneToMany(mappedBy = "staff", cascade = CascadeType.ALL)
     private List<StaffServiceInfo> services;
 
     protected Staff() {}
@@ -32,6 +33,12 @@ public class Staff {
         this.name = name;
         this.rank = rank;
         this.introduce = introduce;
-        this.services = services;
+        this.services = services == null ? new ArrayList<>() : services;
+    }
+
+    public void updateStaff(String name, String rank, String introduce) {
+        this.name = name;
+        this.rank = rank;
+        this.introduce = introduce;
     }
 }

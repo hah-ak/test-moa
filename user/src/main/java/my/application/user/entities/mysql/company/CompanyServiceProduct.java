@@ -18,6 +18,4 @@ public class CompanyServiceProduct {
     @ManyToOne(fetch = FetchType.EAGER)
     private Company company;
     private String content;
-    @OneToMany(mappedBy = "service")
-    private List<Staff> staff;
 }

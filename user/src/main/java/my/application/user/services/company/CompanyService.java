@@ -1,5 +1,6 @@
 package my.application.user.services.company;
 
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import my.application.user.dto.company.CompanyDeleteDTO;
@@ -14,6 +15,10 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CompanyService {
     private final CompanyRepository companyRepository;
+
+    public Company findById(Long id) {
+        return companyRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+    }
 
     @Transactional
     public Company createCompany(CompanyUpdateDTO companyUpdateDTO) {

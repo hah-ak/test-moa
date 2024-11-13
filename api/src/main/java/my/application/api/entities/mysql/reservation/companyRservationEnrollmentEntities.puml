@@ -15,7 +15,6 @@ entity CompanyService {
     - company : Company
     - content : String
     - img : URL
-    - staffServiceInfo : List<StaffServiceInfo>
 }
 
 entity Staff {
@@ -24,6 +23,7 @@ entity Staff {
     - name : String
     - rank : String
     - introduce : String
+    - staffServiceInfo : List<StaffServiceInfo>
 }
 
 entity BusinessWeekTimeTable {

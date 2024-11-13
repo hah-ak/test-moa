@@ -1,5 +1,6 @@
 package my.application.user.services.company;
 
+import com.nimbusds.jose.util.Pair;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -15,7 +16,10 @@ import my.application.user.repositories.mysql.CompanyServiceProductRepository;
 import my.application.user.repositories.mysql.staff.StaffRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -25,6 +29,9 @@ public class StaffService {
     private final CompanyRepository companyRepository;
     private final CompanyServiceProductRepository companyServiceProductRepository;
 
+    public Staff findStaff(Long staffId) {
+        return staffRepository.findById(staffId).orElseThrow(EntityNotFoundException::new);
+    }
     @Transactional
     public Staff createStaff(StaffUpdateDTO staffUpdateDTO) {
         Company company = companyRepository.findById(staffUpdateDTO.company()).orElseThrow(EntityNotFoundException::new);
@@ -48,54 +55,35 @@ public class StaffService {
         return staffRepository.save(save);
     }
 
+    @Transactional
     public Staff updateStaff(StaffUpdateDTO staffUpdateDTO) {
-        if (staffUpdateDTO.staff() == null) {
-            throw new IllegalArgumentException("staff is null");
-        }
+        Staff staff = staffRepository.findByIdWithAllTimeTable(staffUpdateDTO.name()).orElseThrow(() -> new IllegalArgumentException("staff not found"));
 
-//        Staff staff = staffRepository.findById(staffUpdateDTO.staff()).orElseThrow(EntityNotFoundException::new);
-        // 3중 스트림이 됨.
-//        List<StaffServiceInfo> staffServiceInfos = staffUpdateDTO.staffServiceInfos().stream()
-//                .map(dto -> {
-//                    if (dto.getId() == null) {
-//                        CompanyServiceProduct companyServiceProduct = companyServiceProductRepository.findById(dto.getCompanyServiceProduct()).orElseThrow(EntityNotFoundException::new);
-//                        StaffServiceInfo staffServiceInfo = new StaffServiceInfo(staff, companyServiceProduct, dto.getPrice(), dto.getCurrency(), dto.getExplain(), new ArrayList<>());
-//                        staffServiceInfo.getEachStaffServiceTimeTables().addAll(dto.getTimetable().stream().map(timeTable -> new EachStaffServiceTimeTable(null, timeTable)).toList());
-//                        return staffServiceInfo;
-//                    }
-//                    StaffServiceInfo staffServiceInfo = staff.getServices().stream()
-//                            .filter(info -> info.getId().equals(dto.getId()))
-//                            .findFirst()
-//                            .orElseThrow(EntityNotFoundException::new);
-//
-//                    List<EachStaffServiceTimeTable> eachStaffServiceTimeTables = dto.getTimetable().stream().map(timeTable -> {
-//                        EachStaffServiceTimeTable eachStaffServiceTimeTable = staffServiceInfo.getEachStaffServiceTimeTables().stream()
-//                                .filter(table -> table.getDayOfTheWeek().equals(timeTable.getDayOfTheWeek()))
-//                                .findFirst()
-//                                .orElseThrow(EntityNotFoundException::new);
-//
-//                        eachStaffServiceTimeTable.updateEachStaffServiceTimeTable(
-//                                timeTable.getDayOfTheWeek(),
-//                                timeTable.getStartBreakTime(),
-//                                timeTable.getEndBreakTime(),
-//                                timeTable.getExceptionOpenTime(),
-//                                timeTable.getExceptionCloseTime());
-//                        return eachStaffServiceTimeTable;
-//                    }).toList();
-//
-//                    staffServiceInfo.updateStaffServiceInfo(dto.getPrice(), dto.getCurrency(), dto.getExplain(), eachStaffServiceTimeTables);
-//
-//                    return staffServiceInfo;
-//                }).toList();
-//
-//        staff.updateStaff(staffUpdateDTO.name(), staffUpdateDTO.rank(), staffUpdateDTO.introduce(),  staffServiceInfos);
+        staffUpdateDTO.staffServiceInfos().stream()
+                .map(dto -> {
+                    StaffServiceInfo staffServiceInfo = staff.getServices().stream().filter(serviceInfo -> serviceInfo.getId().equals(dto.getId()))
+                            .findFirst()
+                            .orElse(new StaffServiceInfo(staff, companyServiceProductRepository.findById(dto.getCompanyServiceProduct()).orElseThrow(), dto, null));
 
-        Optional<Staff> staffOptional = staffRepository.findByIdWithAllTimeTable(staffUpdateDTO.name());
-        if (staffOptional.isEmpty()) {
-            throw new IllegalArgumentException("staff not found");
-        }
-        Staff staff = staffOptional.get();
+                    staffServiceInfo.updateStaffServiceInfo(dto.getPrice(), dto.getCurrency(), dto.getExplain());
+                    return Pair.of(dto, staffServiceInfo);
+                })
+                .forEach(pair -> {
+                    StaffServiceInfoDTO dto = pair.getLeft();
+                    StaffServiceInfo serviceInfo = pair.getRight();
+                    dto.getTimetable().forEach(timeTable -> {
+                        serviceInfo.getEachStaffServiceTimeTables().stream().filter(dbTimeTable -> dbTimeTable.getDayOfTheWeek().equals(timeTable.getDayOfTheWeek()))
+                                .forEach(dbTimeTable -> dbTimeTable.updateEachStaffServiceTimeTable(timeTable));
+                    });
+                });
+        staff.updateStaff(staffUpdateDTO.name(), staffUpdateDTO.rank(), staffUpdateDTO.introduce());
         return staffRepository.save(staff);
+    }
+
+    @Transactional
+    public Boolean deleteStaff(Long staffId) {
+        staffRepository.deleteById(staffId);
+        return true;
     }
 
     public List<StaffServiceInfo> staffServiceInfo(Long staffId) {

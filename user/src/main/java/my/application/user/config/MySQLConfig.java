@@ -38,7 +38,7 @@ public class MySQLConfig {
         LocalContainerEntityManagerFactoryBean localContainerEntityManagerFactoryBean = new LocalContainerEntityManagerFactoryBean();
         localContainerEntityManagerFactoryBean.setDataSource(hikariDataSource);
         localContainerEntityManagerFactoryBean.setJpaPropertyMap(properties);
-        localContainerEntityManagerFactoryBean.setPackagesToScan("my.application.member.entities.mysql");
+        localContainerEntityManagerFactoryBean.setPackagesToScan("my.application.user.entities.mysql");
         localContainerEntityManagerFactoryBean.setJpaVendorAdapter(hibernateJpaVendorAdapter);
         localContainerEntityManagerFactoryBean.setJpaDialect(new HibernateJpaDialect());
         return localContainerEntityManagerFactoryBean;

@@ -64,4 +64,12 @@ public class EachStaffServiceTimeTable {
         this.exceptionOpenTime = exceptionOpenTime;
         this.exceptionCloseTime = exceptionCloseTime;
     }
+
+    public void updateEachStaffServiceTimeTable(StaffServiceInfoDTO.TimeTable timeTable) {
+        this.dayOfTheWeek = timeTable.getDayOfTheWeek();
+        this.startBreakTime = timeTable.getStartBreakTime();
+        this.endBreakTime = timeTable.getEndBreakTime();
+        this.exceptionOpenTime = timeTable.getExceptionOpenTime();
+        this.exceptionCloseTime = timeTable.getExceptionCloseTime();
+    }
 }

@@ -57,7 +57,13 @@ public class FluxGateWayConfig {
 //                        .filters(gatewayFilterSpec -> gatewayFilterSpec.circuitBreaker(config -> {}))
                         .uri("http://localhost:9100")
                 )
-                .route("api_route", predicateSpec -> predicateSpec.path("/api/**","/member/**")
+                .route("user_route",predicateSpec -> predicateSpec.path("/user/**")
+                        .filters(gatewayFilterSpec -> gatewayFilterSpec
+                                .rewritePath("/(user)/(?<segment>.*)", "/${segment}")
+                        )
+                        .uri("http://localhost:8110")
+                )
+                .route("api_route", predicateSpec -> predicateSpec.path("/api/**")
                         .filters(gatewayFilterSpec -> gatewayFilterSpec
                                 .requestRateLimiter()
                                 .rateLimiter(Bucket4jRateLimiter.class, config -> {

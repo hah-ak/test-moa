@@ -2,6 +2,8 @@ package my.application.user.entities.mysql;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.Setter;
+import my.application.user.entities.mysql.company.Company;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -25,6 +27,10 @@ public class MemberEntity {
     @DateTimeFormat
     private LocalDateTime passwordUpdateDateTime;
     private boolean suspended; //정지
+
+    @OneToOne
+    @Setter
+    private Company company;
 
     protected MemberEntity() {}
 
