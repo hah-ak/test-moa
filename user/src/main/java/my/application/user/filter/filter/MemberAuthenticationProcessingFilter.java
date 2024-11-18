@@ -12,19 +12,18 @@ import my.application.user.filter.handlers.MemberAuthenticationEntryPoint;
 import my.application.user.filter.manager.MemberAuthenticationProcessingProviderManager;
 import my.application.user.repositories.mysql.MemberRepository;
 import my.application.user.services.member.MemberSignInUserDetails;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpMethod;
+import my.domain.redis.RedisSessionTemplate;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
-import org.springframework.stereotype.Component;
-import org.springframework.web.server.MethodNotAllowedException;
+import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import java.io.IOException;
-import java.util.List;
+import java.util.ArrayList;
 
 // 인증시도 시에 (로그인 시) 타게되는 필터. ( authenticationEntryPoint 를 통해 들어오거나 직접 로그인하거나 등등)
 @Slf4j
@@ -39,9 +38,10 @@ public class MemberAuthenticationProcessingFilter extends AbstractAuthentication
     public MemberAuthenticationProcessingFilter(
             MemberAuthenticationProcessingProviderManager memberAuthenticationProcessingProviderManager,
             PasswordEncoder passwordEncoder,
-            MemberRepository memberRepository
+            MemberRepository memberRepository,
+            RedisSessionTemplate<String, Object> redisSessionTemplate
     ) {
-        super(MemberAuthenticationEntryPoint.SIGN_IN_URL, memberAuthenticationProcessingProviderManager);
+        super(new AntPathRequestMatcher(MemberAuthenticationEntryPoint.SIGN_IN_URL + "**", "POST"), memberAuthenticationProcessingProviderManager);
         super.setContinueChainBeforeSuccessfulAuthentication(true);
         this.passwordEncoder = passwordEncoder;
         this.memberRepository = memberRepository;
@@ -51,9 +51,6 @@ public class MemberAuthenticationProcessingFilter extends AbstractAuthentication
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException, IOException, ServletException {
-        if (!request.getMethod().equals(HttpMethod.POST.name())) {
-            throw new MethodNotAllowedException(request.getMethod(), List.of(HttpMethod.POST));
-        }
         UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = null;
         try {
             SignIn signIn = this.objectMapper.readValue(request.getReader(), SignIn.class);
@@ -64,10 +61,10 @@ public class MemberAuthenticationProcessingFilter extends AbstractAuthentication
                 throw new BadCredentialsException("invalid password");
             }
 
-            MemberSignInUserDetails memberSignInUserDetails = new MemberSignInUserDetails(member);
+            MemberSignInUserDetails memberSignInUserDetails = new MemberSignInUserDetails(member.getId(), member.getName(), member.getPassword(), new ArrayList<>());
 
             usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(memberSignInUserDetails, signIn.password(), memberSignInUserDetails.getAuthorities());
-            usernamePasswordAuthenticationToken.setDetails("ip주소등등을 넣자");
+            usernamePasswordAuthenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
 
         } catch (Exception e) {

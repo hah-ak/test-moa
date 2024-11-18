@@ -29,6 +29,8 @@ public class JWTUtil {
     static {
         // file inputstream은 파일시스템아 맞춰서, 다른 스트림은 빌드클래스패스에 맞춰서 찾는데 classloader를 쓰는경우에는 클래스패스에서 /없이 써야하고
         // 아니면 그냥 클래스패스 기준으로 절대경로로사용
+
+        // private,public key > csr > crt > p12
         try(InputStream inputStream = JWTUtil.class.getResourceAsStream("/"+SecretKeyUtil.jWESecretProperties.getPath())) {
             keyStore = KeyStore.getInstance("PKCS12");
             keyStore.load(inputStream, SecretKeyUtil.jWESecretProperties.getPassword().toCharArray());
@@ -45,7 +47,7 @@ public class JWTUtil {
             throw new RuntimeException(e);
         }
     }
-
+    // 서명으로 개인키로 서명 > 공개키로 검증 암호화는 공개키로 암호화 > 개인키로 복호화
     public static SignedJWT parseJWT(String jwt) throws ParseException, JOSEException {
         SignedJWT signedJWT = SignedJWT.parse(jwt);
         if (signedJWT.verify(JWS_VERIFIER)) {
@@ -55,18 +57,19 @@ public class JWTUtil {
         }
     }
 
-    public static String createJWSToken(MemberSignInUserDetails details) throws JOSEException {
+    public static SignedJWT createJWS(MemberSignInUserDetails details, String sessionId) throws JOSEException {
 
         JWTClaimsSet claimsSet = new JWTClaimsSet.Builder()
-                .subject("")
+                .subject("login")
                 .issuer("hahak.com")
-                .claim("email", details.getUsername())
+                .jwtID(sessionId)
+                .audience(details.getUsername())
                 .claim("name", details.getUserNickName())
                 .build();
 
         SignedJWT signedJWT = new SignedJWT(JWS_HEADER, claimsSet);
         signedJWT.sign(JWS_SIGNER);
 
-        return signedJWT.serialize();
+        return signedJWT;
     }
 }

@@ -1,9 +1,9 @@
 package my.application.user.dto.token;
 
 public record MemberLoginToken(
-        String id,
-        String password,
+        String email,
         String session,
-        String encrypt
+        String signature,
+        String name
 ) {
 }

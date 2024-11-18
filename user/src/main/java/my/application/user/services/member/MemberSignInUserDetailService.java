@@ -9,6 +9,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Optional;
 
 @Slf4j
@@ -22,7 +23,7 @@ public class MemberSignInUserDetailService implements UserDetailsService {
     public UserDetails loadUserByUsername(String id) throws UsernameNotFoundException {
         Optional<MemberEntity> memberEntity1 = getMemberEntity(id);
         MemberEntity memberEntity = memberEntity1.orElseThrow(() -> new UsernameNotFoundException("user Not found"));
-        return new MemberSignInUserDetails(memberEntity);
+        return new MemberSignInUserDetails(memberEntity.getId(), memberEntity.getName(), memberEntity.getPassword(), new ArrayList<>());
     }
 
     private Optional<MemberEntity> getMemberEntity(String id) {

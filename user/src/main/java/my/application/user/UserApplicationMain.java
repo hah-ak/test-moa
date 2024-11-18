@@ -6,8 +6,8 @@ import org.springframework.data.redis.repository.configuration.EnableRedisReposi
 
 @SpringBootApplication(scanBasePackages = {"my.domain.redis","my.domain.mysql", "my.application.user"})
 @EnableRedisRepositories(basePackages = {"my.application.user.repositories.google"})
-public class MemberApplicationMain {
+public class UserApplicationMain {
     public static void main(String[] args) {
-        SpringApplication.run(MemberApplicationMain.class, args);
+        SpringApplication.run(UserApplicationMain.class, args);
     }
 }

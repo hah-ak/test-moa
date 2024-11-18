@@ -10,4 +10,7 @@ public class AuthenticationExternalDataErrorException extends AuthenticationExce
     public AuthenticationExternalDataErrorException(String msg) {
         super(msg);
     }
+    public AuthenticationExternalDataErrorException() {
+        super("잘못된 데이터가 들어왔거나, 인증관련 항목이 없습니다.");
+    }
 }
