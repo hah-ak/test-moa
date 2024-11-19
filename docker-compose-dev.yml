@@ -20,6 +20,22 @@ services:
       - myApp-api-volume:/home/service_files
     environment:
       - ACTIVE_PROFILE=dev
+  socket:
+    container_name: myApp_socket
+    build:
+      context : .
+      dockerfile: Dockerfile-socket
+    ports:
+      - "8091:8091"
+    depends_on:
+      mysql:
+        condition: service_started
+      redis:
+        condition: service_started
+      kafka:
+        condition: service_started
+    environment:
+      - ACTIVE_PROFILE=dev
   kafka:
     container_name : myApp_kafka
     build:
