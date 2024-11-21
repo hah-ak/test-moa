@@ -47,11 +47,12 @@ subprojects {
     }
 
     dependencies {
-        implementation platform("io.opentelemetry:opentelemetry-bom:1.41.0")
+        implementation platform("io.opentelemetry:opentelemetry-bom:1.44.1")
         implementation 'io.opentelemetry:opentelemetry-api'
         implementation 'io.opentelemetry:opentelemetry-sdk'
         implementation 'io.opentelemetry:opentelemetry-exporter-logging'
-        implementation 'io.opentelemetry.semconv:opentelemetry-semconv:1.27.0-alpha'
+        implementation 'io.opentelemetry:opentelemetry-exporter-otlp'
         implementation 'io.opentelemetry:opentelemetry-sdk-extension-autoconfigure'
+        implementation 'io.opentelemetry.semconv:opentelemetry-semconv:1.28.0-alpha' // 아직 뭔가 없다
     }
 }

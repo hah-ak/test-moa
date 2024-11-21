@@ -10,9 +10,9 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 
 @Configuration
-@PropertySource("classpath:domain-mysql-${spring.profiles.active}.properties")
+@PropertySource("classpath:domain-mysql-${spring.profiles.active:local}.properties")
 public class MySqlStudyConfig {
-    @Value("${spring.profiles.active}")
+    @Value("${spring.profiles.active:local}")
     private String profile;
     @Bean("mysqlStudy")
     @ConfigurationProperties(prefix = "application.db.mysql.study")

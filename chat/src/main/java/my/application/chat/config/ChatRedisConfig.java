@@ -14,7 +14,7 @@ import org.springframework.data.redis.repository.configuration.EnableRedisReposi
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 @Configuration
-@PropertySource("classpath:domain-redis-${spring.profiles.active}.properties")
+@PropertySource("classpath:domain-redis-${spring.profiles.active:local}.properties")
 @EntityScan("my.domain.redis.entities")
 @EnableRedisRepositories(basePackages = {"my.application.chat.repositories.redis"})
 public class ChatRedisConfig {

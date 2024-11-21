@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.PropertySource;
 
 @Configuration
-@PropertySource("classpath:domain-mysql-${spring.profiles.active}.properties")
+@PropertySource("classpath:domain-mysql-${spring.profiles.active:local}.properties")
 public class MySQLDefaultConfig {
 
     @Bean

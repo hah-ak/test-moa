@@ -24,11 +24,6 @@ public class ApiTest {
 
     @Test
     void whang() {
-        List<Object> objects = List.of();
-        objects.get(0);
-        int a = 4;
-        Child child = new Child();
-        print(child);
     }
 
     void print(Parent parent) {

@@ -12,7 +12,7 @@ import org.springframework.session.data.redis.config.annotation.SpringSessionRed
 import org.springframework.session.data.redis.config.annotation.web.http.EnableRedisIndexedHttpSession;
 
 @Configuration
-@PropertySource("classpath:domain-redis-${spring.profiles.active}.properties")
+@PropertySource("classpath:domain-redis-${spring.profiles.active:local}.properties")
 @EnableRedisIndexedHttpSession(redisNamespace = "online:session")
 public class SessionConfig {
 

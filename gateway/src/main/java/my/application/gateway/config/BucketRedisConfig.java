@@ -29,7 +29,7 @@ import java.time.Duration;
 import static my.application.gateway.config.FluxGateWayConfig.RedisConfigurationProperties;
 
 @Configuration
-@PropertySource("classpath:domain-redis-${spring.profiles.active}.properties")
+@PropertySource("classpath:domain-redis-${spring.profiles.active:local}.properties")
 public class BucketRedisConfig {
 
     @Bean("BucketRedisConfig")

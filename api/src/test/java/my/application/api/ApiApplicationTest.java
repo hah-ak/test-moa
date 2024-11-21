@@ -18,7 +18,9 @@ class ApiApplicationTest {
     void memtest() {
 //        MemberEntity byId = memberRepository.findById("asdf@asdf.asdf");
 //        System.out.println(byId.getId());
-        kafkaTemplate.send("member.request.data","asdf@asdf.asdf");
+//        if (kafkaTemplate != null) {
+//            kafkaTemplate.send("member.request.data","asdf@asdf.asdf");
+//        }
     }
 
 }

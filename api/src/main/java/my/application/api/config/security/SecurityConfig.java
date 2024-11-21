@@ -14,7 +14,6 @@ import java.util.List;
 
 @Slf4j
 @Configuration
-@PropertySource("classpath:security-${spring.profiles.active}.yaml")
 public class SecurityConfig {
 
     @Bean
