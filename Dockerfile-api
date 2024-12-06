@@ -1,13 +1,23 @@
-FROM gradle:jdk17
-WORKDIR /home/workdir/myApp
+FROM openjdk:17
+WORKDIR /home/myApp
 
-COPY ./domain-modules/secret-resources/dockerfiles/api/ssh /root/.ssh
-RUN chmod 600 ~/.ssh/github_ssh
-RUN ssh-keyscan github.com >> ~/.ssh/known_hosts
+#COPY ./domain-modules/secret-resources/dockerfiles/api/ssh /root/.ssh
+#RUN chmod 600 ~/.ssh/github_ssh
+#RUN ssh-keyscan github.com >> ~/.ssh/known_hosts
+#
+#RUN ["git", "clone", "--recursive", "git@github.com:hah-ak/test-moa.git", "."]
+#RUN ["git", "fetch"]
+#RUN ["git", "checkout", "release"]
+#RUN ["git", "pull"]
 
-RUN ["git", "clone", "--recursive", "git@github.com:hah-ak/test-moa.git", "."]
-RUN ["git", "fetch"]
-RUN ["git", "checkout", "release"]
-RUN ["git", "pull"]
-ENTRYPOINT ["gradle",":api:bootRun", "--args='--spring.profiles.active=${ACTIVE_PROFILE}'"]
+RUN if [ "$ACTIVE_PROFILE" = "local" ]; then \
+    cp ./api ./api \
+    cp ./domain-modules ./; \
+    cp ./build.gradle ./; \
+    cp ./settings.gradle ./; \
+    cp ./gradlew ./; \
+    cp ./gradlew.bat ./; \
+    cp ./gradle ./; \
+    fi
+ENTRYPOINT ["/home/myApp/gradlew",":api:bootRun", "--args='--spring.profiles.active=${ACTIVE_PROFILE}'"]
 #ENTRYPOINT ["tail", "-f", "/dev/null"]
