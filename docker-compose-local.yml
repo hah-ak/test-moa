@@ -19,7 +19,21 @@ services:
     volumes:
       - myApp-api-volume:/home/service_files
     environment:
-      - ACTIVE_PROFILE=dev
+      - ACTIVE_PROFILE=local
+  gateway:
+    container_name: myApp_gateway
+    build:
+      context: .
+      dockerfile: Dockerfile-gateway
+    ports:
+      - "9090:9090"
+    networks:
+      - myApp-network
+    environment:
+      - ACTIVE_PROFILE=local
+    depends_on:
+      redis:
+        condition: service_started
   kafka:
     container_name : myApp_kafka
     build:
