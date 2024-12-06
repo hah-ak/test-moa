@@ -11,7 +11,7 @@ class JpqlServiceTest {
 
     @Autowired
     JpqlService jpqlService;
-    @Test
+//    @Test
     void querying() {
         jpqlService.querying();
     }

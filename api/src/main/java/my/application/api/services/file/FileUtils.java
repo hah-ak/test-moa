@@ -24,6 +24,21 @@ public class FileUtils {
     public static final String PHOTO_DIRECTORY = FILE_DIRECTORY + "\\photos";
     public static final String JSON_DIRECTORY = FILE_DIRECTORY + "\\jsons";
     public static final String VIDEO_DIRECTORY = FILE_DIRECTORY + "\\videos";
+
+    static {
+        for (String path : new String[]{FILE_DIRECTORY,JSON_DIRECTORY, VIDEO_DIRECTORY, PHOTO_DIRECTORY}) {
+            try {
+                Path resolve = USER_HOME.resolve(path);
+                Files.createDirectory(resolve);
+            } catch (FileAlreadyExistsException fileAlreadyExistsException) {
+                if (!Files.isDirectory(Paths.get(fileAlreadyExistsException.getFile()))) {
+                    throw new RuntimeException(fileAlreadyExistsException);
+                }
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
     @Getter
     @AllArgsConstructor
     public enum FILE_TYPES{
@@ -31,17 +46,4 @@ public class FileUtils {
         private final String type;
     }
 
-    @PostConstruct
-    private void setDefaultPath() throws IOException {
-        for (String path : new String[]{FILE_DIRECTORY,JSON_DIRECTORY, VIDEO_DIRECTORY, PHOTO_DIRECTORY}) {
-            try {
-                Path resolve = USER_HOME.resolve(path);
-                Files.createDirectory(resolve);
-            } catch (FileAlreadyExistsException fileAlreadyExistsException) {
-                if (!Files.isDirectory(Paths.get(fileAlreadyExistsException.getFile()))) {
-                    throw fileAlreadyExistsException;
-                }
-            }
-        }
-    }
 }

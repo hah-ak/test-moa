@@ -1,6 +1,5 @@
 plugins {
     id 'application'
-    id "io.freefair.lombok"
 }
 group 'my.application'
 version '1.0-SNAPSHOT'
@@ -10,9 +9,8 @@ application {
 }
 
 dependencies {
-    implementation project(':domain-modules:cores:web-core')
+    implementation project(':domain-modules:web-core')
     implementation project(':domain-modules:mysql-domain')
-    implementation project(':domain-modules:redis-domain')
     implementation project(':domain-modules:kafka-domain')
 
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
@@ -28,19 +26,38 @@ dependencies {
     implementation 'org.apache.tika:tika-core:2.8.0'
     implementation 'org.apache.tika:tika-parsers-standard-package:2.8.0'
 
-    implementation 'com.google.auth:google-auth-library-oauth2-http:1.19.0'
+
+    implementation 'com.google.cloud:libraries-bom:26.39.0'
+    implementation 'com.google.analytics:google-analytics-data:0.54.0'
+    implementation 'com.google.auth:google-auth-library-oauth2-http'
     implementation 'com.google.apis:google-api-services-calendar:v3-rev20230825-2.0.0'
     implementation 'com.google.apis:google-api-services-admob:v1-rev20230425-2.0.0'
-    implementation 'com.google.api-client:google-api-client:1.32.1'
+//    implementation 'com.google.api-client:google-api-client:1.32.1'
 
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+    implementation 'org.springframework.boot:spring-boot-starter-security' // security와 ldap접목을 위한 security 코어가 필요
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client' // 내가만든 시큐리티 어플리케이션에서 리소스 서버로 요청하기에, 시큐리티 어플리케이션이 클라이언트로서 필요함.
+//    implementation 'org.springframework.boot:spring-boot-starter-data-ldap' // jdbc, jpa 처럼 ldap 데이터 접근을 위한 프로젝트
+//    implementation 'org.springframework.security:spring-security-ldap' // spring security에서 ldap 전용 프로젝트
+//    implementation 'com.unboundid:unboundid-ldapsdk' // 실제 ldap 서버와 통신을 위해 필요함.
 }
 
 test {
     useJUnitPlatform()
 }
+tasks.register("forbiddenStringsCheck") {
+    doLast {
+        def sourceDir = file("src/main/java/my/application/api")
+        def forbiddenStrings = ["data"]
+        rootProject.ext.checkForbiddenCode(sourceDir, forbiddenStrings)
+    }
+}
+
 bootRun {
+    dependsOn forbiddenStringsCheck
+
     def profile
     if (!args.hasProperty("spring.profiles.active")) {
         args += ["--spring.profiles.active=local"]
@@ -52,7 +69,7 @@ bootRun {
     def port = 8080
     if (!args.hasProperty("server.port")) {
         if (profile == 'local') {
-            port = 8084
+            port = 8100
         }
         if (profile == 'dev') {
             port = 8083

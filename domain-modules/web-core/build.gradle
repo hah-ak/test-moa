@@ -1,0 +1,22 @@
+plugins {
+  id 'java-library'
+  id "io.freefair.lombok"
+}
+
+group 'my.domain'
+version '1.0-SNAPSHOT'
+
+jar {
+  enabled = true
+}
+
+dependencies {
+  api project(':domain-modules:secret-resources')
+  api project(':domain-modules:redis-domain')
+  api 'org.springframework.boot:spring-boot-starter-web'
+  api 'org.springframework.boot:spring-boot-starter-webflux'
+}
+
+test {
+  useJUnitPlatform()
+}

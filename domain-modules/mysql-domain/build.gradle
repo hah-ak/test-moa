@@ -1,6 +1,7 @@
 plugins {
   id 'java-library'
   id "io.freefair.lombok"
+
 }
 
 group 'my.domain'
@@ -10,8 +11,15 @@ jar {
   enabled = true
 }
 
+ext {
+  set('querydslVersion', '5.1.0')
+}
 dependencies {
-  api project(':domain-modules:cores:mysql-core')
+  api project(':domain-modules:secret-resources')
+  api 'org.springframework.boot:spring-boot-starter-validation'
+  api 'org.springframework.boot:spring-boot-starter-data-jpa'
+  api 'com.mysql:mysql-connector-j'
+  api 'org.mariadb.jdbc:mariadb-java-client'
 }
 
 test {

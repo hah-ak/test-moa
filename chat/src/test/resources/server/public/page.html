@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>채팅방 테스트</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+        }
+        #roomList {
+            width: 200px;
+            border-right: 1px solid #ccc;
+            padding-right: 20px;
+        }
+        #chatArea {
+            flex-grow: 1;
+            margin-left: 20px;
+            display: none;
+        }
+        #messages {
+            height: 300px;
+            border: 1px solid #ccc;
+            overflow-y: scroll;
+            margin-bottom: 10px;
+            padding: 10px;
+        }
+        input[type="text"] {
+            width: calc(100% - 70px);
+            padding: 5px;
+        }
+        button {
+            padding: 5px 10px;
+        }
+    </style>
+</head>
+<body>
+<div id="roomList">
+    <h2>채팅방 목록</h2>
+    <ul id="rooms"></ul>
+    <input type="text" id="newRoomName" placeholder="새 방 이름">
+    <button onclick="createRoom()">방 만들기</button>
+</div>
+<div id="chatArea">
+    <h2 id="roomTitle"></h2>
+    <div id="messages"></div>
+    <input type="text" id="messageInput" placeholder="메시지 입력">
+    <button onclick="sendMessage()">전송</button>
+    <button onclick="leaveRoom()">방 나가기</button>
+</div>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-65JNZ8BNBN"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-65JNZ8BNBN');
+
+    let stompClient = null;
+    let currentRoom = null;
+    let currentUser = "User" + Math.floor(Math.random() * 1000);
+
+    const rooms = [
+        { id: 1, name: "일반 채팅" },
+        { id: 2, name: "게임 채팅" },
+        { id: 3, name: "음악 채팅" }
+    ];
+
+    function connect() {
+        gtag('event', 'pushMClick22', {
+            'gender': 'm',
+            'age': 18,
+            'eva_chamchi':"y"
+        });
+        const socket = new WebSocket('ws://localhost:9100/chat/connection');
+        stompClient = Stomp.over(socket);
+        stompClient.connect({}, function(frame) {
+            console.log('Connected: ' + frame);
+            displayRooms();
+        },{
+            NICKNAME : currentUser,
+            MEMBER_NUMBER: 2
+        });
+    }
+
+    function displayRooms() {
+        const roomsList = document.getElementById('rooms');
+        roomsList.innerHTML = '';
+        rooms.forEach(room => {
+            const li = document.createElement('li');
+            li.textContent = room.name;
+            li.onclick = () => enterRoom(room);
+            roomsList.appendChild(li);
+        });
+    }
+
+    function createRoom() {
+        const newRoomName = document.getElementById('newRoomName').value;
+        if (newRoomName) {
+            const newRoom = { id: rooms.length + 1, name: newRoomName };
+            rooms.push(newRoom);
+            displayRooms();
+            document.getElementById('newRoomName').value = '';
+        }
+    }
+
+    function enterRoom(room) {
+        if (currentRoom) {
+            leaveRoom();
+        }
+        currentRoom = room;
+        document.getElementById('roomTitle').textContent = room.name;
+        document.getElementById('chatArea').style.display = 'block';
+        document.getElementById('messages').innerHTML = '';
+
+        gtag('event', 'btn1_click', {
+            'gender': 'm',
+            'age': 18,
+            'eva_chamchi':"y"
+        });
+
+        const headers = {
+            NICKNAME : currentUser,
+            MEMBER_NUMBER: 2
+        }
+
+        stompClient.subscribe(`/chat/sub/room.enter.${room.id}`, function(message) {
+            showMessage(JSON.parse(message.body));
+        },headers);
+
+        stompClient.subscribe(`/chat/sub/message.${room.id}`, function(message) {
+            showMessage(JSON.parse(message.body));
+        },headers);
+
+
+
+        sendSystemMessage(`${currentUser}님이 입장하셨습니다.`);
+    }
+
+    function sendMessage() {
+        const messageInput = document.getElementById('messageInput');
+        const message = messageInput.value;
+        if (message && currentRoom) {
+            const chatMessage = {
+                roomId: currentRoom.id,
+                content: message,
+                sender: currentUser,
+                timestamp: new Date()
+            };
+            const headers = {
+                NICKNAME : currentUser,
+                MEMBER_NUMBER: 2
+            }
+            stompClient.send(`/chat/pub/message.${currentRoom.id}`, headers, JSON.stringify(chatMessage));
+            messageInput.value = '';
+        }
+    }
+
+    function showMessage(message) {
+        const messagesDiv = document.getElementById('messages');
+        const messageElement = document.createElement('div');
+        messageElement.textContent = `${message.sender}: ${message.message}`;
+        messagesDiv.appendChild(messageElement);
+        messagesDiv.scrollTop = messagesDiv.scrollHeight;
+    }
+
+    function sendSystemMessage(content) {
+        const systemMessage = {
+            roomId: currentRoom.id,
+            content: content,
+            sender: 'System',
+            timestamp: new Date()
+        };
+
+        stompClient.send(`/app/chat/${currentRoom.id}`, {}, JSON.stringify(systemMessage));
+    }
+
+    function leaveRoom() {
+        if (currentRoom) {
+            sendSystemMessage(`${currentUser}님이 퇴장하셨습니다.`);
+            stompClient.unsubscribe(`/chat/pub/message.${currentRoom.id}`);
+            currentRoom = null;
+            document.getElementById('chatArea').style.display = 'none';
+        }
+    }
+
+    connect();
+</script>
+</body>
+</html>

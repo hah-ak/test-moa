@@ -17,7 +17,7 @@ import org.springframework.kafka.core.*;
 import java.util.HashMap;
 
 @Getter
-@PropertySource("classpath:kafka-domain-${spring.profiles.active}.properties")
+@PropertySource("classpath:kafka-domain-${spring.profiles.active:local}.properties")
 @EnableKafka
 @Configuration
 @ConfigurationProperties(prefix = "kafka")
@@ -31,7 +31,6 @@ public class KafkaConfig {
     @Bean
     public ProducerFactory<String, String> producerFactory() {
         HashMap<String, Object> hashMap = new HashMap<>();
-        System.out.println(producer.getBootstrapServers());
         hashMap.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, producer.getBootstrapServers());
         hashMap.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
         hashMap.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class);

@@ -1,0 +1,102 @@
+@startuml
+entity Company {
+    - id : Long
+    - name : String
+    - simpleExp : String
+    - holidayWork : boolean
+    - taxId : String
+    - businessWeekTimeTable : BusinessWeekTimeTable
+    - exceptionDayOffTimeTable : ExceptionDayOffTimeTable
+    - exceptionBusinessTimeTable : ExceptionBusinessTimeTable
+    - services : List<CompanyService>
+}
+entity CompanyService {
+    - id : Long
+    - company : Company
+    - content : String
+    - img : URL
+}
+
+entity Staff {
+    - id : Long
+    - companyId : Long
+    - name : String
+    - rank : String
+    - introduce : String
+    - staffServiceInfo : List<StaffServiceInfo>
+}
+
+entity BusinessWeekTimeTable {
+    - id : Long
+    - company : Company
+    - dayOfTheWeek : int
+    - openTime : Time
+    - closeTime : Time
+    - startBreakTime : Time
+    - endBreakTime : Time
+}
+
+entity ExceptionDayOffTimeTable {
+    - id : Long
+    - time : Time
+    - date : LocalDate
+    - company : Company
+    - reason : String
+}
+
+entity ExceptionBusinessTimeTable {
+    - id : Long
+    - time : Time
+    - date : LocalDate
+    - company : Company
+    - reason : String
+}
+
+entity StaffServiceInfo {
+    - id : Long
+    - staff : Staff
+    - service : CompanyService
+    - price : int
+    - currency : String
+    - staffExplain : String
+    - reservationReceipts : List<ReservationReceipt>
+    - eachStaffServiceTimeTable : List<EachStaffServiceTimeTable>
+}
+
+entity EachStaffServiceTimeTable {
+    - id : Long
+    - dayOfTheWeek : int
+    - startBreakTime : Time
+    - endBreakTime : Time
+    - sameBusinessTime : Boolean
+    - exceptionOpenTime : Time
+    - exceptionCloseTime : Time
+}
+
+entity ReservationReceipt {
+    - id : Long
+    - serviceDate : LocalDate
+    - serviceTime : Time
+    - message : String
+    - staffServiceInfo : StaffServiceInfo
+    - member : Integer
+}
+
+entity StaffScheduleTable {
+    - id : Long
+    - staff : Staff
+    - receipt : ReservationReceipt
+}
+
+CompanyService "1" -- "0..*" StaffServiceInfo
+StaffServiceInfo "1" -- "0..*" ReservationReceipt
+Staff "1" -- "1..*" StaffServiceInfo
+
+Company "1" -left- "0..*" BusinessWeekTimeTable
+Company "1" -up- "0..*" ExceptionDayOffTimeTable
+Company "1" -up- "0..*" ExceptionBusinessTimeTable
+Company "1" -- "1..*" Staff
+Company "1" -- "1..*" CompanyService
+
+StaffServiceInfo "1" -left- "1..*" EachStaffServiceTimeTable
+@enduml
