@@ -45,10 +45,7 @@ services:
     ports:
       - "9090:9090"
     environment:
-      - ACTIVE_PROFILE=local
-    depends_on:
-      redis:
-        condition: service_started
+      - ACTIVE_PROFILE=dev
   redis:
     container_name: myApp_redis
     build: ./domain-modules/secret-resources/dockerfiles/redis
