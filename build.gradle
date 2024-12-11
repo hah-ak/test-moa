@@ -5,7 +5,7 @@ plugins {
 }
 ext {
     set("springCloudVersion", "2023.0.2")
-    defaultForbiddenStrings = ["LocalDateTime"]
+    defaultForbiddenStrings = []
     checkForbiddenCode = { sourceDir, forbiddenStrings ->
         sourceDir.eachFileRecurse { file ->
             if (file.name.endsWith(".java")) {

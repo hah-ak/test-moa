@@ -1,23 +1,16 @@
-FROM openjdk:17
-WORKDIR /home/myApp
+FROM eclipse-temurin:17-jdk
+WORKDIR /home/myApp/build
 
-#COPY ./domain-modules/secret-resources/dockerfiles/api/ssh /root/.ssh
-#RUN chmod 600 ~/.ssh/github_ssh
-#RUN ssh-keyscan github.com >> ~/.ssh/known_hosts
-#
-#RUN ["git", "clone", "--recursive", "git@github.com:hah-ak/test-moa.git", "."]
-#RUN ["git", "fetch"]
-#RUN ["git", "checkout", "release"]
-#RUN ["git", "pull"]
+ARG ACTIVE_PROFILE
+ENV ACTIVE_PROFILE=${ACTIVE_PROFILE}
+# 볼륨과 분리 (디렉토리 복사등 정상적인 행동이 될 수 없음)
+COPY ./api ./api
+COPY ./domain-modules ./domain-modules
+COPY ./gradle/wrapper ./gradle/wrapper
+COPY ./build.gradle .
+COPY ./settings.gradle .
+COPY ./gradlew .
+COPY ./gradlew.bat .
 
-RUN if [ "$ACTIVE_PROFILE" = "local" ]; then \
-    cp ./api ./api \
-    cp ./domain-modules ./; \
-    cp ./build.gradle ./; \
-    cp ./settings.gradle ./; \
-    cp ./gradlew ./; \
-    cp ./gradlew.bat ./; \
-    cp ./gradle ./; \
-    fi
-ENTRYPOINT ["/home/myApp/gradlew",":api:bootRun", "--args='--spring.profiles.active=${ACTIVE_PROFILE}'"]
+ENTRYPOINT ["./gradlew",":api:bootRun", "--args='--spring.profiles.active=${ACTIVE_PROFILE}'"]
 #ENTRYPOINT ["tail", "-f", "/dev/null"]

@@ -4,6 +4,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile-api
+      args:
+        - ACTIVE_PROFILE=local
     ports:
       - "8083:8083"
     networks:
@@ -16,9 +18,10 @@ services:
       kafka:
         condition: service_started
     volumes:
-      - myApp-api-volume:/home/myApp
+      - myApp-api-volume:/home/myApp/store
     environment:
-      - ACTIVE_PROFILE=local
+      - MYSQL_SERVER=host.docker.internal
+      - REDIS_SERVER=host.docker.internal
   gateway:
     container_name: myApp_gateway
     build:
