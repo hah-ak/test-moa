@@ -10,7 +10,7 @@ services:
     ports:
       - "8083:8083"
     volumes:
-      - myApp-api-volume:/home/service_files
+      - myApp-api-volume:/home/api
     environment:
       - MYSQL_SERVER=172.22.208.1
       - REDIS_SERVER=172.22.208.1
@@ -49,6 +49,8 @@ services:
         - ACTIVE_PROFILE=dev
     ports:
       - "9090:9090"
+    volumes:
+      - myApp-api-volume:/home/gateway
     environment:
       - MYSQL_SERVER=172.22.208.1
       - REDIS_SERVER=172.22.208.1
