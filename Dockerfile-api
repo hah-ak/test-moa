@@ -11,6 +11,6 @@ COPY ./build.gradle .
 COPY ./settings.gradle .
 COPY ./gradlew .
 COPY ./gradlew.bat .
-
+RUN chmod +x ./gradlew
 ENTRYPOINT ["./gradlew",":api:bootRun", "--args='--spring.profiles.active=${ACTIVE_PROFILE}'"]
 #ENTRYPOINT ["tail", "-f", "/dev/null"]
