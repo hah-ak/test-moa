@@ -5,12 +5,15 @@ services:
     build:
       context: .
       dockerfile: Dockerfile-api
+      args:
+        - ACTIVE_PROFILE=dev
     ports:
       - "8083:8083"
     volumes:
       - myApp-api-volume:/home/service_files
     environment:
-      - ACTIVE_PROFILE=dev
+      - MYSQL_SERVER=172.22.208.1
+      - REDIS_SERVER=172.22.208.1
   socket:
     container_name: myApp_socket
     build:
@@ -42,10 +45,13 @@ services:
     build:
       context: .
       dockerfile: Dockerfile-gateway
+      args:
+        - ACTIVE_PROFILE=dev
     ports:
       - "9090:9090"
     environment:
-      - ACTIVE_PROFILE=dev
+      - MYSQL_SERVER=172.22.208.1
+      - REDIS_SERVER=172.22.208.1
   redis:
     container_name: myApp_redis
     build: ./domain-modules/secret-resources/dockerfiles/redis

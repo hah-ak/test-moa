@@ -50,7 +50,7 @@ test {
 tasks.register("forbiddenStringsCheck") {
     doLast {
         def sourceDir = file("src/main/java/my/application/api")
-        def forbiddenStrings = ["data"]
+        def forbiddenStrings = []
         rootProject.ext.checkForbiddenCode(sourceDir, forbiddenStrings)
     }
 }

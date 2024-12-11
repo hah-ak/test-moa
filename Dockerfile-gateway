@@ -1,13 +1,16 @@
 FROM gradle:jdk17
 WORKDIR /home/workdir/myApp
 
-COPY ./domain-modules/secret-resources/dockerfiles/api/ssh /root/.ssh
-RUN chmod 600 ~/.ssh/github_ssh
-RUN ssh-keyscan github.com >> ~/.ssh/known_hosts
+ARG ACTIVE_PROFILE
+ENV ACTIVE_PROFILE=${ACTIVE_PROFILE}
 
-RUN ["git", "clone", "--recursive", "git@github.com:hah-ak/test-moa.git", "."]
-RUN ["git", "fetch"]
-RUN ["git", "checkout", "release"]
-RUN ["git", "pull"]
-ENTRYPOINT ["gradle",":api:bootRun", "--args='--spring.profiles.active=${ACTIVE_PROFILE}'"]
+COPY ./gateway ./gateway
+COPY ./domain-modules ./domain-modules
+COPY ./gradle/wrapper ./gradle/wrapper
+COPY ./build.gradle .
+COPY ./settings.gradle .
+COPY ./gradlew .
+COPY ./gradlew.bat .
+
+ENTRYPOINT ["gradle",":gateway:bootRun", "--args='--spring.profiles.active=${ACTIVE_PROFILE}'"]
 #ENTRYPOINT ["tail", "-f", "/dev/null"]
