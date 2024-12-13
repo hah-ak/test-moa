@@ -5,7 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import my.application.api.services.file.FileUtils;
 import my.application.api.services.file.JsonFileServiceImpl;
 import org.springframework.stereotype.Service;
-import web.core.MyAppCommonUtil;
+import web.core.common.MyAppCommonUtil;
 
 import java.io.IOException;
 import java.nio.file.Files;

@@ -23,6 +23,6 @@ public class MySqlStudyConfig {
     @Bean("mysqlStudySource")
     @ConfigurationProperties(prefix = "application.db.mysql.my-app.study")
     public HikariDataSource hikariDataSourceStudy(@Qualifier("mysqlStudy") DataSourceProperties dataSourceProperties) {
-        return profile.equals("local") ? dataSourceProperties.initializeDataSourceBuilder().type(HikariDataSource.class).build() : null;
+        return dataSourceProperties.initializeDataSourceBuilder().type(HikariDataSource.class).build();
     }
 }
