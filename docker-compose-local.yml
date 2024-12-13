@@ -4,8 +4,6 @@ services:
     build:
       context: .
       dockerfile: Dockerfile-api
-      args:
-        - ACTIVE_PROFILE=local
     ports:
       - "8083:8083"
     networks:
@@ -20,8 +18,10 @@ services:
     volumes:
       - myApp-api-volume:/home/myApp/store
     environment:
-      - MYSQL_SERVER=host.docker.internal
-      - REDIS_SERVER=host.docker.internal
+      - ACTIVE_PROFILE=local
+      - MYSQL_SERVER_URL=host.docker.internal
+      - REDIS_SERVER_URL=host.docker.internal
+      - KAFKA_SERVER_URL=host.docker.internal
   gateway:
     container_name: myApp_gateway
     build:
@@ -33,6 +33,9 @@ services:
       - myApp-network
     environment:
       - ACTIVE_PROFILE=local
+      - MYSQL_SERVER_URL=host.docker.internal
+      - REDIS_SERVER_URL=host.docker.internal
+      - KAFKA_SERVER_URL=host.docker.internal
     depends_on:
       redis:
         condition: service_started

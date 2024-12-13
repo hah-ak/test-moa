@@ -1,16 +1,14 @@
-FROM eclipse-temurin:17-jdk
+FROM eclipse-temurin:17
 WORKDIR /home/workdir/myApp
 
-ARG ACTIVE_PROFILE
-ENV ACTIVE_PROFILE=${ACTIVE_PROFILE}
-
-COPY ./gateway ./gateway
-COPY ./domain-modules ./domain-modules
 COPY ./gradle/wrapper ./gradle/wrapper
 COPY ./build.gradle .
 COPY ./settings.gradle .
 COPY ./gradlew .
 COPY ./gradlew.bat .
 RUN chmod +x ./gradlew
-ENTRYPOINT ["./gradlew",":gateway:bootRun", "--args='--spring.profiles.active=${ACTIVE_PROFILE}'"]
+
+COPY ./gateway ./gateway
+COPY ./domain-modules ./domain-modules
+ENTRYPOINT ["./gradlew",":gateway:bootRun", "--args=--spring.profiles.active=${ACTIVE_PROFILE} --app.mysql.server.url=${MYSQL_SERVER_URL} --app.redis.server.url=${REDIS_SERVER_URL} --app.kafka.server.url=${KAFKA_SERVER_URL}"]
 #ENTRYPOINT ["tail", "-f", "/dev/null"]

@@ -1,16 +1,16 @@
 FROM eclipse-temurin:17-jdk
 WORKDIR /home/myApp/build
 
-ARG ACTIVE_PROFILE
-ENV ACTIVE_PROFILE=${ACTIVE_PROFILE}
 # 볼륨과 분리 (디렉토리 복사등 정상적인 행동이 될 수 없음)
-COPY ./api ./api
-COPY ./domain-modules ./domain-modules
 COPY ./gradle/wrapper ./gradle/wrapper
 COPY ./build.gradle .
 COPY ./settings.gradle .
 COPY ./gradlew .
 COPY ./gradlew.bat .
 RUN chmod +x ./gradlew
-ENTRYPOINT ["./gradlew",":api:bootRun", "--args='--spring.profiles.active=${ACTIVE_PROFILE}'"]
+
+COPY ./api ./api
+COPY ./domain-modules ./domain-modules
+
+ENTRYPOINT ["./gradlew",":api:bootRun", "--args=--spring.profiles.active=${ACTIVE_PROFILE} --app.mysql.server.url=${MYSQL_SERVER_URL} --app.redis.server.url=${REDIS_SERVER_URL} --app.kafka.server.url=${KAFKA_SERVER_URL}"]
 #ENTRYPOINT ["tail", "-f", "/dev/null"]
