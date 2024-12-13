@@ -3,14 +3,14 @@ WORKDIR /home/myApp/build
 
 # 볼륨과 분리 (디렉토리 복사등 정상적인 행동이 될 수 없음)
 COPY ./gradle/wrapper ./gradle/wrapper
-COPY ./build.gradle .
-COPY ./settings.gradle .
 COPY ./gradlew .
 COPY ./gradlew.bat .
 RUN chmod +x ./gradlew
 
-COPY ./api ./api
-COPY ./domain-modules ./domain-modules
+ONBUILD COPY ./build.gradle .
+ONBUILD COPY ./settings.gradle .
+ONBUILD COPY ./api ./api
+ONBUILD COPY ./domain-modules ./domain-modules
 
-ENTRYPOINT ["./gradlew",":api:bootRun", "--args=--spring.profiles.active=${ACTIVE_PROFILE} --app.mysql.server.url=${MYSQL_SERVER_URL} --app.redis.server.url=${REDIS_SERVER_URL} --app.kafka.server.url=${KAFKA_SERVER_URL}"]
+ENTRYPOINT ["./shell/api.sh"]
 #ENTRYPOINT ["tail", "-f", "/dev/null"]
