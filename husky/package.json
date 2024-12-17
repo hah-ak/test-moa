@@ -1,0 +1,15 @@
+{
+  "name": "git_corporation",
+  "version": "1.0.0",
+  "description": "git hooks manage",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prepare": "cd .. && husky ./husky/.husky"
+  },
+  "author": "hahak",
+  "license": "ISC",
+  "devDependencies": {
+    "husky": "^9.1.7"
+  }
+}
