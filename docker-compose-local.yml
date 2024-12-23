@@ -4,6 +4,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile-api
+    env_file:
+      - ./docker/.env.local
     ports:
       - "8083:8083"
     networks:
@@ -27,6 +29,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile-gateway
+    env_file:
+      - ./docker/.env.local
     ports:
       - "9090:9090"
     networks:
@@ -44,6 +48,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile-kafka
+    env_file:
+      - ./docker/.env.local
     ports :
       - "9094:9094"
     environment:
@@ -62,6 +68,8 @@ services:
   redis:
     container_name: myApp_redis
     build: ./domain-modules/secret-resources/dockerfiles/redis
+    env_file:
+      - ./docker/.env.local
     ports:
       - "6379:6379"
     networks:
@@ -71,6 +79,8 @@ services:
   mysql:
     container_name: myApp_mysql
     build: ./domain-modules/secret-resources/dockerfiles/mysql
+    env_file:
+      - ./docker/.env.local
     ports:
       - "3306:3306"
     networks:

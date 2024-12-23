@@ -1,24 +1,67 @@
 #!/bin/sh
 echo "push start"
-chmod +x ./gradlew
-
+#chmod +x ./gradlew
 # 푸시하려는 변경된 파일 목록 확인
-CHANGED_FILES=$(git diff --cached --name-only HEAD)
-echo "$CHANGED_FILES" | grep -q "^api/"
-HAS_API_PATH=$?
+CHANGED_FILES=$(git diff --name-only origin/main..HEAD)
 
-echo "$CHANGED_FILES" | grep -q "^gateway/"
-HAS_GATEWAY_PATH=$?
+#echo "${CHANGED_FILES}" | grep "^api/" || true
+#HAS_API_PATH=$?
 
-if [ $HAS_API_PATH ]; then
-  docker-compose -f docker-compose-local.yml build api
-  docker-compose --e push=true run myApp_api
-  # 빌드 실패 시 푸시 중단
-  if [ $? -ne 0 ]; then
-      echo "Build failed. Push aborted."
-      exit 1
+#API_FILES=$(echo "${CHANGED_FILES}" | grep "^api/" || true)
+#HAS_API_PATH=0
+#if [ -z "$API_FILES" ]; then
+#    HAS_API_PATH=1
+#fi
+#
+#GATEWAY_FILES=$(echo "${CHANGED_FILES}" | grep "^gateway/" || true)
+#HAS_GATEWAY_PATH=0
+#if [ -z "$GATEWAY_FILES" ]; then
+#    HAS_GATEWAY_PATH=1
+#fi
+
+#if [ $HAS_API_PATH -eq 0 ]; then
+#  docker-compose -f docker-compose-local.yml build api
+#  docker-compose -e push=true run myApp_api
+#  # 빌드 실패 시 푸시 중단
+#  if [ $? -ne 0 ]; then
+#      echo "Build failed. Push aborted."
+#      exit 1
+#  fi
+#fi
+#
+#if [ $HAS_GATEWAY_PATH -eq 0 ]; then
+#  docker-compose -f docker-compose-local.yml build gateway
+#  docker-compose -e push=true run myApp_gateway
+#  # 빌드 실패 시 푸시 중단
+#  if [ $? -ne 0 ]; then
+#      echo "Build failed. Push aborted."
+#      exit 1
+#  fi
+#fi
+DISABLE_CACHE=$(date + +"%Y-%m-%d %H:%M:%S")
+paths=("api" "gateway")
+declare -A path_results
+for path in "${paths[@]}"; do
+    files=$(echo "${CHANGED_FILES}" | grep "^${path}/" || true)
+
+    if [ -z "$files" ]; then
+        path_results[$path]=1  # 동적으로 값 할당
+    else
+        path_results[$path]=0  # 동적으로 값 할당
+    fi
+done
+
+for path in "${!path_results[@]}" ; do
+  if [ ${path_results[$path]} -eq 0 ]; then
+    docker-compose -f docker-compose-local.yml up -d ${path}
+    # 빌드 실패 시 푸시 중단
+    if [ $? -ne 0 ]; then
+        echo "Build failed. Push aborted."
+        docker-compse down
+        exit 1
+    fi
   fi
-fi
-
+done
 
 echo "build success!"
+exit 1
